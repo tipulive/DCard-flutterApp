@@ -51,7 +51,7 @@ class _HomepageState extends State<Homepage> {
   TextEditingController uidInput3=TextEditingController();//input data to submit
   TextEditingController uidInput4=TextEditingController();
   TextEditingController uidInput5=TextEditingController();
-  bool showprofile=true;
+  bool showprofile=false;
   final GlobalKey qrkey = GlobalKey(debugLabel: 'QR');
   Barcode?result;
   QRViewController?controller;
@@ -60,8 +60,8 @@ class _HomepageState extends State<Homepage> {
   bool optionVal=true;
   List items=["male","female","others","Keb2"];
 
-  bool Cameravalue=true;
-  bool Flashvalue=true;
+  bool Cameravalue=false;
+  bool Flashvalue=false;
 
   @override
 
@@ -89,7 +89,7 @@ class _HomepageState extends State<Homepage> {
     AdminQuery adminStatedata=Get.put(AdminQuery());
 
 
-   // ParticipatedQuery participatedState=Get.put(ParticipatedQuery());
+    // ParticipatedQuery participatedState=Get.put(ParticipatedQuery());
     DateClassUtil DateState=Get.put(DateClassUtil());
 
     //Map<String,dynamic> Promo_data=promotionState.obj["resultData"]??promotionState.obj;
@@ -115,9 +115,9 @@ class _HomepageState extends State<Homepage> {
                           children: [
 
                             CameraSwitch(),
-                           //SizedBox(width: 10.0,),
+                            //SizedBox(width: 10.0,),
 
-                           // SizedBox(width: 10.0,),
+                            // SizedBox(width: 10.0,),
                             FlashSwitch(),
                             Image.asset(
                               Flashvalue ? 'images/on.png' : 'images/off.png',
@@ -134,7 +134,7 @@ class _HomepageState extends State<Homepage> {
             ),
 
           ),
-          
+
           Expanded(
             flex: 2,
             child: SingleChildScrollView(
@@ -146,8 +146,8 @@ class _HomepageState extends State<Homepage> {
 
 
 
-                    GetBuilder<PromotionQuery>(
-                         // init:PromotionQuery(),
+                      GetBuilder<PromotionQuery>(
+                        // init:PromotionQuery(),
                           builder: (promotionState){
 
                             if((promotionState.obj["id"])==1) return Center(child: CircularProgressIndicator());
@@ -233,8 +233,8 @@ class _HomepageState extends State<Homepage> {
                                                                   //value="male";
                                                                   print(_groupVal);
                                                                   //print(_groupVal);
-                                                                 //Get.back(result: value);
-                                                                 // Get.back();
+                                                                  //Get.back(result: value);
+                                                                  // Get.back();
                                                                 },
                                                               ),
 
@@ -299,6 +299,7 @@ class _HomepageState extends State<Homepage> {
                       TextButton(
                           onPressed: ()async =>{
 
+
                             await Get.put(ParticipatedQuery()).ParticipateEventOnline(Participated(uid:uidInput.text,uidUser:uidInput2.text,inputData:uidInput3.text),Promotions(reach:uidInput4.text,gain:uidInput5.text)),
                             //print((Get.put(ParticipatedQuery()).obj)),
                             if((Get.put(ParticipatedQuery()).obj)["resultData"]["reach"]!=null)
@@ -310,7 +311,9 @@ class _HomepageState extends State<Homepage> {
                                   title:"Congratulation !!!",
                                   text: "You Reach ${(Get.put(ParticipatedQuery()).obj)["resultData"]["reach"]}\$ and You win ${(Get.put(ParticipatedQuery()).obj)["resultData"]["gain"]} !",
 
-                                )
+                                ),
+
+
                               }else{
                               if((Get.put(ParticipatedQuery()).obj)["resultData"]["status"])
                                 {
@@ -320,21 +323,23 @@ class _HomepageState extends State<Homepage> {
 
                                       icon: Icon(Icons.access_alarm),
                                       duration: Duration(seconds: 5)),
-                                  showprofile=false,
+
                                 }
                               //print((Get.put(ParticipatedQuery()).obj)),
-                            }
+                            },
 
-
+                            setState((){
+                              showprofile=false;
+                            }),
                             //print(promotionState)
-                           // print(promotionState.obj["resultData"]["result"][0]["uid"]),
+                            // print(promotionState.obj["resultData"]["result"][0]["uid"]),
                             //print((await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]),
-                          //uidInput2.text='${(await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]}',
-                          //CardQuery CardData=Get.put(CardQuery());
+                            //uidInput2.text='${(await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]}',
+                            //CardQuery CardData=Get.put(CardQuery());
                             //print((await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))),
                             //print((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]),
 
-                          //await loadData(true),
+                            //await loadData(true),
                             //(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"],
                             //print((Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]),
 
@@ -347,7 +352,7 @@ class _HomepageState extends State<Homepage> {
                             //await controller!.toggleFlash(),
                             // Wakelock.enable()
 
-                          /*CoolAlert.show(
+                            /*CoolAlert.show(
                           context: context,
                             backgroundColor:Color(0xff940e4b),
                           type: CoolAlertType.success,
@@ -386,16 +391,16 @@ class _HomepageState extends State<Homepage> {
           ),
         ],
       ) ,
-        bottomNavigationBar:HomeNavigator(),
+      bottomNavigationBar:HomeNavigator(),
 
       floatingActionButton: Visibility(
         visible:showprofile,
 
         child: FloatingActionButton(
           onPressed:()async =>{
-           // Get.to(ProfilePage()),
-           (await Get.put(TopupQuery()).GetBalance(Topups(uid:'kebineericMuna_1674160265'))),
-           //print((Get.put(TopupQuery()).obj)["resultData"]["result"][0]["bonus"]),
+
+            (await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))),
+
             Get.to(() => ProfilePage())
           },
           tooltip: 'Increment',
@@ -417,15 +422,15 @@ class _HomepageState extends State<Homepage> {
 
     controller.scannedDataStream.listen((scanData) {
       setState(() async{
-       // (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
+        // (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
         //loadData((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["status"]);
 
         (result!=null)?"scan":loadDatafalse();
 
         result=scanData;
-       //var check=(result!=null)?"${result!.code}":"0";
+        //var check=(result!=null)?"${result!.code}":"0";
         if(result==null){
-         // uidInput3.text='${showprofile}';
+          // uidInput3.text='${showprofile}';
           //showprofile=false;
           loadData(false);
         }
@@ -434,12 +439,12 @@ class _HomepageState extends State<Homepage> {
           //uidInput2.text='${(await CardQuery().GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}';
           //showprofile=true;
 
-              uidInput2.text='${(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}';
-              await loadData(true);
+          uidInput2.text='${(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}';
+          await loadData(true);
 
 
 
-        // uidInput3.text='${showprofile}';
+          // uidInput3.text='${showprofile}';
         }
 
       });
@@ -453,47 +458,53 @@ class _HomepageState extends State<Homepage> {
   Widget CameraSwitch()=>Transform.scale(
     scale: 1,
     child: Switch.adaptive(
-      activeColor: Colors.red,
-     activeTrackColor: Colors.red.withOpacity(0.4),
-     inactiveThumbColor: Colors.orange,
-     inactiveTrackColor: Colors.blueAccent,
+        activeColor: Colors.red,
+        activeTrackColor: Colors.red.withOpacity(0.4),
+        inactiveThumbColor: Colors.orange,
+        inactiveTrackColor: Colors.blueAccent,
 
-     value: Cameravalue,
-    onChanged:(value)=>setState(() async{
-      this.Cameravalue=value;
-      await controller!.resumeCamera();
-     //print(value);
-    }),
+        value: Cameravalue,
+        onChanged:(value)async{
+          setState((){
+            this.Cameravalue=value;
+
+            //print(value);
+          });
+          await controller!.resumeCamera();
+        }
     ),
   );
   Widget FlashSwitch()=>Transform.scale(
     scale: 1,
     child: Switch.adaptive(
-      activeColor: Colors.red,
-      activeTrackColor: Colors.red.withOpacity(0.4),
-      inactiveThumbColor: Colors.orange,
-      inactiveTrackColor: Colors.blueAccent,
+        activeColor: Colors.red,
+        activeTrackColor: Colors.red.withOpacity(0.4),
+        inactiveThumbColor: Colors.orange,
+        inactiveTrackColor: Colors.blueAccent,
 
-      value:Flashvalue,
-      onChanged:(value)=>setState(() async{
-        this.Flashvalue=value;
-        await controller!.toggleFlash();
-        print(value);
-      }),
+        value:Flashvalue,
+        onChanged:(value)async{
+          setState((){
+            this.Flashvalue=value;
+
+            //print(value);
+          });
+          await controller!.toggleFlash();
+        }
     ),
   );
 
-loadData(bole) async{
+  loadData(bole) async{
 
-  setState(() {
-    showprofile=bole;
-  });
-  //await PromotionQuery().getAllPromotionEventOnline();
+    setState(() {
+      showprofile=bole;
+    });
+    //await PromotionQuery().getAllPromotionEventOnline();
     // Perform data loading here
-   // Map<String, dynamic> _data=((await PromotionQuery().getAllPromotionEventOnline()));
-   //print(_data);
+    // Map<String, dynamic> _data=((await PromotionQuery().getAllPromotionEventOnline()));
+    //print(_data);
 
-   // return _data;
+    // return _data;
     //return ((await PromotionQuery().getAllPromotionEventOnline()));
   }
   loadDatafalse(){
@@ -509,7 +520,7 @@ loadData(bole) async{
     // return _data;
     //return ((await PromotionQuery().getAllPromotionEventOnline()));
   }
-  //Method
+//Method
 
 //method
 }

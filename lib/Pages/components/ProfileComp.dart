@@ -60,7 +60,7 @@ class ProfileComp extends StatelessWidget {
         ),
         SizedBox(height:6.0),
 
-         //Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
+         Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
     SizedBox(height:3.0),
     //Text("Eric Ford",style: TextStyle(color: Colors.teal,fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
     Row(
@@ -78,7 +78,7 @@ class ProfileComp extends StatelessWidget {
             color: Colors.black,),
         ),
         SizedBox(width: 1,),
-       // Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
+        Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
       ],
     ),
       ],
@@ -200,27 +200,27 @@ mainAxisAlignment: MainAxisAlignment.end,
 }
 
  Balancefunc() async{
-   (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:'kebineericMuna_1668935593')));
+   (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
    Get.to(() =>BalancePage());
 }
 Bonusfunc() async{
-  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:'kebineericMuna_1668935593')));
+  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>BonusPage());
 }
 Eventfunc() async{
-  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:'kebineericMuna_1668935593')));
+  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>EventsPage());
 }
 Statusfunc() async{
-  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:'kebineericMuna_1668935593')));
+  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>ActiveEventPage());
 }
 Topupfunc() async{
-  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:'kebineericMuna_1668935593')));
+  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>ActiveEventPage());
 }

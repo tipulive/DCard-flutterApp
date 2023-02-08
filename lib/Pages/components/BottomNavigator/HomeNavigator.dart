@@ -3,11 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../Card/AddCardPage.dart';
+import '../../Homepage.dart';
 
 
 
 class HomeNavigator extends StatelessWidget {
  @override
+
+
  Widget build(BuildContext context) {
   return BottomNavigationBar(
    backgroundColor: Colors.yellow,
@@ -34,13 +37,14 @@ class HomeNavigator extends StatelessWidget {
     if(index==0)
     {
 
-     Get.back();
+     Get.to(() => Homepage());
 
     }
     if(index==1)
-     {
-      Get.to(AddCardPage());
-     }
+    {
+
+     Get.to(() =>AddCardPage());
+    }
    },
   );
  }

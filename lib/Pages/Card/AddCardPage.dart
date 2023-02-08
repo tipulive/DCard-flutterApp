@@ -18,6 +18,7 @@ import 'package:dcard/models/Promotions.dart';
 import '../../Query/AdminQuery.dart';
 import '../../models/Admin.dart';
 import '../../models/CardModel.dart';
+import '../Homepage.dart';
 import '../ProfilePage.dart';
 
 import '../../Pages/components/BottomNavigator/HomeNavigator.dart';
@@ -51,9 +52,11 @@ class _AddCardPageState extends State<AddCardPage> {
   TextEditingController uidInput5=TextEditingController();
   TextEditingController uidInput6=TextEditingController(text:"1");
   TextEditingController uidInput7=TextEditingController(text:"TEALTD_7hEnj_1672352175");
-  final GlobalKey qrkey = GlobalKey(debugLabel: 'QR');
+  final GlobalKey qrkey = GlobalKey(debugLabel: 'QR2');
   Barcode?result;
   QRViewController?controller;
+  bool Cameravalues=false;
+  bool Flashvalues=false;
 
   @override
 
@@ -86,12 +89,40 @@ class _AddCardPageState extends State<AddCardPage> {
         children: [
 
           Visibility(
-            visible: true,
+            visible:true,
             child: Expanded(
-                flex: 3,
-                child:QRView(key: qrkey,onQRViewCreated: _onQRViewCreated,)
+                flex: 5,
+                child:Stack(
+                  alignment:Alignment.bottomCenter,
+                  children: [
+                    QRView(key: qrkey,onQRViewCreated: _onQRViewCreated,),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+
+                            CameraSwitch(),
+                            //SizedBox(width: 10.0,),
+
+                            // SizedBox(width: 10.0,),
+                            FlashSwitch(),
+                            Image.asset(
+                              Flashvalues ? 'images/on.png' : 'images/off.png',
+                              height: 30,
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+
+                  ],
+                )
 
             ),
+
           ),
 
           Expanded(
@@ -242,7 +273,25 @@ class _AddCardPageState extends State<AddCardPage> {
                           child: const Text("Add Card")
                       ),
 
+                      TextButton(
+                          onPressed: () async=>{
+                            //await controller!.toggleFlash(),
+                            // Wakelock.enable()
+                            await controller!.pauseCamera(),
+                          Get.to(() => Homepage()),
 
+
+                          },
+
+                          child: const Text("Enable")
+                      ),
+                      TextButton(
+                          onPressed: () async=>{
+                            await controller!.resumeCamera(),
+                            // Wakelock.enable()
+                          },
+                          child: const Text("resume")
+                      ),
 
                     ],
                   )
@@ -272,6 +321,46 @@ class _AddCardPageState extends State<AddCardPage> {
     controller?.dispose();
     super.dispose();
   }
+  Widget CameraSwitch()=>Transform.scale(
+    scale: 1,
+    child: Switch.adaptive(
+        activeColor: Colors.red,
+        activeTrackColor: Colors.red.withOpacity(0.4),
+        inactiveThumbColor: Colors.orange,
+        inactiveTrackColor: Colors.blueAccent,
+
+        value: Cameravalues,
+        onChanged:(value)async{
+          setState((){
+            this.Cameravalues=value;
+
+            //print(value);
+          });
+          await controller!.resumeCamera();
+        }
+    ),
+  );
+  Widget FlashSwitch()=>Transform.scale(
+    scale: 1,
+    child: Switch.adaptive(
+        activeColor: Colors.red,
+        activeTrackColor: Colors.red.withOpacity(0.4),
+        inactiveThumbColor: Colors.orange,
+        inactiveTrackColor: Colors.blueAccent,
+
+        value:Flashvalues,
+        onChanged:(value)async{
+          setState((){
+            this.Flashvalues=value;
+
+            //print(value);
+          });
+          await controller!.toggleFlash();
+        }
+    ),
+  );
+
+
   loadData() async{
     //await PromotionQuery().getAllPromotionEventOnline();
     // Perform data loading here
