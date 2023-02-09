@@ -5,6 +5,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../Query/CardQuery.dart';
 import '../../Query/TopupQuery.dart';
 import '../../Query/ParticipatedQuery.dart';
+import '../../models/Participated.dart';
+import '../ParticipateHistPage.dart';
 
 class ReachEventComp extends StatelessWidget {
   const ReachEventComp({Key? key}) : super(key: key);
@@ -23,7 +25,7 @@ class ReachEventComp extends StatelessWidget {
         for(var i=0;i<(Get.put(ParticipatedQuery()).reached)["resultData"]["result"].length;i++)
           ...[
 
-            detailsProfile("EventID",Icons.account_balance_wallet,"${(Get.put(ParticipatedQuery()).reached)["resultData"]["result"][i]["uid"]}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
+            detailsProfile("EventID",Icons.account_balance_wallet,"${(Get.put(ParticipatedQuery()).reached)["resultData"]["result"][i]["uid"]}",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
             const SizedBox(height:5,),
 
           ]
@@ -165,8 +167,10 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
                   new IconButton(
                     icon: new Icon(iconright,color:
                     Colors.teal,size: 22,),
-                    onPressed: () {
-                      print(IconText);
+                    onPressed: () async{
+                      (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+
+                      Get.to(() =>ParticipateHistPage());
                     },
                   ),
 

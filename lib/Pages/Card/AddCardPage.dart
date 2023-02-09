@@ -268,7 +268,29 @@ class _AddCardPageState extends State<AddCardPage> {
                             // print( (await ParticipatedQuery().getAllParticipateEventOnline()).data["status"])
                             //print( (await PromotionQuery().getAllPromotionEventOnline()),
 
-                            print(await CardQuery().CreateAssignCardEventOnline(CardModel(uid:uidInput7.text),Admin(phone:uidInput.text,name:uidInput2.text,email:uidInput3.text,Ccode:uidInput4.text,country:uidInput5.text,password:uidInput6.text,uid: "no need", subscriber:"no need"))),
+                            if((await CardQuery().CreateAssignCardEventOnline(CardModel(uid:uidInput7.text),Admin(phone:uidInput.text,name:uidInput2.text,email:uidInput3.text,Ccode:uidInput4.text,country:uidInput5.text,password:uidInput6.text,uid: "no need", subscriber:"no need"))).data["status"])
+                              {
+                          Get.snackbar("Success", "Card Addedd",backgroundColor: Color(0xff9a1c55),
+                          colorText: Color(0xffffffff),
+                          titleText: const Text("Card User",style:TextStyle(color:Color(
+                              0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
+
+                          icon: Icon(Icons.access_alarm),
+                              duration: Duration(seconds: 4))
+                              }
+                            else{
+                      Get.snackbar("Error", "Card ,Card Can't be assigned",backgroundColor: Color(
+                          0xffdc2323),
+                      colorText: Color(0xffffffff),
+                      titleText: const Text("Card User",style:TextStyle(color:Color(
+                      0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
+
+                      icon: Icon(Icons.access_alarm),
+                      duration: Duration(seconds: 4))
+
+                      }
+
+
                           },
                           child: const Text("Add Card")
                       ),

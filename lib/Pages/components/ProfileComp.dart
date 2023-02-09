@@ -3,6 +3,8 @@ import 'package:dcard/Pages/BalancePage.dart';
 import 'package:dcard/Pages/BonusPage.dart';
 import 'package:dcard/Pages/EventsPage.dart';
 import 'package:dcard/Pages/Homepage.dart';
+import 'package:dcard/Query/ParticipatedQuery.dart';
+import 'package:dcard/models/Participated.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -26,9 +28,9 @@ class ProfileComp extends StatelessWidget {
         profile(),
         const SizedBox(height: 6.0,),
         divLine(),
-        detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["balance"]}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Balancefunc),
+        detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["balance"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Balancefunc),
         const SizedBox(height:5,),
-        detailsProfile("Bonus",Icons.redeem,"${(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["bonus"]}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Bonusfunc),
+        detailsProfile("Bonus",Icons.redeem,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["bonus"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Bonusfunc),
         const SizedBox(height:5,),
         detailsProfile("Event",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Eventfunc),//Last Time Purchase
         const SizedBox(height:5,),
@@ -210,7 +212,7 @@ Bonusfunc() async{
   Get.to(() =>BonusPage());
 }
 Eventfunc() async{
-  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+  (await Get.put(ParticipatedQuery()).getCountParticipateEventOnline(Participated(uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>EventsPage());
 }

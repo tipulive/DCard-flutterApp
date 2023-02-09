@@ -74,7 +74,7 @@ class TopupQuery extends GetxController{
 
       var params =  {
 
-        "uid":TopupData.uid,
+        "uid":TopupData.uid
 
         //"options": [1,2,3],
       };

@@ -361,12 +361,9 @@ class _HomepageState extends State<Homepage> {
 
                           )*/
 
-                            Get.snackbar("Success", "messag",backgroundColor: Color(0xff9a1c55),
-                                colorText: Color(0xffffffff),
-                                titleText: Text("test"),
 
-                                icon: Icon(Icons.access_alarm),
-                                duration: Duration(seconds: 5))
+                            print((await Get.put(TopupQuery()).GetBalance(Topups(uid:"vitakumari_1675957205")))),
+
 
                           },
 
@@ -376,8 +373,9 @@ class _HomepageState extends State<Homepage> {
 
                       TextButton(
                           onPressed: () async=>{
-                            await controller!.resumeCamera(),
+                           // await controller!.resumeCamera(),
                             // Wakelock.enable()
+                            print((Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?"yes":"none"),
                           },
                           child: const Text("resume")
                       ),

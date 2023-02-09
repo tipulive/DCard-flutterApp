@@ -1,3 +1,5 @@
+import 'package:dcard/Pages/ParticipateHistPage.dart';
+import 'package:dcard/models/Participated.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -23,7 +25,7 @@ class ActiveComp extends StatelessWidget {
         for(var i=0;i<(Get.put(ParticipatedQuery()).active)["resultData"]["result"].length;i++)
           ...[
 
-                 detailsProfile("EventID",Icons.account_balance_wallet,"${(Get.put(ParticipatedQuery()).active)["resultData"]["result"][i]["uid"]}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
+                 detailsProfile("EventID",Icons.account_balance_wallet,"${(Get.put(ParticipatedQuery()).active)["resultData"]["result"][i]["uid"]}",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
                  const SizedBox(height:5,),
 
           ]
@@ -165,8 +167,10 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
                   new IconButton(
                     icon: new Icon(iconright,color:
                     Colors.teal,size: 22,),
-                    onPressed: () {
-                      print(IconText);
+                    onPressed: ()  async{
+                      (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+
+                      Get.to(() =>ParticipateHistPage());
                     },
                   ),
 

@@ -46,6 +46,24 @@ Map<String,dynamic> reached={
     }
   ],
 }.obs;
+Map<String,dynamic> hist={
+  "name":"name",
+  "id":1,
+  "result":[
+    {
+      "id":10
+    }
+  ],
+}.obs;
+Map<String,dynamic> countData={
+  "name":"name",
+  "id":1,
+  "result":[
+    {
+      "id":10
+    }
+  ],
+}.obs;
 Map<String,dynamic> all={
   "name":"name",
   "id":1,
@@ -137,6 +155,40 @@ getAllParticipateEventOnline(Participated ParticipatedData) async{//all particip
     print(e);
   }
 }
+getCountParticipateEventOnline(Participated ParticipatedData) async{//reached
+  try {
+
+    var params =  {
+
+      "uidUser":ParticipatedData.uidUser   //"kebineericMuna_1668935593",
+
+      //"options": [1,2,3],
+    };
+
+    String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+    var url="${ConstantClassUtil.urlLink}/CountParticipateEvent";
+    var response = await Dio().get(url,
+      options: Options(headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+      }),
+      queryParameters: params,
+    );
+    if (response.statusCode == 200) {
+
+      updateCountParticipateState(response.data);
+      return response;
+
+
+    } else {
+      return false;
+      //print(false);
+    }
+  } catch (e) {
+    //return false;
+    print(e);
+  }
+}
 getActiveParticipateEventOnline(Participated ParticipatedData) async{//Active
   try {
 
@@ -193,6 +245,40 @@ getReachedParticipateEventOnline(Participated ParticipatedData) async{//reached
     if (response.statusCode == 200) {
 
       updateReachedParticipateState(response.data);
+      return response;
+
+
+    } else {
+      return false;
+      //print(false);
+    }
+  } catch (e) {
+    //return false;
+    print(e);
+  }
+}
+getParticipateHistEventOnline(Participated ParticipatedData) async{//reached
+  try {
+
+    var params =  {
+       "uid":ParticipatedData.uid,
+      "uidUser":ParticipatedData.uidUser   //"kebineericMuna_1668935593",
+
+      //"options": [1,2,3],
+    };
+
+    String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+    var url="${ConstantClassUtil.urlLink}/GetParticipatedHist";
+    var response = await Dio().get(url,
+      options: Options(headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+      }),
+      queryParameters: params,
+    );
+    if (response.statusCode == 200) {
+
+      updateParticipateHistState(response.data);
       return response;
 
 
@@ -288,6 +374,30 @@ updateActiveParticipateState(list){ //save user
 updateReachedParticipateState(list){ //save user
 
   reached={
+    "id":4,
+    "resultData":list
+  };
+  update();
+
+
+
+
+}
+updateParticipateHistState(list){ //save user
+
+  hist={
+    "id":4,
+    "resultData":list
+  };
+  update();
+
+
+
+
+}
+updateCountParticipateState(list){ //save user
+
+  countData={
     "id":4,
     "resultData":list
   };

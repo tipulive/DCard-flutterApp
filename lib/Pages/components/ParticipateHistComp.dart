@@ -1,18 +1,13 @@
-import 'package:dcard/Pages/ActiveEventPage.dart';
-import 'package:dcard/Pages/ReachEventPage.dart';
-import 'package:dcard/Pages/AllEventPage.dart';
-import 'package:dcard/Query/ParticipatedQuery.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Query/CardQuery.dart';
 import '../../Query/TopupQuery.dart';
-import '../../models/Topups.dart';
-import '../../models/Participated.dart';
+import '../../Query/ParticipatedQuery.dart';
 
-class EventsComp extends StatelessWidget {
-  const EventsComp({Key? key}) : super(key: key);
+class ParticipateHistComp extends StatelessWidget {
+  const ParticipateHistComp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +20,13 @@ class EventsComp extends StatelessWidget {
         profile(),
         const SizedBox(height: 6.0,),
         divLine(),
+        for(var i=0;i<(Get.put(ParticipatedQuery()).hist)["resultData"]["result"].length;i++)
+          ...[
 
-        detailsProfile("Active",Icons.calendar_month_outlined,"${(Get.put(ParticipatedQuery()).countData)["resultData"]["Active"]??'none'}",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Activefunct),//Last Time Purchase
-        const SizedBox(height:5,),
-        detailsProfile("Reach",Icons.calendar_month_outlined,"${(Get.put(ParticipatedQuery()).countData)["resultData"]["Reached"]??'none'}",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Reachedfunct),//Last Time Purchase
-        const SizedBox(height:5,),
-        detailsProfile("All Events",Icons.account_balance_wallet,"${(Get.put(ParticipatedQuery()).countData)["resultData"]["all"]??'none'}",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,AllEventfunct),
+            detailsProfile("${(Get.put(ParticipatedQuery()).hist)["resultData"]["result"][i]["uid"]}",Icons.account_balance_wallet,"${(Get.put(ParticipatedQuery()).hist)["resultData"]["result"][i]["inputData"]}",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
+            const SizedBox(height:5,),
 
-
-
+          ]
 
 
 
@@ -72,7 +65,7 @@ class EventsComp extends StatelessWidget {
                 color: Colors.black,),
             ),
             SizedBox(width: 1,),
-            Text("Events",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
+            // Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
           ],
         ),
       ],
@@ -115,7 +108,7 @@ Widget divLine(){
   );
 }
 
-Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconright,IconDescrRight,listBackgroundRight,Function myfunct){
+Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconright,IconDescrRight,listBackgroundRight){
 
 
   return ClipRRect(
@@ -172,8 +165,7 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
                     icon: new Icon(iconright,color:
                     Colors.teal,size: 22,),
                     onPressed: () {
-                      //print(IconText);
-myfunct();
+                      print(IconText);
                     },
                   ),
 
@@ -190,18 +182,4 @@ myfunct();
   );
 }
 
-Activefunct()async{
-  (await Get.put(ParticipatedQuery()).getActiveParticipateEventOnline(Participated(uid:'kebineericMuna_1668935593')));
 
-  Get.to(() =>ActiveEventPage());
-}
-Reachedfunct()async{
-  (await Get.put(ParticipatedQuery()).getReachedParticipateEventOnline(Participated(uid:'kebineericMuna_1668935593')));
-
-  Get.to(() =>ReachEventPage());
-}
-AllEventfunct()async{
-  (await Get.put(ParticipatedQuery()).getAllParticipateEventOnline(Participated(uid:'kebineericMuna_1668935593')));
-
-  Get.to(() =>AllEventPage());
-}

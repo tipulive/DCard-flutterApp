@@ -294,10 +294,10 @@ class PromotionQuery extends GetxController{
     List<Map> list=await db.rawQuery('select *from groceries');
     return list;
   }
-  /*void onReady() async{
+  void onReady() async{
     super.onReady();
     await getAllPromotionEventOnline();
-  }*/
+  }
   void onInit() async{
 
     await getAllPromotionEventOnline();
