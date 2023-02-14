@@ -50,12 +50,14 @@ class _HomepageState extends State<Homepage> {
   PromotionQuery promotionState=Get.put(PromotionQuery());
   AdminQuery adminStatedata=Get.put(AdminQuery());
 
+  TextEditingController PromoName=TextEditingController();
   TextEditingController uidInput=TextEditingController();//uid promo
   TextEditingController uidInput2=TextEditingController(text:'kebineericMuna_1668935593');//userid of user that will be available after qr scan
   TextEditingController uidInput3=TextEditingController();//input data to submit
   TextEditingController uidInput4=TextEditingController();
   TextEditingController uidInput5=TextEditingController();
   TextEditingController ClientName=TextEditingController();
+  String PromoMsg="none";
   bool showprofile=false;
   final GlobalKey qrkey = GlobalKey(debugLabel: 'QR');
   Barcode?result;
@@ -103,7 +105,7 @@ class _HomepageState extends State<Homepage> {
       body:Column(
         children: [
           Visibility(
-            visible:true,
+            visible:false,
             child: Expanded(
                 flex: 5,
                 child:Stack(
@@ -300,6 +302,8 @@ class _HomepageState extends State<Homepage> {
   }
   Widget MyTextWidget(uid,name){
     if((promotionState.obj["id"])==1) return Center(child: CircularProgressIndicator());
+    PromoName.text="${(promotionState.obj["resultData"]["result"][0]["promoName"])}";
+    PromoMsg=(promotionState.obj["resultData"]["result"][0]["promo_msg"]);
     uidInput.text="${(promotionState.obj["resultData"]["result"][0]["uid"])}";
     uidInput4.text="${(promotionState.obj["resultData"]["result"][0]["reach"])}";
     uidInput5.text="${(promotionState.obj["resultData"]["result"][0]["gain"])}";
@@ -315,16 +319,33 @@ class _HomepageState extends State<Homepage> {
               child: Column(
 
                 children: [
+                  Center(child: Text(name)),
+                  SizedBox(height:10.0,),
+                  TextField(
+                    controller:PromoName,
+                    enabled: false,
+                    //obscureText: true,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                      border: OutlineInputBorder(),
+                      labelText: 'Promotion Name',
+                      hintText: 'Promotion Name',
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+
+                    ),
+                  ),
                   Visibility(
-                    visible: false,
+                    visible:false,
                     child: TextField(
                       controller: uidInput,
                       //obscureText: true,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
                         border: OutlineInputBorder(),
-                        labelText: 'userid after qrcode search ',
-                        hintText: 'Enter your name',
+                        labelText: 'Uid of Promotion ',
+                        hintText: 'Uid of Promotion',
                         hintStyle: TextStyle(
                           color: Colors.grey,
                         ),
@@ -341,7 +362,7 @@ class _HomepageState extends State<Homepage> {
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
                         border: OutlineInputBorder(),
-                        labelText: 'UserInput',
+                        labelText: 'UserID',
                         hintText: 'Enter your name',
                         hintStyle: TextStyle(
                           color: Colors.grey,
@@ -350,11 +371,12 @@ class _HomepageState extends State<Homepage> {
                       ),
                     ),
                   ),
-                  SizedBox(height: 10.0,),
+                  //SizedBox(height: 10.0,),
                   Visibility(
-                    visible:true,
+                    visible:false,
                     child: TextField(
                       controller: ClientName,
+                      enabled: false,
                       //obscureText: true,
                       decoration: InputDecoration(
                         contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
@@ -377,7 +399,7 @@ class _HomepageState extends State<Homepage> {
                       contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
                       border: OutlineInputBorder(),
                       // labelText: 'Enter ${Promo_data["result"][0]["promo_msg"]}',${promotionState.obj["resultData"]["result"][0]["uid"]}
-                      labelText: '${(promotionState.obj["resultData"]["result"][0]["promo_msg"])}',
+                      labelText: '${PromoMsg}',
                       hintText: 'InputData',
                       hintStyle: TextStyle(
                         color: Colors.grey,
@@ -385,31 +407,41 @@ class _HomepageState extends State<Homepage> {
                       suffixIcon:  GestureDetector(
                         child: Icon(Icons.settings),
                         onTap: () {
-
+                          _groupVal=uidInput.text;
                           Get.dialog(
                             AlertDialog(
-                              title: const Text('Dialog'),
+                              title: Center(child: const Text('Choose Promotion')),
                               content:SingleChildScrollView(
                                 child: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   mainAxisAlignment:MainAxisAlignment.start,
                                   crossAxisAlignment:CrossAxisAlignment.start,
                                   children: <Widget> [
-                                    for(var i=0;i<items.length;i++)
+
+
+                                 if(((Get.put(PromotionQuery()).obj)["id"])==1)...[Center(child: CircularProgressIndicator())],
+
+                          for(var i=0;i<(Get.put(PromotionQuery()).obj)["resultData"]["result"].length;i++)
                                       RadioListTile(
-                                        title: Text("${i==null?"none":items[i]}"),
-                                        value: "${i==null?"none":items[i]}",
+                                        title: Text("${i==null?"none":(Get.put(PromotionQuery()).obj)["resultData"]["result"][i]["promoName"]}"),
+                                        value: "${i==null?"none":(Get.put(PromotionQuery()).obj)["resultData"]["result"][i]["uid"]}",
                                         //value:"${items[i]}",
 
                                         groupValue:_groupVal,
                                         onChanged: (value){
 
-                                          this._groupVal=items[i];
+                                          this._groupVal=value.toString();
                                           //value="male";
-                                          print(_groupVal);
+
+                                          uidInput.text=this._groupVal;
+                                          PromoName.text="${(Get.put(PromotionQuery()).obj)["resultData"]["result"][i]["promoName"]}";
+                                          PromoMsg="${(Get.put(PromotionQuery()).obj)["resultData"]["result"][i]["promo_msg"]}";
+                                          uidInput4.text="${(Get.put(PromotionQuery()).obj)["resultData"]["result"][i]["reach"]}";
+                                          uidInput5.text="${(Get.put(PromotionQuery()).obj)["resultData"]["result"][i]["gain"]}";
+
                                           //print(_groupVal);
                                           //Get.back(result: value);
-                                          // Get.back();
+                                          Get.back();
                                         },
                                       ),
 
@@ -433,7 +465,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                   SizedBox(height: 10.0,),
                   Visibility(
-                    visible: false,
+                    visible:false,
                     child: TextField(
                       controller: uidInput4,
                       //obscureText: true,
@@ -451,7 +483,7 @@ class _HomepageState extends State<Homepage> {
                   ),
                   SizedBox(height: 10.0,),
                   Visibility(
-                    visible: false,
+                    visible:false,
                     child: TextField(
                       controller: uidInput5,
                       //obscureText: true,
