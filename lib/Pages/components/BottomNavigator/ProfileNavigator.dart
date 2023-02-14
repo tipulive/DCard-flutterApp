@@ -3,11 +3,12 @@ import 'package:get/get.dart';
 
 class ProfileNavigator extends StatelessWidget {
   @override
+  final myindex = Get.arguments??0;
   Widget build(BuildContext context) {
     return BottomNavigationBar(
       //backgroundColor: Colors.red,
       //backgroundColor: Color(0xd0ffffff),
-      currentIndex: 0,
+      currentIndex:myindex,
       items: [
         BottomNavigationBarItem(
           icon: Icon(Icons.add),

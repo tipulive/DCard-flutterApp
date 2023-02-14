@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'dart:convert';
 import 'dart:io';
 
@@ -30,6 +31,8 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:dcard/Query/PromotionQuery.dart';
 import '../Query/ParticipatedQuery.dart';
 import 'package:dcard/Dateconfig/DateClassUtil.dart';
+import '../Utilconfig/ConstantClassUtil.dart';
+import 'Card/AddCardPage.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -44,13 +47,15 @@ class Homepage extends StatefulWidget {
 class _HomepageState extends State<Homepage> {
 
 
-
+  PromotionQuery promotionState=Get.put(PromotionQuery());
+  AdminQuery adminStatedata=Get.put(AdminQuery());
 
   TextEditingController uidInput=TextEditingController();//uid promo
   TextEditingController uidInput2=TextEditingController(text:'kebineericMuna_1668935593');//userid of user that will be available after qr scan
   TextEditingController uidInput3=TextEditingController();//input data to submit
   TextEditingController uidInput4=TextEditingController();
   TextEditingController uidInput5=TextEditingController();
+  TextEditingController ClientName=TextEditingController();
   bool showprofile=false;
   final GlobalKey qrkey = GlobalKey(debugLabel: 'QR');
   Barcode?result;
@@ -85,8 +90,7 @@ class _HomepageState extends State<Homepage> {
     @override
     //hidekeyboard();
     //UserQuery userQueryData = Get.put(UserQuery());
-    PromotionQuery promotionState=Get.put(PromotionQuery());
-    AdminQuery adminStatedata=Get.put(AdminQuery());
+
 
 
     // ParticipatedQuery participatedState=Get.put(ParticipatedQuery());
@@ -135,255 +139,72 @@ class _HomepageState extends State<Homepage> {
 
           ),
 
-          Expanded(
-            flex: 2,
-            child: SingleChildScrollView(
+          Visibility(
+            visible: true,
+            child: Expanded(
+              flex: 2,
+              child: SingleChildScrollView(
 
-              child: Center(
-                  child:Column(
-                    children: [
-                      (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
-
-
-
-                      GetBuilder<PromotionQuery>(
-                        // init:PromotionQuery(),
-                          builder: (promotionState){
-
-                            if((promotionState.obj["id"])==1) return Center(child: CircularProgressIndicator());
-                            uidInput.text="${(promotionState.obj["resultData"]["result"][0]["uid"])}";
-                            uidInput4.text="${(promotionState.obj["resultData"]["result"][0]["reach"])}";
-                            uidInput5.text="${(promotionState.obj["resultData"]["result"][0]["gain"])}";
-                            return Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Column(
-
-                                children: [
-                                  Visibility(
-                                      visible: true,
-                                      child: Column(
-
-                                        children: [
-                                          TextField(
-                                            controller: uidInput,
-                                            //obscureText: true,
-                                            decoration: InputDecoration(
-                                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                              border: OutlineInputBorder(),
-                                              labelText: 'userid after qrcode search ',
-                                              hintText: 'Enter your name',
-                                              hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                              ),
-
-                                            ),
-                                          ),
-                                          SizedBox(height: 10.0,),
-                                          TextField(
-                                            controller: uidInput2,
-                                            //obscureText: true,
-                                            decoration: InputDecoration(
-                                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                              border: OutlineInputBorder(),
-                                              labelText: 'UserInput',
-                                              hintText: 'Enter your name',
-                                              hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                              ),
-
-                                            ),
-                                          ),
-                                          SizedBox(height: 10.0,),
-                                          TextField(
-                                            controller: uidInput3,
-
-                                            //obscureText: true,
-                                            decoration: InputDecoration(
-                                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                              border: OutlineInputBorder(),
-                                              // labelText: 'Enter ${Promo_data["result"][0]["promo_msg"]}',${promotionState.obj["resultData"]["result"][0]["uid"]}
-                                              labelText: '${(promotionState.obj["resultData"]["result"][0]["promo_msg"])}',
-                                              hintText: 'InputData',
-                                              hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                              ),
-                                              suffixIcon:  GestureDetector(
-                                                child: Icon(Icons.settings),
-                                                onTap: () {
-
-                                                  Get.dialog(
-                                                    AlertDialog(
-                                                      title: const Text('Dialog'),
-                                                      content:SingleChildScrollView(
-                                                        child: Column(
-                                                          mainAxisSize: MainAxisSize.min,
-                                                          mainAxisAlignment:MainAxisAlignment.start,
-                                                          crossAxisAlignment:CrossAxisAlignment.start,
-                                                          children: <Widget> [
-                                                            for(var i=0;i<items.length;i++)
-                                                              RadioListTile(
-                                                                title: Text("${i==null?"none":items[i]}"),
-                                                                value: "${i==null?"none":items[i]}",
-                                                                //value:"${items[i]}",
-
-                                                                groupValue:_groupVal,
-                                                                onChanged: (value){
-
-                                                                  this._groupVal=items[i];
-                                                                  //value="male";
-                                                                  print(_groupVal);
-                                                                  //print(_groupVal);
-                                                                  //Get.back(result: value);
-                                                                  // Get.back();
-                                                                },
-                                                              ),
-
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      actions: [
-                                                        TextButton(
-                                                          child: const Text("Close"),
-                                                          onPressed: () => Get.back(),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  );
+                child: Center(
+                    child:Column(
+                      children: [
+                        (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
 
 
-                                                  // Perform some action when the icon is pressed
-                                                },
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(height: 10.0,),
-                                          TextField(
-                                            controller: uidInput4,
-                                            //obscureText: true,
-                                            decoration: InputDecoration(
-                                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                              border: OutlineInputBorder(),
-                                              labelText: 'reach',
-                                              hintText: 'reache',
-                                              hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                              ),
 
-                                            ),
-                                          ),
-                                          SizedBox(height: 10.0,),
-                                          TextField(
-                                            controller: uidInput5,
-                                            //obscureText: true,
-                                            decoration: InputDecoration(
-                                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                              border: OutlineInputBorder(),
-                                              labelText: 'gain',
-                                              hintText: 'gain',
-                                              hintStyle: TextStyle(
-                                                color: Colors.grey,
-                                              ),
+                       /* GetBuilder<PromotionQuery>(
+                          // init:PromotionQuery(),
+                            builder: (promotionState){
 
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                  ),
-                                ],
-                              ),
-                            );
+                              if((promotionState.obj["id"])==1) return Center(child: CircularProgressIndicator());
+                              uidInput.text="${(promotionState.obj["resultData"]["result"][0]["uid"])}";
+                              uidInput4.text="${(promotionState.obj["resultData"]["result"][0]["reach"])}";
+                              uidInput5.text="${(promotionState.obj["resultData"]["result"][0]["gain"])}";
+                              return MyTextWidget();
 
 
-                          }),
-
-                      TextButton(
-                          onPressed: ()async =>{
+                            }),*/
 
 
-                            await Get.put(ParticipatedQuery()).ParticipateEventOnline(Participated(uid:uidInput.text,uidUser:uidInput2.text,inputData:uidInput3.text),Promotions(reach:uidInput4.text,gain:uidInput5.text)),
-                            //print((Get.put(ParticipatedQuery()).obj)),
-                            if((Get.put(ParticipatedQuery()).obj)["resultData"]["reach"]!=null)
-                              {
-                                CoolAlert.show(
-                                  context: context,
-                                  backgroundColor:Color(0xff940e4b),
-                                  type: CoolAlertType.success,
-                                  title:"Congratulation !!!",
-                                  text: "You Reach ${(Get.put(ParticipatedQuery()).obj)["resultData"]["reach"]}\$ and You win ${(Get.put(ParticipatedQuery()).obj)["resultData"]["gain"]} !",
+                        TextButton(
+                            onPressed: () async=>{
+                              //await controller!.toggleFlash(),
+                              // Wakelock.enable()
 
-                                ),
+                              /*CoolAlert.show(
+                            context: context,
+                              backgroundColor:Color(0xff940e4b),
+                            type: CoolAlertType.success,
+                            title:"Success !!!",
+                            text: "Your transaction was successful!",
+
+                            )*/
+
+                              //ScanPopup(),
+
+                              ScanPopup("ui","name"),
 
 
-                              }else{
-                              if((Get.put(ParticipatedQuery()).obj)["resultData"]["status"])
-                                {
-                                  Get.snackbar("Success", "Data Submitted",backgroundColor: Color(0xff9a1c55),
-                                      colorText: Color(0xffffffff),
-                                      titleText: Text("Participate"),
-
-                                      icon: Icon(Icons.access_alarm),
-                                      duration: Duration(seconds: 5)),
-
-                                }
-                              //print((Get.put(ParticipatedQuery()).obj)),
                             },
 
-                            setState((){
-                              showprofile=false;
-                            }),
-                            //print(promotionState)
-                            // print(promotionState.obj["resultData"]["result"][0]["uid"]),
-                            //print((await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]),
-                            //uidInput2.text='${(await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]}',
-                            //CardQuery CardData=Get.put(CardQuery());
-                            //print((await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))),
-                            //print((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]),
-
-                            //await loadData(true),
-                            //(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"],
-                            //print((Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]),
+                            child: const Text("Enable")
+                        ),
 
 
-                          },
-                          child: const Text("Participate")
-                      ),
-                      TextButton(
-                          onPressed: () async=>{
-                            //await controller!.toggleFlash(),
-                            // Wakelock.enable()
-
-                            /*CoolAlert.show(
-                          context: context,
-                            backgroundColor:Color(0xff940e4b),
-                          type: CoolAlertType.success,
-                          title:"Success !!!",
-                          text: "Your transaction was successful!",
-
-                          )*/
+                        TextButton(
+                            onPressed: () async=>{
+                             // await controller!.resumeCamera(),
+                              // Wakelock.enable()
+                              print((Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?"yes":"none"),
+                            },
+                            child: const Text("resume")
+                        ),
 
 
-                            print((await Get.put(TopupQuery()).GetBalance(Topups(uid:"vitakumari_1675957205")))),
+                      ],
+                    )
 
-
-                          },
-
-                          child: const Text("Enable")
-                      ),
-
-
-                      TextButton(
-                          onPressed: () async=>{
-                           // await controller!.resumeCamera(),
-                            // Wakelock.enable()
-                            print((Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?"yes":"none"),
-                          },
-                          child: const Text("resume")
-                      ),
-
-
-                    ],
-                  )
-
+                ),
               ),
             ),
           ),
@@ -413,40 +234,362 @@ class _HomepageState extends State<Homepage> {
     );
 
   }
+
+  ScanPopup(uid,name){
+
+    Get.bottomSheet(
+        Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              height: 300,
+
+              child: Column(
+                children: [
+                  Container(
+
+                    height: 300,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(16),
+                        topRight: Radius.circular(16),
+                      ),
+                    ),
+                    child: ListView(
+                      children: [
+
+                        MyTextWidget(uid,name)
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              // height: 60,
+              //color: Colors.white,
+              child: HomeNavigator(),
+            ),
+            Positioned(
+              right: 15.0,
+              bottom:70,
+              child: FloatingActionButton(
+                onPressed:()async =>{
+
+                  (await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))),
+
+
+                  Get.to(() => ProfilePage())
+                  //Get.to(() =>AddCardPage())
+                },
+                tooltip: 'Increment',
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage("images/profile.jpg",
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+    ).whenComplete(() {
+      controller!.resumeCamera();
+      //do whatever you want after closing the bottom sheet
+    });
+  }
+  Widget MyTextWidget(uid,name){
+    if((promotionState.obj["id"])==1) return Center(child: CircularProgressIndicator());
+    uidInput.text="${(promotionState.obj["resultData"]["result"][0]["uid"])}";
+    uidInput4.text="${(promotionState.obj["resultData"]["result"][0]["reach"])}";
+    uidInput5.text="${(promotionState.obj["resultData"]["result"][0]["gain"])}";
+    uidInput2.text="${uid}";
+    ClientName.text="${name}";
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+
+        children: [
+          Visibility(
+              visible: true,
+              child: Column(
+
+                children: [
+                  Visibility(
+                    visible: false,
+                    child: TextField(
+                      controller: uidInput,
+                      //obscureText: true,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                        border: OutlineInputBorder(),
+                        labelText: 'userid after qrcode search ',
+                        hintText: 'Enter your name',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.0,),
+                  Visibility(
+                    visible:false,
+                    child: TextField(
+                      controller: uidInput2,
+                      //obscureText: true,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                        border: OutlineInputBorder(),
+                        labelText: 'UserInput',
+                        hintText: 'Enter your name',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.0,),
+                  Visibility(
+                    visible:true,
+                    child: TextField(
+                      controller: ClientName,
+                      //obscureText: true,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                        border: OutlineInputBorder(),
+                        labelText: 'Name',
+                        hintText: 'Enter your name',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.0,),
+                  TextField(
+                    controller: uidInput3,
+
+                    //obscureText: true,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                      border: OutlineInputBorder(),
+                      // labelText: 'Enter ${Promo_data["result"][0]["promo_msg"]}',${promotionState.obj["resultData"]["result"][0]["uid"]}
+                      labelText: '${(promotionState.obj["resultData"]["result"][0]["promo_msg"])}',
+                      hintText: 'InputData',
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
+                      suffixIcon:  GestureDetector(
+                        child: Icon(Icons.settings),
+                        onTap: () {
+
+                          Get.dialog(
+                            AlertDialog(
+                              title: const Text('Dialog'),
+                              content:SingleChildScrollView(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  mainAxisAlignment:MainAxisAlignment.start,
+                                  crossAxisAlignment:CrossAxisAlignment.start,
+                                  children: <Widget> [
+                                    for(var i=0;i<items.length;i++)
+                                      RadioListTile(
+                                        title: Text("${i==null?"none":items[i]}"),
+                                        value: "${i==null?"none":items[i]}",
+                                        //value:"${items[i]}",
+
+                                        groupValue:_groupVal,
+                                        onChanged: (value){
+
+                                          this._groupVal=items[i];
+                                          //value="male";
+                                          print(_groupVal);
+                                          //print(_groupVal);
+                                          //Get.back(result: value);
+                                          // Get.back();
+                                        },
+                                      ),
+
+                                  ],
+                                ),
+                              ),
+                              actions: [
+                                TextButton(
+                                  child: const Text("Close"),
+                                  onPressed: () => Get.back(),
+                                ),
+                              ],
+                            ),
+                          );
+
+
+                          // Perform some action when the icon is pressed
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.0,),
+                  Visibility(
+                    visible: false,
+                    child: TextField(
+                      controller: uidInput4,
+                      //obscureText: true,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                        border: OutlineInputBorder(),
+                        labelText: 'reach',
+                        hintText: 'reache',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10.0,),
+                  Visibility(
+                    visible: false,
+                    child: TextField(
+                      controller: uidInput5,
+                      //obscureText: true,
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                        border: OutlineInputBorder(),
+                        labelText: 'gain',
+                        hintText: 'gain',
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+
+                      ),
+                    ),
+                  ),
+
+                  FloatingActionButton.extended(
+                    label: Text('Participate'), // <-- Text
+                    backgroundColor: Colors.black,
+                    icon: Icon( // <-- Icon
+                      Icons.thumb_up,
+                      size: 24.0,
+                    ),
+                    onPressed: ()async =>{
+
+
+
+
+                      await Get.put(ParticipatedQuery()).ParticipateEventOnline(Participated(uid:uidInput.text,uidUser:uidInput2.text,inputData:uidInput3.text),Promotions(reach:uidInput4.text,gain:uidInput5.text)),
+                      //print((Get.put(ParticipatedQuery()).obj)),
+                      if((Get.put(ParticipatedQuery()).obj)["resultData"]["reach"]!=null)
+                        {
+                          uidInput3.text="",
+                          Get.close(1),
+                          controller!.resumeCamera(),
+                          CoolAlert.show(
+                            context: context,
+                            backgroundColor:Color(0xff940e4b),
+                            type: CoolAlertType.success,
+                            title:"Congratulation !!!",
+                            text: "You Reach ${(Get.put(ParticipatedQuery()).obj)["resultData"]["reach"]}\$ and You win ${(Get.put(ParticipatedQuery()).obj)["resultData"]["gain"]} !",
+
+                          ),
+
+
+
+                          //Get.back(),
+
+                        }else{
+                        if((Get.put(ParticipatedQuery()).obj)["resultData"]["status"])
+                          {
+                            uidInput3.text="",
+                            Get.close(1),
+                            controller!.resumeCamera(),
+
+                            Get.snackbar("Success", "Data Submitted",backgroundColor: Color(0xff9a1c55),
+                                colorText: Color(0xffffffff),
+                                titleText: Text("Participate"),
+
+                                icon: Icon(Icons.access_alarm),
+                                duration: Duration(seconds: 5)),
+
+
+
+
+                          },
+
+
+                        //print((Get.put(ParticipatedQuery()).obj)),
+                      },
+                     //
+                     //
+
+
+                      //print(promotionState)
+                      // print(promotionState.obj["resultData"]["result"][0]["uid"]),
+                      //print((await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]),
+                      //uidInput2.text='${(await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]}',
+                      //CardQuery CardData=Get.put(CardQuery());
+                      //print((await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))),
+                      //print((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]),
+
+                      //await loadData(true),
+                      //(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"],
+                      //print((Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]),
+
+
+                    },
+                  ),
+                ],
+              )
+          ),
+        ],
+      ),
+    );
+  }
   void _onQRViewCreated(QRViewController controller)
   {
-
     this.controller=controller;
-
-    controller.scannedDataStream.listen((scanData) {
-      setState(() async{
-        // (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
-        //loadData((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["status"]);
-
-        (result!=null)?"scan":loadDatafalse();
-
+    controller.scannedDataStream.listen((scanData) async{
+      setState((){
         result=scanData;
-        //var check=(result!=null)?"${result!.code}":"0";
-        if(result==null){
-          // uidInput3.text='${showprofile}';
-          //showprofile=false;
-          loadData(false);
-        }
-        else{
-          //showprofile=true;
-          //uidInput2.text='${(await CardQuery().GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}';
-          //showprofile=true;
-
-          uidInput2.text='${(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}';
-          await loadData(true);
-
-
-
-          // uidInput3.text='${showprofile}';
-        }
-
       });
+      await scanMethod();
     });
+  }
+ scanMethod() async{
+
+       // uidInput2.text="${result!.code}";
+        //uidInput2.text="${(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}";
+if(result!=null)
+  {
+    try {
+    controller!.pauseCamera();
+    Map<String,dynamic> ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}'))).data;
+    if(ResultData["status"])
+      {
+        //print(ResultData["UserDetail"]["uid"]);
+        ScanPopup(ResultData["UserDetail"]["uid"],ResultData["UserDetail"]["name"]);
+        (await Get.put(CardQuery()).updateCardState(ResultData));
+      }
+    else{
+      uidInput2.text="${ResultData["status"]}";
+    }
+
+    } catch (e) {
+      //return false;
+      //print(e);
+    }
+
+  }
+else{
+
+  uidInput2.text="test";
+}
+
+
+
   }
   @override
   void dispose(){

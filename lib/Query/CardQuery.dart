@@ -53,8 +53,8 @@ class CardQuery extends GetxController{
         // return (response.data).length;
         //updateEventState(response.data);
         //return "hello";
-        updateCardState(response.data);
-        return response.data;
+       // updateCardState(response.data);
+        return response;
 
 
       } else {

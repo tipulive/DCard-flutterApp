@@ -12,9 +12,10 @@ class HomeNavigator extends StatelessWidget {
 
 
  Widget build(BuildContext context) {
+  final myindex = Get.arguments??0;
   return BottomNavigationBar(
    backgroundColor: Colors.yellow,
-   currentIndex: 0,
+   currentIndex:myindex,
    items: [
     BottomNavigationBarItem(
         icon: Icon(Icons.access_alarm),
@@ -43,7 +44,7 @@ class HomeNavigator extends StatelessWidget {
     if(index==1)
     {
 
-     Get.to(() =>AddCardPage());
+     Get.to(() =>AddCardPage(),arguments:1);
     }
    },
   );

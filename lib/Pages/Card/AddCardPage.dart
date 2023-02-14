@@ -48,10 +48,10 @@ class _AddCardPageState extends State<AddCardPage> {
   TextEditingController uidInput=TextEditingController();
   TextEditingController uidInput2=TextEditingController(text:"kebine eric Muna");
   TextEditingController uidInput3=TextEditingController(text:"on1@gmail.com");
-  TextEditingController uidInput4=TextEditingController();
-  TextEditingController uidInput5=TextEditingController();
+  TextEditingController uidInput4=TextEditingController(text:"243");
+  TextEditingController uidInput5=TextEditingController(text:"Congo,Democratic Republic of the Congo");
   TextEditingController uidInput6=TextEditingController(text:"1");
-  TextEditingController uidInput7=TextEditingController(text:"TEALTD_7hEnj_1672352175");
+  TextEditingController uidInput7=TextEditingController();
   final GlobalKey qrkey = GlobalKey(debugLabel: 'QR2');
   Barcode?result;
   QRViewController?controller;
@@ -91,7 +91,7 @@ class _AddCardPageState extends State<AddCardPage> {
           Visibility(
             visible:true,
             child: Expanded(
-                flex: 5,
+                flex: 6,
                 child:Stack(
                   alignment:Alignment.bottomCenter,
                   children: [
@@ -124,200 +124,66 @@ class _AddCardPageState extends State<AddCardPage> {
             ),
 
           ),
-
-          Expanded(
-            flex: 2,
-            child: SingleChildScrollView(
-
+          Visibility(
+            visible: false,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
               child: Center(
-                  child:Column(
-                    children: [
-                      SizedBox(height: 8,),
-                     // (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
-                      (result!=null)?Text("New Code"): const Text("Scan Code"),
-
-                      Column(
-                        children: [
-                          SizedBox(height: 8,),
-                          IntlPhoneField(
-                            initialCountryCode: 'CD',
-                            controller: uidInput,
-                            decoration: InputDecoration(
-                              labelText: 'Phone Number',
-                              border: OutlineInputBorder(
-                                borderSide: BorderSide(),
-                              ),
-                            ),
-                            onChanged: (phone) {
-
-                              //uidInput2.text=phone.countryCode;
-                              //uidInput2.text=phone.number;
-                             // uidInput2.text=phone.countryISOCode;
-                              //print(phone.completeNumber);
-                            },
-                            onCountryChanged: (country) {
-                              uidInput4.text=country.dialCode;
-                              uidInput5.text=country.name;
-                             // print('Country changed to: ' + country.name);
-                             // print('Country changed to: ' + country.dialCode);
-                            },
-                          ),
-                          TextField(
-                            controller: uidInput2,
+                child: Column(
+                  children: [
+                    TextButton(
+                        onPressed: () async=>{
+                          //await controller!.toggleFlash(),
+                          // Wakelock.enable()
+                          // await controller!.pauseCamera(),
+                          //Get.to(() => Homepage()),
+                          Get.dialog(
 
 
-
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                              border: OutlineInputBorder(),
-                              labelText: 'Name',
-
-                              hintText: 'Enter your name',
-                              hintStyle: TextStyle(
-                                color: Colors.grey,
-                              ),
-
-                            ),
-                          ),
-                          TextField(
-                            controller: uidInput3,
-
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                              border: OutlineInputBorder(),
-                              labelText: 'Email',
-                              hintText: 'Enter your Email',
-                              hintStyle: TextStyle(
-                                color: Colors.grey,
-                              ),
-
-                            ),
-                          ),
-                          Visibility(
-                            visible: true,
-                            child: TextField(
-                              controller: uidInput4,
-                              //obscureText: true,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                border: OutlineInputBorder(),
-                                labelText: 'country Code',
-                                hintText: 'country Code',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
+                            AlertDialog(
+                              title: Center(child: Text('Message')),
+                              content: Container(
+                                height: 50,
+                                child: Column(
+                                  children: [
+                                    Center(child: Icon(Icons.thumb_up_alt_outlined, color: Colors.green)),
+                                    SizedBox(width: 10),
+                                    Expanded(
+                                      child: Text('This is an alert message.'),
+                                    ),
+                                  ],
                                 ),
-
                               ),
-                            ),
-                          ),
-                          Visibility(
-                            visible: true,
-                            child: TextField(
-                              controller: uidInput5,
-                              //obscureText: true,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                border: OutlineInputBorder(),
-                                labelText: 'Country',
-                                hintText: 'Enter Country',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Get.back(),
+                                  child: Text('Close'),
                                 ),
-
-                              ),
+                              ],
                             ),
-                          ),
-                          TextField(
-                            controller: uidInput6,
-                            //obscureText: true,
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                              border: OutlineInputBorder(),
-                              labelText: 'Password',
-                              hintText: 'Enter your Password',
-                              hintStyle: TextStyle(
-                                color: Colors.grey,
-                              ),
-
-                            ),
-                          ),
-                          Visibility(
-                            visible: true,
-                            child: TextField(
-                              controller: uidInput7,
-                              //obscureText: true,
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                border: OutlineInputBorder(),
-                                labelText: 'CardUId',
-                                hintText: 'Enter your name',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                ),
-
-                              ),
-                            ),
-                          ),
-
-                        ],
-                      ),
-                      TextButton(
-                          onPressed: ()async =>{
-                           //print(uidInput2.text),
-
-                            // print( (await ParticipatedQuery().getAllParticipateEventOnline()).data["status"])
-                            //print( (await PromotionQuery().getAllPromotionEventOnline()),
-
-                            if((await CardQuery().CreateAssignCardEventOnline(CardModel(uid:uidInput7.text),Admin(phone:uidInput.text,name:uidInput2.text,email:uidInput3.text,Ccode:uidInput4.text,country:uidInput5.text,password:uidInput6.text,uid: "no need", subscriber:"no need"))).data["status"])
-                              {
-                          Get.snackbar("Success", "Card Addedd",backgroundColor: Color(0xff9a1c55),
-                          colorText: Color(0xffffffff),
-                          titleText: const Text("Card User",style:TextStyle(color:Color(
-                              0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-
-                          icon: Icon(Icons.access_alarm),
-                              duration: Duration(seconds: 4))
-                              }
-                            else{
-                      Get.snackbar("Error", "Card ,Card Can't be assigned",backgroundColor: Color(
-                          0xffdc2323),
-                      colorText: Color(0xffffffff),
-                      titleText: const Text("Card User",style:TextStyle(color:Color(
-                      0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-
-                      icon: Icon(Icons.access_alarm),
-                      duration: Duration(seconds: 4))
-
-                      }
+                          )
 
 
-                          },
-                          child: const Text("Add Card")
-                      ),
 
-                      TextButton(
-                          onPressed: () async=>{
-                            //await controller!.toggleFlash(),
-                            // Wakelock.enable()
-                            await controller!.pauseCamera(),
-                          Get.to(() => Homepage()),
+                        },
+
+                        child: const Text("alert")
+                    ),
+                    TextButton(
+                        onPressed: () async=>{
+                          //await controller!.toggleFlash(),
+                          // Wakelock.enable()
+                          // await controller!.pauseCamera(),
+                          //Get.to(() => Homepage()),
+                          ScanPopup("none"),
 
 
-                          },
+                        },
 
-                          child: const Text("Enable")
-                      ),
-                      TextButton(
-                          onPressed: () async=>{
-                            await controller!.resumeCamera(),
-                            // Wakelock.enable()
-                          },
-                          child: const Text("resume")
-                      ),
-
-                    ],
-                  )
-
+                        child: const Text("Enable")
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -334,7 +200,9 @@ class _AddCardPageState extends State<AddCardPage> {
     controller.scannedDataStream.listen((scanData) {
       setState((){
         result=scanData;
-        uidInput7.text=(result!=null)?"${result!.code}":"0";
+
+        String CheckCode=(result!=null)?"${result!.code}":"0";
+        ScanPopup(CheckCode);
       });
     });
   }
@@ -382,7 +250,283 @@ class _AddCardPageState extends State<AddCardPage> {
     ),
   );
 
+  ScanPopup(checkcode){
+controller!.pauseCamera();
+uidInput7.text=checkcode;
+    Get.bottomSheet(
+        Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            Container(
+              height: 400,
 
+              child: Column(
+                children: [
+                  Container(
+
+                    height: 400,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    child: ListView(
+                      children: [
+
+                        MyTextWidget()
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              // height: 60,
+              //color: Colors.white,
+              child: HomeNavigator(),
+            ),
+            Positioned(
+              right: 15.0,
+              bottom:70,
+              child: FloatingActionButton(
+                onPressed:()async =>{
+
+
+                  Get.to(() => ProfilePage())
+                  //Get.to(() =>AddCardPage())
+                },
+                tooltip: 'Increment',
+                child: CircleAvatar(
+                  radius: 50,
+                  backgroundImage: AssetImage("images/profile.jpg",
+                  ),
+                ),
+              ),
+            ),
+          ],
+        )
+    ).whenComplete(() {
+      controller!.resumeCamera();
+      //do whatever you want after closing the bottom sheet
+    });
+  }
+  Widget MyTextWidget(){
+
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+
+        children: [
+          SingleChildScrollView(
+
+            child: Center(
+                child:Column(
+                  children: [
+                    SizedBox(height: 8,),
+                    // (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
+                    (result!=null)?Text("New Code"): const Text("Scan Code"),
+
+                    Column(
+                      children: [
+                        SizedBox(height: 8,),
+                        IntlPhoneField(
+                          initialCountryCode: 'CD',
+                          controller: uidInput,
+                          decoration: InputDecoration(
+                            labelText: 'Phone Number',
+                            border: OutlineInputBorder(
+                              borderSide: BorderSide(),
+                            ),
+                          ),
+                          onChanged: (phone) {
+
+                            //uidInput2.text=phone.countryCode;
+                            //uidInput2.text=phone.number;
+                            // uidInput2.text=phone.countryISOCode;
+                            //print(phone.completeNumber);
+
+
+
+                          },
+
+                          onCountryChanged: (country) {
+                            uidInput4.text=country.dialCode;
+                            uidInput5.text=country.name;
+                            // print('Country changed to: ' + country.name);
+                            // print('Country changed to: ' + country.dialCode);
+                          },
+                        ),
+                        TextField(
+                          controller: uidInput2,
+
+
+
+                          decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                            border: OutlineInputBorder(),
+                            labelText: 'Name',
+
+                            hintText: 'Enter your name',
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                            ),
+
+                          ),
+                        ),
+                        SizedBox(height: 10.0,),
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller: uidInput3,
+
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Email',
+                              hintText: 'Enter your Email',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller: uidInput4,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'country Code',
+                              hintText: 'country Code',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller: uidInput5,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Country',
+                              hintText: 'Enter Country',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
+                          ),
+                        ),
+
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller: uidInput6,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Password',
+                              hintText: 'Enter your Password',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 10.0,),
+                        Visibility(
+                          visible: true,
+                          child: TextField(
+                            controller: uidInput7,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'CardUId',
+                              hintText: 'Enter your name',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
+                          ),
+                        ),
+
+                      ],
+                    ),
+                    SizedBox(height: 10.0,),
+                    FloatingActionButton.extended(
+                        label: Text('Add Card'), // <-- Text
+                        backgroundColor: Color(0xff940e4b),
+                        icon: Icon( // <-- Icon
+                          Icons.add_card,
+                          size: 24.0,
+                        ),
+                        onPressed: ()async =>{
+                          //print(uidInput2.text),
+
+                          // print( (await ParticipatedQuery().getAllParticipateEventOnline()).data["status"])
+                          //print( (await PromotionQuery().getAllPromotionEventOnline()),
+
+                          if((await CardQuery().CreateAssignCardEventOnline(CardModel(uid:uidInput7.text),Admin(phone:uidInput.text,name:uidInput2.text,email:uidInput3.text,Ccode:uidInput4.text,country:uidInput5.text,password:uidInput6.text,uid: "no need", subscriber:"no need"))).data["status"])
+                            {
+                              uidInput7.text="",
+                              Get.close(1),
+                              controller!.resumeCamera(),
+                              Get.snackbar("Success", "Card Addedd",backgroundColor: Color(0xff9a1c55),
+                                  colorText: Color(0xffffffff),
+                                  titleText: const Text("Card User",style:TextStyle(color:Color(
+                                      0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
+
+                                  icon: Icon(Icons.access_alarm),
+                                  duration: Duration(seconds: 4))
+                            }
+                          else{
+                            uidInput7.text="",
+                            Get.close(1),
+                            controller!.resumeCamera(),
+                            Get.snackbar("Error", "Card ,Card Can't be assigned",backgroundColor: Color(
+                                0xffdc2323),
+                                colorText: Color(0xffffffff),
+                                titleText: const Text("Card User",style:TextStyle(color:Color(
+                                    0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
+
+                                icon: Icon(Icons.access_alarm),
+                                duration: Duration(seconds: 4))
+
+                          }
+
+
+                        },
+
+                    ),
+
+
+
+                  ],
+                )
+
+            ),
+          ),
+
+        ],
+      ),
+    );
+  }
   loadData() async{
     //await PromotionQuery().getAllPromotionEventOnline();
     // Perform data loading here

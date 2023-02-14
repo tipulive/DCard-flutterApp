@@ -105,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     //final UserQuery getdata = Get.find();
-    int test=2;
+    int test=3;
     //yourFunction();
     //ConnectivityResult connectivity;
     return checkAuth();
@@ -125,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     else{
       //print((adminStatedata.obj)["result"]);
-      return Login();
+     // return Login();
       return Homepage();
     }
 

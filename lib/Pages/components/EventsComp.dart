@@ -191,17 +191,17 @@ myfunct();
 }
 
 Activefunct()async{
-  (await Get.put(ParticipatedQuery()).getActiveParticipateEventOnline(Participated(uid:'kebineericMuna_1668935593')));
+  (await Get.put(ParticipatedQuery()).getActiveParticipateEventOnline(Participated(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>ActiveEventPage());
 }
 Reachedfunct()async{
-  (await Get.put(ParticipatedQuery()).getReachedParticipateEventOnline(Participated(uid:'kebineericMuna_1668935593')));
+  (await Get.put(ParticipatedQuery()).getReachedParticipateEventOnline(Participated(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>ReachEventPage());
 }
 AllEventfunct()async{
-  (await Get.put(ParticipatedQuery()).getAllParticipateEventOnline(Participated(uid:'kebineericMuna_1668935593')));
+  (await Get.put(ParticipatedQuery()).getAllParticipateEventOnline(Participated(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>AllEventPage());
 }
