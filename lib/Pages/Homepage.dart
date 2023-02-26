@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+
 import 'dart:convert';
 import 'dart:io';
 
@@ -6,7 +6,7 @@ import 'package:dcard/Query/CardQuery.dart';
 import 'package:dcard/Query/TopupQuery.dart';
 import 'package:dcard/models/CardModel.dart';
 import 'package:dcard/models/Topups.dart';
-import 'package:dio/dio.dart';
+
 import '../Pages/ProfilePage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:get/get.dart';
-import 'dart:io';
+
 
 import 'package:dcard/models/Admin.dart';
 import 'package:dcard/models/Participated.dart';
@@ -22,8 +22,6 @@ import 'package:dcard/models/Promotions.dart';
 import '../Query/AdminQuery.dart';
 import '../Pages/components/BottomNavigator/HomeNavigator.dart';
 
-import '../models/User.dart';
-import '../Query/UserQuery.dart';
 
 import 'package:cool_alert/cool_alert.dart';
 
@@ -31,8 +29,7 @@ import 'package:cool_alert/cool_alert.dart';
 import 'package:dcard/Query/PromotionQuery.dart';
 import '../Query/ParticipatedQuery.dart';
 import 'package:dcard/Dateconfig/DateClassUtil.dart';
-import '../Utilconfig/ConstantClassUtil.dart';
-import 'Card/AddCardPage.dart';
+
 
 class Homepage extends StatefulWidget {
   const Homepage({Key? key}) : super(key: key);
@@ -69,6 +66,7 @@ class _HomepageState extends State<Homepage> {
 
   bool Cameravalue=false;
   bool Flashvalue=false;
+  var ResultDatas;
 
   @override
 
@@ -89,7 +87,7 @@ class _HomepageState extends State<Homepage> {
         controller!.pauseCamera();
       }
     }
-    @override
+
     //hidekeyboard();
     //UserQuery userQueryData = Get.put(UserQuery());
 
@@ -105,7 +103,7 @@ class _HomepageState extends State<Homepage> {
       body:Column(
         children: [
           Visibility(
-            visible:false,
+            visible:true,
             child: Expanded(
                 flex: 5,
                 child:Stack(
@@ -197,7 +195,14 @@ class _HomepageState extends State<Homepage> {
                             onPressed: () async=>{
                              // await controller!.resumeCamera(),
                               // Wakelock.enable()
-                              print((Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?"yes":"none"),
+                             // print((Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?"yes":"none"),
+                            await controller!.pauseCamera(),
+                          // ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175'))).data,
+                              //print((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175'))))
+                             // print(ResultData["status"])
+
+
+
                             },
                             child: const Text("resume")
                         ),
@@ -214,24 +219,7 @@ class _HomepageState extends State<Homepage> {
       ) ,
       bottomNavigationBar:HomeNavigator(),
 
-      floatingActionButton: Visibility(
-        visible:showprofile,
-
-        child: FloatingActionButton(
-          onPressed:()async =>{
-
-            (await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))),
-
-            Get.to(() => ProfilePage())
-          },
-          tooltip: 'Increment',
-          child: CircleAvatar(
-            radius: 50,
-            backgroundImage: AssetImage("images/profile.jpg",
-            ),
-          ),
-        ),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+       // This trailing comma makes auto-formatting nicer for build methods.
 
     );
 
@@ -277,14 +265,16 @@ class _HomepageState extends State<Homepage> {
               right: 15.0,
               bottom:70,
               child: FloatingActionButton(
-                onPressed:()async =>{
+                onPressed:()async {
+              ResultDatas=(await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))).data;
+              if(ResultDatas["status"])
+                {
+                  await Get.put(TopupQuery()).updateTopupState(ResultDatas);
+                  Get.to(() => ProfilePage());
+                }
 
-                  (await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))),
 
-
-                  Get.to(() => ProfilePage())
-                  //Get.to(() =>AddCardPage())
-                },
+              },
                 tooltip: 'Increment',
                 child: CircleAvatar(
                   radius: 50,
@@ -596,17 +586,35 @@ class _HomepageState extends State<Homepage> {
         //uidInput2.text="${(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}";
 if(result!=null)
   {
-    try {
     controller!.pauseCamera();
-    Map<String,dynamic> ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}'))).data;
+    try {
+
+
+     // controller!.pauseCamera();
+    //controller!.pauseCamera();
+var ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}'))).data;
     if(ResultData["status"])
       {
+
+
         //print(ResultData["UserDetail"]["uid"]);
         ScanPopup(ResultData["UserDetail"]["uid"],ResultData["UserDetail"]["name"]);
         (await Get.put(CardQuery()).updateCardState(ResultData));
       }
     else{
-      uidInput2.text="${ResultData["status"]}";
+      controller!.pauseCamera();
+      CoolAlert.show(
+        context: context,
+        backgroundColor:Color(0xff940e4b),
+        type: CoolAlertType.error,
+        title:"Error !!!",
+        text: "This Card is not exist",
+
+      ).then((value) {
+        // Event to trigger when the alert is dismissed
+        controller!.resumeCamera();
+      });
+      //uidInput2.text="${ResultData["status"]}";
     }
 
     } catch (e) {

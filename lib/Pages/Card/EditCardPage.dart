@@ -27,15 +27,18 @@ import 'package:intl_phone_field/intl_phone_field.dart';
 
 
 
-class AddCardPage extends StatefulWidget {
-  const AddCardPage({Key? key}) : super(key: key);
+
+
+
+class EditCardPage extends StatefulWidget {
+  const EditCardPage({Key? key}) : super(key: key);
 
   @override
-  State<AddCardPage> createState() => _AddCardPageState();
+  State<EditCardPage> createState() => _EditCardPageState();
 
 
 }
-class _AddCardPageState extends State<AddCardPage> {
+class _EditCardPageState extends State<EditCardPage> {
 
 
 
@@ -44,7 +47,6 @@ class _AddCardPageState extends State<AddCardPage> {
   TextEditingController uidInput2=TextEditingController(text:"kebine eric Muna");
   TextEditingController uidInput3=TextEditingController(text:"on1@gmail.com");
   TextEditingController uidInput4=TextEditingController(text:"243");
-  TextEditingController initCountry=TextEditingController(text:"CD");
   TextEditingController uidInput5=TextEditingController(text:"Congo,Democratic Republic of the Congo");
   TextEditingController uidInput6=TextEditingController(text:"1");
   TextEditingController uidInput7=TextEditingController();
@@ -60,7 +62,6 @@ class _AddCardPageState extends State<AddCardPage> {
   Widget build(BuildContext context)
   {
 
-
     void reassemble(){
       super.reassemble();
       if(Platform.isAndroid)
@@ -71,6 +72,7 @@ class _AddCardPageState extends State<AddCardPage> {
         controller!.pauseCamera();
       }
     }
+
 
     //hidekeyboard();
     //UserQuery userQueryData = Get.put(UserQuery());
@@ -141,7 +143,7 @@ class _AddCardPageState extends State<AddCardPage> {
                               content: Container(
                                 height: 50,
                                 child: Column(
-                                  children: [
+                                  children: const [
                                     Center(child: Icon(Icons.thumb_up_alt_outlined, color: Colors.green)),
                                     SizedBox(width: 10),
                                     Expanded(
@@ -247,8 +249,8 @@ class _AddCardPageState extends State<AddCardPage> {
   );
 
   ScanPopup(checkcode){
-controller!.pauseCamera();
-uidInput7.text=checkcode;
+    controller!.pauseCamera();
+    uidInput7.text=checkcode;
     Get.bottomSheet(
         Stack(
           alignment: Alignment.bottomCenter,
@@ -350,7 +352,6 @@ uidInput7.text=checkcode;
                           onCountryChanged: (country) {
                             uidInput4.text=country.dialCode;
                             uidInput5.text=country.name;
-                            initCountry.text=country.code;
                             // print('Country changed to: ' + country.name);
                             // print('Country changed to: ' + country.dialCode);
                           },
@@ -467,48 +468,48 @@ uidInput7.text=checkcode;
                     ),
                     SizedBox(height: 10.0,),
                     FloatingActionButton.extended(
-                        label: Text('Add Card'), // <-- Text
-                        backgroundColor: Color(0xff940e4b),
-                        icon: Icon( // <-- Icon
-                          Icons.add_card,
-                          size: 24.0,
-                        ),
-                        onPressed: ()async =>{
-                          //print(uidInput2.text),
+                      label: Text('Add Card'), // <-- Text
+                      backgroundColor: Color(0xff940e4b),
+                      icon: Icon( // <-- Icon
+                        Icons.add_card,
+                        size: 24.0,
+                      ),
+                      onPressed: ()async =>{
+                        //print(uidInput2.text),
 
-                          // print( (await ParticipatedQuery().getAllParticipateEventOnline()).data["status"])
-                          //print( (await PromotionQuery().getAllPromotionEventOnline()),
+                        // print( (await ParticipatedQuery().getAllParticipateEventOnline()).data["status"])
+                        //print( (await PromotionQuery().getAllPromotionEventOnline()),
 
-                          if((await CardQuery().CreateAssignCardEventOnline(CardModel(uid:uidInput7.text),Admin(phone:uidInput.text,name:uidInput2.text,email:uidInput3.text,Ccode:uidInput4.text,initCountry:initCountry.text,country:uidInput5.text,password:uidInput6.text,uid: "no need", subscriber:"no need"))).data["status"])
-                            {
-                              uidInput7.text="",
-                              Get.close(1),
-                              controller!.resumeCamera(),
-                              Get.snackbar("Success", "Card Addedd",backgroundColor: Color(0xff9a1c55),
-                                  colorText: Color(0xffffffff),
-                                  titleText: const Text("Card User",style:TextStyle(color:Color(
-                                      0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-
-                                  icon: Icon(Icons.access_alarm),
-                                  duration: Duration(seconds: 4))
-                            }
-                          else{
+                        if((await CardQuery().CreateAssignCardEventOnline(CardModel(uid:uidInput7.text),Admin(phone:uidInput.text,name:uidInput2.text,email:uidInput3.text,Ccode:uidInput4.text,country:uidInput5.text,password:uidInput6.text,uid: "no need", subscriber:"no need"))).data["status"])
+                          {
                             uidInput7.text="",
                             Get.close(1),
                             controller!.resumeCamera(),
-                            Get.snackbar("Error", "Card ,Card Can't be assigned",backgroundColor: Color(
-                                0xffdc2323),
+                            Get.snackbar("Success", "Card Addedd",backgroundColor: Color(0xff9a1c55),
                                 colorText: Color(0xffffffff),
                                 titleText: const Text("Card User",style:TextStyle(color:Color(
                                     0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
 
                                 icon: Icon(Icons.access_alarm),
                                 duration: Duration(seconds: 4))
-
                           }
+                        else{
+                          uidInput7.text="",
+                          Get.close(1),
+                          controller!.resumeCamera(),
+                          Get.snackbar("Error", "Card ,Card Can't be assigned",backgroundColor: Color(
+                              0xffdc2323),
+                              colorText: Color(0xffffffff),
+                              titleText: const Text("Card User",style:TextStyle(color:Color(
+                                  0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
+
+                              icon: Icon(Icons.access_alarm),
+                              duration: Duration(seconds: 4))
+
+                        }
 
 
-                        },
+                      },
 
                     ),
 

@@ -12,6 +12,7 @@ class Admin {
   final String? AuthToken;
   final String? status;
   final String? subscriber;
+  final String? initCountry;
   final String? country;
 
   final String? created_at;
@@ -32,6 +33,7 @@ class Admin {
     this.AuthToken,
     this.status,
     required this.subscriber,
+    this.initCountry,
     this.country,
 
     this.created_at,
@@ -53,6 +55,7 @@ class Admin {
       AuthToken: json['AuthToken'],
       status: json['status'],
       subscriber: json['subscriber'],
+      initCountry: json['initCountry'],
       country: json['country'],
 
       created_at: json['created_at'],
@@ -74,6 +77,7 @@ class Admin {
       'AuthToken':AuthToken,
       'status':status,
       'subscriber':subscriber,
+      'initCountry':initCountry,
       'country':country,
 
       'created_at': created_at,

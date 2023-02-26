@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dcard/Query/AdminQuery.dart';
@@ -30,6 +31,158 @@ class TopupQuery extends GetxController{
       }
     ],
   }.obs;
+  AddBalanceOnline(Topups TopupData) async{
+
+    try {
+
+      var params =  {
+        "uid":TopupData.uid,//just to avoid error nothing else
+        "uidUser":TopupData.uidCreator,//uidUser
+        "balance":TopupData.amount,
+        "description":TopupData.desc
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(Get.put(AdminQuery()).obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/AddBalance";
+      var response = await Dio().post(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        data: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+
+        //updateParticipateState(response.data);
+        return response;
+
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  EditBalanceOnline(Topups TopupData) async{
+
+    try {
+
+      var params =  {
+        "uid":TopupData.uid,//just to avoid error nothing else
+        "uidUser":TopupData.uidCreator,//uidUser
+        "balance":TopupData.amount,
+        "description":TopupData.desc
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(Get.put(AdminQuery()).obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/EditBalance";
+      var response = await Dio().post(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        data: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+
+        //updateParticipateState(response.data);
+        return response;
+
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  RedeemBalanceOnline(Topups TopupData) async{
+
+    try {
+
+      var params =  {
+        "uid":TopupData.uid,//uidUser
+        "uidUser":TopupData.uidCreator,
+        "amount":TopupData.amount,
+        "description":TopupData.desc
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(Get.put(AdminQuery()).obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/RedeemBalance";
+      var response = await Dio().post(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        data: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+
+        //updateParticipateState(response.data);
+        return response;
+
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  RedeemBonusOnline(Topups TopupData) async{
+
+    try {
+
+      var params =  {
+        "uid":TopupData.uid,//uidUser
+        "uidUser":TopupData.uidCreator,
+        "amount":TopupData.amount,
+        "description":TopupData.desc
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(Get.put(AdminQuery()).obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/RedeemBonus";
+      var response = await Dio().post(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        data: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+
+        //updateParticipateState(response.data);
+        return response;
+
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
   GetBalanceHist(Topups TopupData) async{//balance and Bonus History
     try {
 
@@ -95,8 +248,8 @@ class TopupQuery extends GetxController{
         //updateEventState(response.data);
         //return "hello";
 
-        updateTopupState(response.data);
-        return response.data;
+        //updateTopupState(response.data);
+        return response;
 
 
       } else {

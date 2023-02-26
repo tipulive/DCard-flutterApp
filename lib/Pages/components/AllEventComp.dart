@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Query/CardQuery.dart';
-import '../../Query/TopupQuery.dart';
+
 import '../../Query/ParticipatedQuery.dart';
 import '../../models/Participated.dart';
 import '../ParticipateHistPage.dart';
@@ -164,15 +164,20 @@ class AllEventComp extends StatelessWidget {
                     height: 30,
 
                     child:
-                    new IconButton(
-                      icon: new Icon(iconright,color:
-                      Colors.teal,size: 22,),
-                      onPressed: ()  async{
-                        (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+                    GestureDetector(
+                        onTap: () async{
+                          // This function will be called when the icon is tapped.
+                          // myfunct();
+                          //print(IconText);
+                          (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
-                        Get.to(() =>ParticipateHistPage());
-                      },
-                    ),
+                          Get.to(() =>ParticipateHistPage());
+                        },
+                        child: Icon(iconright,color:
+                        Colors.teal,size: 22,)
+                    )
+
+
 
 
 

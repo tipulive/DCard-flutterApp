@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dcard/Query/CardQuery.dart';
+import 'package:dcard/models/CardModel.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -46,6 +48,38 @@ class _LoginState extends State<Login> {
                   ),
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                    child:ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: const Size.fromHeight(50),
+                      ),
+
+                      child: const Text('Action btn'),
+                      onPressed: () async{
+                       // ResultData=(await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",name:name.text,email:email.text,Ccode:Ccode.text,phone:phone.text,country:country.text,password:password.text,status:edit.text,subscriber:"none"))).data,
+                       /*var ResultData=(await CardQuery().GetDataOnline(CardModel(uid:"none"))).data;
+
+                        if(ResultData["status"])
+                          {
+                            await Get.put(CardQuery()).updateCardState(ResultData);
+                           setState(() {
+                             Get.put(CardQuery()).obj;
+                           });
+                          }
+                        else{
+                          print("failed");
+                        }*/
+                        topupfunc();
+                       // print(((await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid: "kebineericMuna_1674160265",name:"voga",email:"on@gmail.com",Ccode:"+250",phone:"782389359",country:"Rwanda",password:"1",status:"edit",subscriber:"none"))).data).runtimeType);
+
+
+                      },
+
+                    ) ,
+
+                  ),
+                  Text("${Get.put(CardQuery()).obj["id"]==1?"hello":Get.put(CardQuery()).obj["resultData"]["result"]}"),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: IntlPhoneField(
                       decoration: InputDecoration(
                         labelText: 'Phone Number',
@@ -57,7 +91,7 @@ class _LoginState extends State<Login> {
                         print(phone.completeNumber);
                       },
                       onCountryChanged: (country) {
-                        print('Country changed to: ' + country.name);
+                        print('Country changed to: ' + country.code);
                       },
                     ),
                   ),
@@ -73,6 +107,7 @@ class _LoginState extends State<Login> {
                       ),
                     ),
                   ),
+
                   Container(
                     padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                     child: TextField(
@@ -150,6 +185,8 @@ class _LoginState extends State<Login> {
         {
           //Get.to(Homepage());
           //Get.to(() => Homepage());
+
+          await adminStatedata.auth();
           Get.to(() => Homepage());
           //print(await SyncService().SyncDownloadCard());
         }
@@ -168,6 +205,113 @@ class _LoginState extends State<Login> {
     }
 
 
+  }
+
+  void topupfunc() {
+    Get.bottomSheet(
+        Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            SingleChildScrollView(
+              child: Container(
+                height: 200,
+
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+
+                      height: 200,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      child: ListView(
+                        children: [
+                          SizedBox(height: 10.0,),
+                          SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                mainAxisAlignment:MainAxisAlignment.start,
+                                crossAxisAlignment:CrossAxisAlignment.start,
+                                children: <Widget> [
+
+                                  TextField(
+
+                                    //obscureText: true,
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Enter Balance',
+                                      hintText: 'Enter Balance',
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.0,),
+                                  TextField(
+
+                                    keyboardType: TextInputType.multiline,
+                                    maxLines: null,
+                                    //obscureText: true,
+                                    decoration: InputDecoration(
+                                      contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                                      border: OutlineInputBorder(),
+                                      labelText: 'Enter Description',
+                                      hintText: 'Enter Description',
+                                      hintStyle: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+
+                                    ),
+                                  ),
+                                  SizedBox(height: 10.0,),
+                                  Center(
+                                    child: FloatingActionButton.extended(
+                                      label: Text('Add Balance'), // <-- Text
+                                      backgroundColor: Colors.black,
+                                      icon: Icon( // <-- Icon
+                                        Icons.thumb_up,
+                                        size: 24.0,
+                                      ),
+                                      onPressed: ()async =>{
+
+
+                                      },
+
+
+
+
+                                    ),
+                                  ),
+
+                                ],
+                              ),
+                            ),
+                          ),
+
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+
+          ],
+        )
+    ).whenComplete(() {
+
+      //do whatever you want after closing the bottom sheet
+    });
   }
 }
 

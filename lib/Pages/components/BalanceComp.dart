@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import '../../Query/CardQuery.dart';
 import '../../Query/TopupQuery.dart';
 
 class BalanceComp extends StatelessWidget {
@@ -27,7 +25,7 @@ class BalanceComp extends StatelessWidget {
               ]
             else
               ...[
-                detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj2)["resultData"]["result"][i]["bonus"]}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
+                detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj2)["resultData"]["result"][i]["balance"]}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
                 const SizedBox(height:5,),
               ]
           ]
@@ -167,13 +165,15 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
                   height: 30,
 
                   child:
-                  new IconButton(
-                    icon: new Icon(iconright,color:
-                    Colors.teal,size: 22,),
-                    onPressed: () {
-                      print(IconText);
-                    },
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        // This function will be called when the icon is tapped.
+                        // myfunct();
+                        //print(IconText);
+                      },
+                      child: Icon(iconright,color:
+                      Colors.teal,size: 22,)
+                  )
 
 
 

@@ -1,12 +1,17 @@
+
 import 'package:flutter/material.dart';
-import 'components/ProfileComp.dart';
+
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import 'components/BottomNavigator/ProfileNavigator.dart';
+import 'components/BottomNavigator/HomeNavigator.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+import 'components/BottomNavigator/ProfileNavigator.dart';
+import 'components/UserAccountComp.dart';
+
+
+class UserAccountPage extends StatelessWidget {
+  const UserAccountPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,10 +22,10 @@ class ProfilePage extends StatelessWidget {
         // the App.build method, and use it to set our appbar title.
         title: Text("demo",style: TextStyle(color: Colors.teal)),
         leading: IconButton(
-            icon: Icon(Icons.arrow_back),
-           onPressed: () {
-             Get.back();
-           },
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.back();
+          },
         ),
 
         toolbarHeight:0, //hide Text in appbar
@@ -35,16 +40,13 @@ class ProfilePage extends StatelessWidget {
         ),
 
       ),
-      backgroundColor: Color(0xff010a0e),
+      backgroundColor: Colors.yellow,
 
-      body: ProfileComp(),
+      body:UserAccountComp(),
       bottomNavigationBar:ProfileNavigator(),
 
 
     );
 
   }
-}
-loaddata(){
-  //print("hello");
 }

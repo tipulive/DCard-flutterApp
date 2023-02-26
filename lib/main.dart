@@ -1,29 +1,19 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:dcard/Pages/ProfilePage.dart';
+
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
+//import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+
 import 'package:wakelock/wakelock.dart';
 import 'package:get/get.dart';
-import 'dart:io';
 
-import 'package:dcard/models/Admin.dart';
-import 'package:dcard/models/Participated.dart';
-import 'package:dcard/models/Promotions.dart';
-import 'Pages/Homepage.dart';
+
 import 'Pages/Login.dart';
 import 'Query/AdminQuery.dart';
 
-import 'models/User.dart';
-import 'Query/UserQuery.dart';
 
-
-import 'package:dcard/Query/PromotionQuery.dart';
-import 'package:dcard/Query/ParticipatedQuery.dart';
-import 'package:dcard/Dateconfig/DateClassUtil.dart';
 
 void main() {
   /*this will make apps not going to sleep Mode*/
@@ -105,7 +95,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     //final UserQuery getdata = Get.find();
-    int test=3;
+
     //yourFunction();
     //ConnectivityResult connectivity;
     return checkAuth();
@@ -117,16 +107,20 @@ class _MyHomePageState extends State<MyHomePage> {
 
   checkAuth(){
     //print((await adminStatedata.obj));
-    // AdminQuery().auth();
+    //AdminQuery().auth();
+    adminStatedata.auth();
     if(((adminStatedata.obj)["result"])==0)
     {
       //print((adminStatedata.obj)["result"]);
       return Login();
+     // return ScrollPage();
+
     }
     else{
       //print((adminStatedata.obj)["result"]);
-     // return Login();
-      return Homepage();
+
+      return Login();
+      //return ScrollPage();
     }
 
 
@@ -140,7 +134,7 @@ class _MyHomePageState extends State<MyHomePage> {
       var response = await Dio().get('https://google.com/');
       if (response.statusCode == 200) {
         return true;
-        print(true);
+        //print(true);
       } else {
         return false;
         //print(false);
@@ -197,7 +191,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
   deleteData(String text) {
-    print(text);
+    //print(text);
   }
 
   insertData(String text) async{

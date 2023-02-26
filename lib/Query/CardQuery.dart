@@ -28,6 +28,46 @@ class CardQuery extends GetxController{
       }
     ],
   }.obs;
+
+  GetDataOnline(CardModel CardData) async{
+    try {
+
+      var params =  {
+
+        "carduid":CardData.uid,
+
+        //"options": [1,2,3],
+      };
+
+      String Authtoken =(adminStatedata.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/testGetData";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+
+        // return (response.data).length;
+        //updateEventState(response.data);
+        //return "hello";
+        // updateCardState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      return false;
+    }
+  }
+
   GetDetailCardOnline(CardModel CardData) async{
     try {
 
@@ -63,7 +103,7 @@ class CardQuery extends GetxController{
       }
     } catch (e) {
       //return false;
-      print(e);
+      return false;
     }
   }
   CreateAssignCardEventOnline(CardModel CardData,Admin AdminData) async{//create user and Assign
@@ -75,6 +115,7 @@ class CardQuery extends GetxController{
       "email":AdminData.email??'none',
       "Ccode":AdminData.Ccode,
       "phone":AdminData.phone,
+        "initCountry":AdminData.initCountry,
       "country":AdminData.country,
       "password":AdminData.password??'none',
       //"carduid":"TEALTD_7hEnj_1672352175",
@@ -91,6 +132,53 @@ class CardQuery extends GetxController{
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
           HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        data: jsonEncode(params),
+      );
+      if (response.statusCode == 200) {
+
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      return e;
+    }
+
+  }
+  editAssignCardEventOnline(CardModel CardData,Admin AdminData) async{//create user and Assign
+
+    try {
+
+      var params =  {
+        "uid":AdminData.uid,
+        "name":AdminData.name,
+        "email":AdminData.email??'none',
+        "Ccode":AdminData.Ccode,
+        "phone":AdminData.phone,
+        "initCountry":AdminData.initCountry,
+        "country":AdminData.country,
+        "password":AdminData.password??'none',
+        "status":AdminData.status,//card or user edit
+        "carduid":CardData.uid
+
+
+        //"uid":"kebineericMuna_1668935593",//userid
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStatedata.obj)["result"][0]["AuthToken"];
+
+      var url="${ConstantClassUtil.urlLink}/EditUserAssign";
+      var response = await Dio().post(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+         // HttpHeaders.authorizationHeader:"Bearer 259|bR1wtUu26VkiGlY49AF9UVW0xsxaykI5wHNhiNl6"
         }),
         data: jsonEncode(params),
       );

@@ -121,6 +121,45 @@ return response.data;
   }
 
 }
+ParticipateEditEventOnline(Participated participateddata,Promotions promotionData) async{
+
+  try {
+
+    var params =  {
+      "uid":participateddata.uid,
+      "uidUser":participateddata.uidUser,
+      "inputData":participateddata.inputData,
+      "reach":promotionData.reach,
+      "gain":promotionData.gain
+      //"options": [1,2,3],
+    };
+    String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+
+    var url="${ConstantClassUtil.urlLink}/ParticipateEditEvent";
+    var response = await Dio().post(url,
+      options: Options(headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+      }),
+      data: jsonEncode(params),
+    );
+    if (response.statusCode == 200) {
+
+      updateParticipateState(response.data);
+      return response.data;
+
+
+
+    } else {
+      return false;
+      //print(false);
+    }
+  } catch (e) {
+    //return false;
+    print(e);
+  }
+
+}
 getAllParticipateEventOnline(Participated ParticipatedData) async{//all participated events reached or not reached
   try {
 

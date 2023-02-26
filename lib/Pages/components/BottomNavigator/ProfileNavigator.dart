@@ -1,3 +1,4 @@
+import 'package:dcard/Pages/UserAccountPage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -32,6 +33,10 @@ class ProfileNavigator extends StatelessWidget {
 
           Get.back();
 
+        } if(index==1)
+        {
+
+          Get.to(() =>UserAccountPage(),arguments:1);
         }
       },
     );

@@ -7,8 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../Query/CardQuery.dart';
-import '../../Query/TopupQuery.dart';
-import '../../models/Topups.dart';
+
 import '../../models/Participated.dart';
 
 class EventsComp extends StatelessWidget {
@@ -168,14 +167,16 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
                   height: 30,
 
                   child:
-                  new IconButton(
-                    icon: new Icon(iconright,color:
-                    Colors.teal,size: 22,),
-                    onPressed: () {
-                      //print(IconText);
-myfunct();
-                    },
-                  ),
+                  GestureDetector(
+                      onTap: () {
+                        // This function will be called when the icon is tapped.
+                         myfunct();
+                        //print(IconText);
+                      },
+                      child: Icon(iconright,color:
+                      Colors.teal,size: 22,)
+                  )
+
 
 
 
