@@ -30,8 +30,21 @@ class ProfileNavigator extends StatelessWidget {
       onTap: (index){
         if(index==0)
         {
+          if(Get.currentRoute=="/UserAccountPage")
+            {
+              Get.toNamed('/ProfilePage');
+              //print(Get.currentRoute);
+            }
+          else if(Get.currentRoute=="/ProfilePage")
+            {
+              Get.toNamed('/home');
+            }
+          else{
+            Get.back();
+          }
 
-          Get.back();
+
+
 
         } if(index==1)
         {

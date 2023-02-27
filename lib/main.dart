@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 //import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'Pages/routes.dart';
 
 
 import 'package:wakelock/wakelock.dart';
@@ -36,6 +37,8 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Demo',
+      initialRoute: '/',
+      getPages: AppRoutes.routes,
       theme: ThemeData(
         // This is the theme of your application.
         //
