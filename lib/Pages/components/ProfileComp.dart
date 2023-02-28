@@ -25,33 +25,36 @@ class _ProfileCompState extends State<ProfileComp> {
   var ResultData;
   final TextEditingController balance = TextEditingController();
   final TextEditingController description = TextEditingController();
+  bool showOveray=false;
 
   var ResultDatas;
   @override
   Widget build(BuildContext context) {
-    return ListView(
-
-
+    return Stack(
       children: [
+        ListView(
+
+
+        children: [
 
         profile(),
-        const SizedBox(height: 6.0,),
-        divLine(),
-        detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["balance"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,balancefunc),
-        const SizedBox(height:5,),
-        detailsProfile("Bonus",Icons.redeem,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["bonus"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,bonusfunc),
-        const SizedBox(height:5,),
-        detailsProfile("Event",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,eventfunc),//Last Time Purchase
-        const SizedBox(height:5,),
-        //   detailsProfile("Status",Icons.track_changes,"Redeemed",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Statusfunc),
-        const SizedBox(height:5,),
-        detailsProfile("Top Up",Icons.monetization_on,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,topupFunc),
-        const SizedBox(height:5,),
-        detailsProfile("Edit Balance",Icons.monetization_on,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,editTopupfunc),
-        const SizedBox(height:5,),
-        detailsProfile("WithDraw Balance",Icons.monetization_on,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawFunc),
-        const SizedBox(height:5,),
-        detailsProfile("Redeem Bonus",Icons.monetization_on,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,redeemBonus),
+    const SizedBox(height: 6.0,),
+    divLine(),
+    detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["balance"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,balancefunc),
+    const SizedBox(height:5,),
+    detailsProfile("Bonus",Icons.redeem,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["bonus"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,bonusfunc),
+    const SizedBox(height:5,),
+    detailsProfile("Event",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,eventfunc),//Last Time Purchase
+    const SizedBox(height:5,),
+    //   detailsProfile("Status",Icons.track_changes,"Redeemed",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Statusfunc),
+
+    detailsProfile("Top Up",Icons.paid,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,topupFunc),
+    const SizedBox(height:5,),
+    detailsProfile("Edit Balance",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,editTopupfunc),
+    const SizedBox(height:5,),
+    detailsProfile("WithDraw Balance",Icons.payments_rounded,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawFunc),
+    const SizedBox(height:5,),
+    detailsProfile("Redeem Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,redeemBonus),
 
 
 
@@ -59,6 +62,18 @@ class _ProfileCompState extends State<ProfileComp> {
 
 
 
+    ],
+    ),
+        if(showOveray)
+          Positioned.fill(
+            child: Center(
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.white70,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
       ],
     );
   }
@@ -108,13 +123,13 @@ class _ProfileCompState extends State<ProfileComp> {
           children: [
             SingleChildScrollView(
               child: Container(
-                height: 200,
+                height: 230,
 
                 child: Column(
                   children: [
                     Container(
 
-                      height: 200,
+                      height: 230,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -175,11 +190,19 @@ class _ProfileCompState extends State<ProfileComp> {
                                         size: 24.0,
                                       ),
                                       onPressed: ()async =>{
+                                        setState(() {
 
+                                          showOveray=true;
+
+                                        }),
                                         ResultData=(await Get.put(TopupQuery()).AddBalanceOnline(Topups(uid:"1",uidCreator:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",amount:balance.text,desc:description.text))).data,
 
                                         if(ResultData["status"])
                                           {
+                                            setState(() {
+                                              showOveray=false;
+
+                                            }),
                                             Get.snackbar("Success", "Balance Added Successfuly",backgroundColor: Color(0xff9a1c55),
                                                 colorText: Color(0xffffffff),
                                                 titleText: const Text("Balance",style:TextStyle(color:Color(
@@ -193,13 +216,19 @@ class _ProfileCompState extends State<ProfileComp> {
                                               {
                                                 await Get.put(TopupQuery()).updateTopupState(ResultDatas),
                                                 setState(() {
+
                                                   Get.put(TopupQuery()).obj;
+
                                                 }),
                                                 Get.close(1),
 
                                               }
 
                                           }else{
+                                          setState(() {
+                                            showOveray=false;
+
+                                          }),
                                           Get.snackbar("Error", "Balance",backgroundColor: Color(
                                               0xffdc2323),
                                               colorText: Color(0xffffffff),
@@ -231,6 +260,23 @@ class _ProfileCompState extends State<ProfileComp> {
               ),
             ),
 
+       if(showOveray)
+          ...[
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.5),
+              ),
+            ),
+
+            Positioned(
+
+              child: Container(
+                padding: EdgeInsets.all(16),
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ]
+
 
           ],
         )
@@ -248,13 +294,13 @@ class _ProfileCompState extends State<ProfileComp> {
           children: [
             SingleChildScrollView(
               child: Container(
-                height: 200,
+                height: 230,
 
                 child: Column(
                   children: [
                     Container(
 
-                      height: 200,
+                      height: 230,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -315,11 +361,16 @@ class _ProfileCompState extends State<ProfileComp> {
                                         size: 24.0,
                                       ),
                                       onPressed: ()async =>{
-
+                                        setState(() {
+                                          showOveray=true;
+                                        }),
                                         ResultData=(await Get.put(TopupQuery()).EditBalanceOnline(Topups(uid:"1",uidCreator:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",amount:balance.text,desc:description.text))).data,
 
                                         if(ResultData["status"])
                                           {
+                                            setState(() {
+                                              showOveray=false;
+                                            }),
                                             Get.snackbar("Success", "Balance Edited Successfuly",backgroundColor: Color(0xff9a1c55),
                                                 colorText: Color(0xffffffff),
                                                 titleText: const Text("Balance",style:TextStyle(color:Color(
@@ -340,6 +391,9 @@ class _ProfileCompState extends State<ProfileComp> {
                                               }
 
                                           }else{
+                                          setState(() {
+                                            showOveray=false;
+                                          }),
                                           Get.snackbar("Error", "Something is Wrong Please Contact System Admin",backgroundColor: Color(
                                               0xffdc2323),
                                               colorText: Color(0xffffffff),
@@ -389,13 +443,13 @@ class _ProfileCompState extends State<ProfileComp> {
           children: [
             SingleChildScrollView(
               child: Container(
-                height: 200,
+                height: 230,
 
                 child: Column(
                   children: [
                     Container(
 
-                      height: 200,
+                      height: 230,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -456,10 +510,15 @@ class _ProfileCompState extends State<ProfileComp> {
                                         size: 24.0,
                                       ),
                                       onPressed: ()async =>{
-
+                                        setState(() {
+                                          showOveray=true;
+                                        }),
                                         ResultData=(await Get.put(TopupQuery()).RedeemBalanceOnline(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",amount:balance.text,desc:description.text))).data,
                                         if(ResultData["status"])
                                           {
+                                            setState(() {
+                                              showOveray=false;
+                                            }),
                                             Get.snackbar("Success", "Successfully Withdraw",backgroundColor: Color(0xff9a1c55),
                                                 colorText: Color(0xffffffff),
                                                 titleText: const Text("Balance",style:TextStyle(color:Color(
@@ -480,6 +539,9 @@ class _ProfileCompState extends State<ProfileComp> {
                                               }
 
                                           }else{
+                                          setState(() {
+                                            showOveray=false;
+                                          }),
                                           Get.snackbar("Error", "insufficient Balance in Your Account",backgroundColor: Color(
                                               0xffdc2323),
                                               colorText: Color(0xffffffff),
@@ -528,13 +590,13 @@ class _ProfileCompState extends State<ProfileComp> {
           children: [
             SingleChildScrollView(
               child: Container(
-                height: 200,
+                height: 230,
 
                 child: Column(
                   children: [
                     Container(
 
-                      height: 200,
+                      height: 230,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -595,10 +657,15 @@ class _ProfileCompState extends State<ProfileComp> {
                                         size: 24.0,
                                       ),
                                       onPressed: ()async =>{
-
+                                        setState(() {
+                                          showOveray=true;
+                                        }),
                                         ResultData=(await Get.put(TopupQuery()).RedeemBonusOnline(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",amount:balance.text,desc:description.text))).data,
                                         if(ResultData["status"])
                                           {
+                                            setState(() {
+                                              showOveray=false;
+                                            }),
                                             Get.snackbar("Success", "Successfully Redeem Bonus",backgroundColor: Color(0xff9a1c55),
                                                 colorText: Color(0xffffffff),
                                                 titleText: const Text("Bonus",style:TextStyle(color:Color(
@@ -619,6 +686,9 @@ class _ProfileCompState extends State<ProfileComp> {
                                               }
 
                                           }else{
+                                          setState(() {
+                                            showOveray=false;
+                                          }),
                                           Get.snackbar("Error", "insufficient Bonus in Your Account",backgroundColor: Color(
                                               0xffdc2323),
                                               colorText: Color(0xffffffff),

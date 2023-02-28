@@ -53,6 +53,7 @@ class _AddCardPageState extends State<AddCardPage> {
   QRViewController?controller;
   bool Cameravalues=false;
   bool Flashvalues=false;
+  bool showOveray=false;
 
   @override
 
@@ -81,110 +82,124 @@ class _AddCardPageState extends State<AddCardPage> {
 
     //FocusScope.of(context).unfocus();//hide keyboard on screen loading
     return Scaffold(
-      body:Column(
+      body:Stack(
         children: [
+          Column(
+            children: [
 
-          Visibility(
-            visible:true,
-            child: Expanded(
-                flex: 6,
-                child:Stack(
-                  alignment:Alignment.bottomCenter,
-                  children: [
-                    QRView(key: qrkey,onQRViewCreated: _onQRViewCreated,),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              Visibility(
+                visible:true,
+                child: Expanded(
+                    flex: 6,
+                    child:Stack(
+                      alignment:Alignment.bottomCenter,
                       children: [
+                        QRView(key: qrkey,onQRViewCreated: _onQRViewCreated,),
+
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
 
-                            CameraSwitch(),
-                            //SizedBox(width: 10.0,),
+                                CameraSwitch(),
+                                //SizedBox(width: 10.0,),
 
-                            // SizedBox(width: 10.0,),
-                            FlashSwitch(),
-                            Image.asset(
-                              Flashvalues ? 'images/on.png' : 'images/off.png',
-                              height: 30,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                  ],
-                )
-
-            ),
-
-          ),
-          Visibility(
-            visible: false,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Column(
-                  children: [
-                    TextButton(
-                        onPressed: () async=>{
-                          //await controller!.toggleFlash(),
-                          // Wakelock.enable()
-                          // await controller!.pauseCamera(),
-                          //Get.to(() => Homepage()),
-                          Get.dialog(
-
-
-                            AlertDialog(
-                              title: Center(child: Text('Message')),
-                              content: Container(
-                                height: 50,
-                                child: Column(
-                                  children: [
-                                    Center(child: Icon(Icons.thumb_up_alt_outlined, color: Colors.green)),
-                                    SizedBox(width: 10),
-                                    Expanded(
-                                      child: Text('This is an alert message.'),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () => Get.back(),
-                                  child: Text('Close'),
+                                // SizedBox(width: 10.0,),
+                                FlashSwitch(),
+                                Image.asset(
+                                  Flashvalues ? 'images/on.png' : 'images/off.png',
+                                  height: 30,
                                 ),
                               ],
                             ),
-                          )
+                          ],
+                        ),
+
+                      ],
+                    )
+
+                ),
+
+              ),
+              Visibility(
+                visible: false,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        TextButton(
+                            onPressed: () async=>{
+                              //await controller!.toggleFlash(),
+                              // Wakelock.enable()
+                              // await controller!.pauseCamera(),
+                              //Get.to(() => Homepage()),
+                              Get.dialog(
+
+
+                                AlertDialog(
+                                  title: Center(child: Text('Message')),
+                                  content: Container(
+                                    height: 50,
+                                    child: Column(
+                                      children: [
+                                        Center(child: Icon(Icons.thumb_up_alt_outlined, color: Colors.green)),
+                                        SizedBox(width: 10),
+                                        Expanded(
+                                          child: Text('This is an alert message.'),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Get.back(),
+                                      child: Text('Close'),
+                                    ),
+                                  ],
+                                ),
+                              )
 
 
 
-                        },
+                            },
 
-                        child: const Text("alert")
+                            child: const Text("alert")
+                        ),
+                        TextButton(
+                            onPressed: () async=>{
+                              //await controller!.toggleFlash(),
+                              // Wakelock.enable()
+                              // await controller!.pauseCamera(),
+                              //Get.to(() => Homepage()),
+                              ScanPopup("none"),
+
+
+                            },
+
+                            child: const Text("Enable")
+                        ),
+                      ],
                     ),
-                    TextButton(
-                        onPressed: () async=>{
-                          //await controller!.toggleFlash(),
-                          // Wakelock.enable()
-                          // await controller!.pauseCamera(),
-                          //Get.to(() => Homepage()),
-                          ScanPopup("none"),
-
-
-                        },
-
-                        child: const Text("Enable")
-                    ),
-                  ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if(showOveray)
+            Positioned.fill(
+              child: Center(
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white70,
+                  child: CircularProgressIndicator(),
                 ),
               ),
             ),
-          ),
         ],
-      ) ,
+      ),
       bottomNavigationBar:HomeNavigator(),
 
     );
@@ -249,6 +264,7 @@ class _AddCardPageState extends State<AddCardPage> {
   ScanPopup(checkcode){
 controller!.pauseCamera();
 uidInput7.text=checkcode;
+
     Get.bottomSheet(
         Stack(
           alignment: Alignment.bottomCenter,
@@ -474,6 +490,9 @@ uidInput7.text=checkcode;
                           size: 24.0,
                         ),
                         onPressed: ()async =>{
+                        setState(() {
+                        showOveray=true;
+                        }),
                           //print(uidInput2.text),
 
                           // print( (await ParticipatedQuery().getAllParticipateEventOnline()).data["status"])
@@ -481,6 +500,9 @@ uidInput7.text=checkcode;
 
                           if((await CardQuery().CreateAssignCardEventOnline(CardModel(uid:uidInput7.text),Admin(phone:uidInput.text,name:uidInput2.text,email:uidInput3.text,Ccode:uidInput4.text,initCountry:initCountry.text,country:uidInput5.text,password:uidInput6.text,uid: "no need", subscriber:"no need"))).data["status"])
                             {
+                              setState(() {
+                                showOveray=false;
+                              }),
                               uidInput7.text="",
                               Get.close(1),
                               controller!.resumeCamera(),
@@ -493,6 +515,9 @@ uidInput7.text=checkcode;
                                   duration: Duration(seconds: 4))
                             }
                           else{
+                            setState(() {
+                              showOveray=false;
+                            }),
                             uidInput7.text="",
                             Get.close(1),
                             controller!.resumeCamera(),

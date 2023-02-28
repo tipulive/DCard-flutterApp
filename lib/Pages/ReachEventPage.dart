@@ -23,6 +23,7 @@ class ReachEventPage extends StatelessWidget {
           onPressed: () {
             Get.back();
           },
+
         ),
 
         toolbarHeight:0, //hide Text in appbar

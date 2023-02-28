@@ -56,6 +56,7 @@ class _HomepageState extends State<Homepage> {
   TextEditingController ClientName=TextEditingController();
   String PromoMsg="none";
   bool showprofile=false;
+  bool showOveray=false;
   final GlobalKey qrkey = GlobalKey(debugLabel: 'QR');
   Barcode?result;
   QRViewController?controller;
@@ -100,59 +101,61 @@ class _HomepageState extends State<Homepage> {
 
     //FocusScope.of(context).unfocus();//hide keyboard on screen loadin
     return Scaffold(
-      body:Column(
+      body:Stack(
         children: [
-          Visibility(
-            visible:true,
-            child: Expanded(
-                flex: 5,
-                child:Stack(
-                  alignment:Alignment.bottomCenter,
-                  children: [
-                    QRView(key: qrkey,onQRViewCreated: _onQRViewCreated,),
-
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+          Column(
+            children: [
+              Visibility(
+                visible:true,
+                child: Expanded(
+                    flex: 5,
+                    child:Stack(
+                      alignment:Alignment.bottomCenter,
                       children: [
+                        QRView(key: qrkey,onQRViewCreated: _onQRViewCreated,),
+
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
 
-                            CameraSwitch(),
-                            //SizedBox(width: 10.0,),
+                                CameraSwitch(),
+                                //SizedBox(width: 10.0,),
 
-                            // SizedBox(width: 10.0,),
-                            FlashSwitch(),
-                            Image.asset(
-                              Flashvalue ? 'images/on.png' : 'images/off.png',
-                              height: 30,
+                                // SizedBox(width: 10.0,),
+                                FlashSwitch(),
+                                Image.asset(
+                                  Flashvalue ? 'images/on.png' : 'images/off.png',
+                                  height: 30,
+                                ),
+                              ],
                             ),
                           ],
                         ),
+
                       ],
-                    ),
+                    )
 
-                  ],
-                )
+                ),
 
-            ),
+              ),
 
-          ),
+              Visibility(
+                visible: true,
+                child: Expanded(
+                  flex: 2,
+                  child: SingleChildScrollView(
 
-          Visibility(
-            visible: true,
-            child: Expanded(
-              flex: 2,
-              child: SingleChildScrollView(
-
-                child: Center(
-                    child:Column(
-                      children: [
-                        (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
+                    child: Center(
+                        child:Column(
+                          children: [
+                            (result!=null)?Text("barcode Type ${describeEnum(result!.format)} Data ${result!.code}"): const Text("Scan Code"),
 
 
 
-                       /* GetBuilder<PromotionQuery>(
+                            /* GetBuilder<PromotionQuery>(
                           // init:PromotionQuery(),
                             builder: (promotionState){
 
@@ -166,12 +169,12 @@ class _HomepageState extends State<Homepage> {
                             }),*/
 
 
-                        TextButton(
-                            onPressed: () async=>{
-                              //await controller!.toggleFlash(),
-                              // Wakelock.enable()
+                            TextButton(
+                                onPressed: () async=>{
+                                  //await controller!.toggleFlash(),
+                                  // Wakelock.enable()
 
-                              /*CoolAlert.show(
+                                  /*CoolAlert.show(
                             context: context,
                               backgroundColor:Color(0xff940e4b),
                             type: CoolAlertType.success,
@@ -180,41 +183,54 @@ class _HomepageState extends State<Homepage> {
 
                             )*/
 
-                              //ScanPopup(),
+                                  //ScanPopup(),
 
-                              ScanPopup("ui","name"),
-
-
-                            },
-
-                            child: const Text("Enable")
-                        ),
+                                  ScanPopup("ui","name"),
 
 
-                        TextButton(
-                            onPressed: () async=>{
-                             // await controller!.resumeCamera(),
-                              // Wakelock.enable()
-                             // print((Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?"yes":"none"),
-                            await controller!.pauseCamera(),
-                          // ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175'))).data,
-                              //print((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175'))))
-                             // print(ResultData["status"])
+                                },
+
+                                child: const Text("Enable")
+                            ),
+
+
+                            TextButton(
+                                onPressed: () async=>{
+                                  // await controller!.resumeCamera(),
+                                  // Wakelock.enable()
+                                  // print((Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?"yes":"none"),
+                                  await controller!.pauseCamera(),
+                                  // ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175'))).data,
+                                  //print((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175'))))
+                                  // print(ResultData["status"])
 
 
 
-                            },
-                            child: const Text("resume")
-                        ),
+                                },
+                                child: const Text("resume")
+                            ),
 
 
-                      ],
-                    )
+                          ],
+                        )
 
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          if(showOveray)
+            Positioned.fill(
+              child: Center(
+                child: Container(
+                  alignment: Alignment.center,
+                  color: Colors.white70,
+                  child: CircularProgressIndicator(),
                 ),
               ),
             ),
-          ),
+
         ],
       ) ,
       bottomNavigationBar:HomeNavigator(),
@@ -266,6 +282,9 @@ class _HomepageState extends State<Homepage> {
               bottom:70,
               child: FloatingActionButton(
                 onPressed:()async {
+                  setState(() {
+                    showOveray=true;
+                  });
               ResultDatas=(await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))).data;
               if(ResultDatas["status"])
                 {
@@ -499,13 +518,18 @@ class _HomepageState extends State<Homepage> {
                     ),
                     onPressed: ()async =>{
 
-
+                    setState(() {
+                    showOveray=true;
+                    }),
 
 
                       await Get.put(ParticipatedQuery()).ParticipateEventOnline(Participated(uid:uidInput.text,uidUser:uidInput2.text,inputData:uidInput3.text),Promotions(reach:uidInput4.text,gain:uidInput5.text)),
                       //print((Get.put(ParticipatedQuery()).obj)),
                       if((Get.put(ParticipatedQuery()).obj)["resultData"]["reach"]!=null)
                         {
+                          setState(() {
+                            showOveray=false;
+                          }),
                           uidInput3.text="",
                           Get.close(1),
                           controller!.resumeCamera(),
@@ -525,6 +549,9 @@ class _HomepageState extends State<Homepage> {
                         }else{
                         if((Get.put(ParticipatedQuery()).obj)["resultData"]["status"])
                           {
+                            setState(() {
+                              showOveray=false;
+                            }),
                             uidInput3.text="",
                             Get.close(1),
                             controller!.resumeCamera(),
@@ -586,7 +613,11 @@ class _HomepageState extends State<Homepage> {
         //uidInput2.text="${(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}";
 if(result!=null)
   {
+
     controller!.pauseCamera();
+    setState(() {
+      showOveray=true;
+    });
     try {
 
 
@@ -595,7 +626,9 @@ if(result!=null)
 var ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}'))).data;
     if(ResultData["status"])
       {
-
+        setState(() {
+          showOveray=false;
+        });
 
         //print(ResultData["UserDetail"]["uid"]);
         ScanPopup(ResultData["UserDetail"]["uid"],ResultData["UserDetail"]["name"]);
@@ -603,6 +636,9 @@ var ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${
       }
     else{
       controller!.pauseCamera();
+      setState(() {
+        showOveray=false;
+      });
       CoolAlert.show(
         context: context,
         backgroundColor:Color(0xff940e4b),

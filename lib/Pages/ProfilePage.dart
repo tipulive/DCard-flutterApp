@@ -35,7 +35,8 @@ class ProfilePage extends StatelessWidget {
         ),
 
       ),
-      backgroundColor: Color(0xff010a0e),
+      backgroundColor: Colors.yellow,
+      //backgroundColor: Color(0xff010a0e),
 
       body: ProfileComp(),
       bottomNavigationBar:ProfileNavigator(),

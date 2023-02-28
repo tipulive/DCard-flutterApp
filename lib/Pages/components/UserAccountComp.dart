@@ -21,6 +21,7 @@ class UserAccountComp extends StatefulWidget {
 }
 
 class _UserAccountCompState extends State<UserAccountComp> {
+  bool showOveray=false;
   @override
   Widget build(BuildContext context) {
     return ListView(
@@ -42,39 +43,54 @@ class _UserAccountCompState extends State<UserAccountComp> {
     );
   }
   Widget profile(){
-    return Column(
+    return Stack(
+      children: [
+        Column(
 
-      children: <Widget>[
-        SizedBox(
-          width: 100,
-          height: 100,
-          child: CircleAvatar(
-            backgroundImage: AssetImage("images/profile.jpg"),
-          ),
-        ),
-        SizedBox(height:6.0),
-
-        Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
-        SizedBox(height:3.0),
-        Text("+ ${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25,
-              height: 25,
-              decoration: BoxDecoration(
-                //shape: BoxShape.circle,
-                //border: Border.all(color: Colors.black,width: 2)
+          children: <Widget>[
+            SizedBox(
+              width: 100,
+              height: 100,
+              child: CircleAvatar(
+                backgroundImage: AssetImage("images/profile.jpg"),
               ),
-              child: Icon(Icons.phone
-                ,size: 18,
-                color: Colors.black,),
             ),
-            SizedBox(width: 1,),
-            Text("Profile",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
+            SizedBox(height:6.0),
+
+            Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
+            SizedBox(height:3.0),
+            Text("+ ${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 25,
+                  height: 25,
+                  decoration: BoxDecoration(
+                    //shape: BoxShape.circle,
+                    //border: Border.all(color: Colors.black,width: 2)
+                  ),
+                  child: Icon(Icons.phone
+                    ,size: 18,
+                    color: Colors.black,),
+                ),
+                SizedBox(width: 1,),
+                Text("Profile",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
+              ],
+            ),
           ],
         ),
+        if(showOveray)
+          Positioned.fill(
+            child: Center(
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.white70,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+
       ],
     );
   }
@@ -292,7 +308,9 @@ class _UserAccountCompState extends State<UserAccountComp> {
                         size: 24.0,
                       ),
                       onPressed: ()async =>{
-
+                        setState(() {
+                          showOveray=true;
+                        }),
                         ResultData=(await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",name:name.text,email:email.text,Ccode:Ccode.text,phone:phone.text,initCountry:initCountry.text,country:Country.text,password:password.text,status:edit.text,subscriber:"none"))).data,
                         if(ResultData["status"])
                           {
@@ -302,7 +320,9 @@ class _UserAccountCompState extends State<UserAccountComp> {
                               Get.put(CardQuery()).obj;
                             }),
                             Get.close(1),
-
+                            setState(() {
+                              showOveray=false;
+                            }),
                             Get.snackbar("Success", "Profile Edited Successfuly",backgroundColor: Color(0xff9a1c55),
                                 colorText: Color(0xffffffff),
                                 titleText: const Text("Card User",style:TextStyle(color:Color(
@@ -314,7 +334,9 @@ class _UserAccountCompState extends State<UserAccountComp> {
                         else{
 
                           Get.close(1),
-
+                          setState(() {
+                            showOveray=false;
+                          }),
                           Get.snackbar("Error", "Something is Wrong Please Contact System Admin",backgroundColor: Color(
                               0xffdc2323),
                               colorText: Color(0xffffffff),
