@@ -189,6 +189,9 @@ class TopupQuery extends GetxController{
       var params =  {
 
         "uid":TopupData.uid,//userid
+        "LimitStart":TopupData.endlimit,  //page
+        "LimitEnd":TopupData.startlimit,//limit
+        "optionCase":TopupData.optionCase//optionCase
         //"uid":"kebineericMuna_1668935593",
         //"options": [1,2,3],
       };
@@ -209,8 +212,9 @@ class TopupQuery extends GetxController{
         //updateEventState(response.data);
         //return "hello";
 
-        updateBalanceHistState(response.data);
-        return response.data;
+        //updateBalanceHistState(response.data);
+        //return response.data;
+        return response;
 
 
       } else {

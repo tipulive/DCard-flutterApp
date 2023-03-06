@@ -36,7 +36,7 @@ class BalancePage extends StatelessWidget {
         ),
 
       ),
-      backgroundColor: Colors.yellow,
+      //backgroundColor: Colors.yellow,
 
       body: const BalanceComp(),
       bottomNavigationBar:ProfileNavigator(),

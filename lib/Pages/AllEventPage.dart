@@ -37,7 +37,7 @@ class AllEventPage extends StatelessWidget {
         ),
 
       ),
-      backgroundColor: Colors.yellow,
+      //backgroundColor: Colors.yellow,
 
       body: const AllEventComp(),
       bottomNavigationBar:ProfileNavigator(),

@@ -37,7 +37,7 @@ class BonusPage extends StatelessWidget {
         ),
 
       ),
-      backgroundColor: Colors.yellow,
+      //backgroundColor: Colors.yellow,
 
       body: const BonusComp(),
       bottomNavigationBar:ProfileNavigator(),

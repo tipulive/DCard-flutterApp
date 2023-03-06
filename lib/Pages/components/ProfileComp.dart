@@ -1,4 +1,5 @@
 
+import 'package:dcard/Pages/AllEventPage.dart';
 import 'package:dcard/Pages/BalancePage.dart';
 import 'package:dcard/Pages/BonusPage.dart';
 import 'package:dcard/Pages/EventsPage.dart';
@@ -13,6 +14,7 @@ import '../../Query/CardQuery.dart';
 import '../../Query/TopupQuery.dart';
 import '../../models/Topups.dart';
 import '../ActiveEventPage.dart';
+import'../../Pages/components/ProfilePic.dart';
 
 class ProfileComp extends StatefulWidget {
   const ProfileComp({Key? key}) : super(key: key);
@@ -37,7 +39,7 @@ class _ProfileCompState extends State<ProfileComp> {
 
         children: [
 
-        profile(),
+        ProfilePic().profile(),
     const SizedBox(height: 6.0,),
     divLine(),
     detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["balance"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,balancefunc),
@@ -77,43 +79,7 @@ class _ProfileCompState extends State<ProfileComp> {
       ],
     );
   }
-  Widget profile(){
-    return Column(
 
-      children: <Widget>[
-        SizedBox(
-          width: 100,
-          height: 100,
-          child: CircleAvatar(
-            backgroundImage: AssetImage("images/profile.jpg"),
-          ),
-        ),
-        SizedBox(height:6.0),
-
-        Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
-        SizedBox(height:3.0),
-        //Text("Eric Ford",style: TextStyle(color: Colors.teal,fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25,
-              height: 25,
-              decoration: BoxDecoration(
-                //shape: BoxShape.circle,
-                //border: Border.all(color: Colors.black,width: 2)
-              ),
-              child: Icon(Icons.phone
-                ,size: 18,
-                color: Colors.black,),
-            ),
-            SizedBox(width: 1,),
-            Text("+ ${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
-          ],
-        ),
-      ],
-    );
-  }
   topupFunc() async{
     balance.text="";
     description.text="";
@@ -845,19 +811,21 @@ mainAxisAlignment: MainAxisAlignment.end,
 }
 
  balancefunc() async{
-   (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+   //(await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
    Get.to(() =>BalancePage());
 }
 bonusfunc() async{
-  (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+  //(await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>BonusPage());
 }
 eventfunc() async{
-  (await Get.put(ParticipatedQuery()).getCountParticipateEventOnline(Participated(uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+  //(await Get.put(ParticipatedQuery()).getCountParticipateEventOnline(Participated(uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
-  Get.to(() =>EventsPage());
+  //Get.to(() =>EventsPage());
+  Get.to(() =>AllEventPage());
+
 }
 statusfunc() async{
   (await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));

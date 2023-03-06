@@ -1,10 +1,8 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
 import 'package:dio/dio.dart';
-import 'package:get/get.dart';
 
 import '../Query/ScrollQuery.dart';
 
@@ -19,7 +17,7 @@ class _ScrollPageState extends State<ScrollPage> {
 
   ScrollController _scrollController = ScrollController();// detect scroll
   List<dynamic> _data = [];
-  int _page=0;
+  int _page=1;
   bool hasMoreData=true;
   bool isLoading=false;
   @override
@@ -30,36 +28,14 @@ class _ScrollPageState extends State<ScrollPage> {
         children: [
           Expanded(
             child: ListView.builder(
-
               controller: _scrollController,
               itemCount: _data.length+1,
               itemBuilder: (context, index) {
                 if(index<_data.length)
                   {
-                    return Card(
-                      elevation:0,
-                      //margin: EdgeInsets.symmetric(vertical:1,horizontal:5),
-                     //color:Colors.yellow,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        //side: BorderSide(color:getRandomColor(), width: 1),
-                      ),
-
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          child: Icon(_getRandomIcon()),
-                          backgroundColor:getRandomColor(),
-                        ),
-                        title: Text("${_data[index]['id']}"),
-                        subtitle: Text(_data[index]['productCode']),
-
-                        trailing: IconButton(
-                          icon:Icon(Icons.arrow_forward),
-                          onPressed: () {
-                            // delete item at index
-                          },
-                        ),
-                      ),
+                    return ListTile(
+                      title: Text("${_data[index]['id']}"),
+                      subtitle: Text(_data[index]['body']),
                     );
                   }
                 else{
@@ -91,7 +67,7 @@ class _ScrollPageState extends State<ScrollPage> {
   void _scrollListener() {
     if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
         !_scrollController.position.outOfRange) {
-      _page=_page+10;
+      _page++;
       //getapi();
       scrolldata();
     }
@@ -102,33 +78,22 @@ class _ScrollPageState extends State<ScrollPage> {
     _scrollController.dispose();
     super.dispose();
   }
-  Color getRandomColor() {
-    Random random = Random();
-    return Color.fromARGB(
-      255,
-      random.nextInt(256),
-      random.nextInt(256),
-      random.nextInt(256),
-    );
-  }
-  IconData _getRandomIcon() {
-    Random random = Random();
-    List<IconData> icons = [Icons.favorite,Icons.star,Icons.thumb_up,Icons.access_time,Icons.access_time,Icons.fastfood,Icons.directions_bike,      Icons.directions_walk,      Icons.directions_car,      Icons.directions_boat,      Icons.airplanemode_active,      Icons.airport_shuttle,      Icons.beach_access,      Icons.camera,      Icons.movie,      Icons.music_note,      Icons.spa,      Icons.palette,      Icons.account_balance,      Icons.attach_money,    ];
-    return icons[random.nextInt(icons.length)];
-  }
   scrolldata()async
   {
     if(isLoading) return;
     isLoading=true;
     int limit=10;
     var Resul=(await ScrollQuery().getapi(limit,_page)).data;
+    final List NewItems=Resul;
+    //return response;
+    //print(response.data[0]["userId"]);
     setState(() {
       isLoading=false;
-      if(Resul["result"].length<limit)
+      if(NewItems.length<limit)
       {
         hasMoreData=false;
       }
-      _data.addAll(Resul["result"]);
+      _data.addAll(Resul);
     });
   }
   getapi() async{

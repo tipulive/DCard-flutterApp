@@ -1,197 +1,171 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+
 
 import '../../Query/CardQuery.dart';
 
 import '../../Query/ParticipatedQuery.dart';
 import '../../models/Participated.dart';
-import '../ParticipateHistPage.dart';
 
-class AllEventComp extends StatelessWidget {
+import '../ParticipateHistPage.dart';
+import '../components/ProfilePic.dart';
+import '../../models/Topups.dart';
+
+
+
+
+class AllEventComp extends StatefulWidget {
   const AllEventComp({Key? key}) : super(key: key);
-//static final uniput=TextEditingController();
+
+  @override
+  State<AllEventComp> createState() => _AllEventCompState();
+}
+
+class _AllEventCompState extends State<AllEventComp> {
+  ScrollController _scrollController = ScrollController();// detect scroll
+  List<dynamic> _data = [];
+  int _page=0;
+  bool hasMoreData=true;
+  bool isLoading=false;
   @override
   Widget build(BuildContext context) {
 
-    return ListView(
 
 
+    return listdata();
+
+
+
+  }
+  Widget listdata(){
+    return  Column(
       children: [
+        ProfilePic().profile(),
+        Text("Events"),
+        Expanded(
+          child: ListView.builder(
 
-        profile(),
-        const SizedBox(height: 6.0,),
-        divLine(),
-        for(var i=0;i<(Get.put(ParticipatedQuery()).all)["resultData"]["result"].length;i++)
-          ...[
-
-            detailsProfile("EventID",Icons.account_balance_wallet,"${(Get.put(ParticipatedQuery()).all)["resultData"]["result"][i]["uid"]}",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
-            const SizedBox(height:5,),
-
-          ],
-
-
-
-
-
-      ],
-    );
-  }
-
-  Widget profile(){
-    return Column(
-
-      children: <Widget>[
-        SizedBox(
-          width: 100,
-          height: 100,
-          child: CircleAvatar(
-            backgroundImage: AssetImage("images/profile.jpg"),
-          ),
-        ),
-        SizedBox(height:6.0),
-
-        //Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
-        SizedBox(height:3.0),
-        //Text("Eric Ford",style: TextStyle(color: Colors.teal,fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25,
-              height: 25,
-              decoration: BoxDecoration(
-                //shape: BoxShape.circle,
-                //border: Border.all(color: Colors.black,width: 2)
-              ),
-              child: Icon(Icons.phone
-                ,size: 18,
-                color: Colors.black,),
-            ),
-            SizedBox(width: 1,),
-            // Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
-          ],
-        ),
-      ],
-    );
-  }
-  Widget divLine(){
-    return Container(
-      margin: const EdgeInsets.all(8),
-      child: Row(
-
-        children: [
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-
-
-                  constraints: const BoxConstraints(maxWidth: 200,maxHeight: 5),
-                  //color: Color.fromRGBO(13,44,64, 0.4),
-                  color: Colors.white70
-              ),
-            ),
-          ),
-          const SizedBox(width: 100,),
-          Expanded(
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Container(
-
-
-                  constraints: const BoxConstraints(maxWidth: 200,maxHeight: 5),
-                  //color: Color.fromRGBO(13,44,64, 0.4),
-                  color: Colors.white70
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconright,IconDescrRight,listBackgroundRight){
-
-
-    return ClipRRect(
-      //borderRadius: BorderRadius.circular(32),
-      child: Container(
-        padding: EdgeInsets.all(8),
-        //margin: const EdgeInsets.all(8),
-        margin: EdgeInsets.fromLTRB(8,0,8,0),
-        width: 400,
-        height: 50,
-        //color:Color(0xffffffff),
-        color:Color(listBackground),
-
-        child: Row(
-
-          children: [
-            Container(
-              width: 30,
-              height: 30,
-              decoration: BoxDecoration(
-
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.yellow,width: 1.5),
-
-
-
-              ),
-              child: Icon(
-                icon,color:
-              Colors.amber,size: 22,),
-
-            ),
-            SizedBox(width:3,),
-            Text("${IconText}:",style:GoogleFonts.pacifico(fontSize:15,color: Colors.teal,fontWeight: FontWeight.w700)),
-            SizedBox(width:5,),
-            Expanded(
-              child: Container(
-                padding: EdgeInsets.only(top: 3.9),
-                child: Text("${IconDescr}",style:GoogleFonts.pacifico(fontSize: 15)),
-              ),
-            ),
-
-            Expanded(//right
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Container(
-
-                    width: 30,
-                    height: 30,
-
-                    child:
-                    GestureDetector(
-                        onTap: () async{
-                          // This function will be called when the icon is tapped.
-                          // myfunct();
-                          //print(IconText);
-                          (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
-
-                          Get.to(() =>ParticipateHistPage());
-                        },
-                        child: Icon(iconright,color:
-                        Colors.teal,size: 22,)
-                    )
-
-
-
-
-
+            controller: _scrollController,
+            itemCount: _data.length+1,
+            itemBuilder: (context, index) {
+              if(index<_data.length)
+              {
+                return Card(
+                  elevation:0,
+                  //margin: EdgeInsets.symmetric(vertical:1,horizontal:5),
+                  //color:Colors.yellow,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    //side: BorderSide(color:getRandomColor(), width: 1),
                   ),
 
-                ],
-              ),
-            ),
-          ],
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Icon(_getRandomIcon()),
+                      backgroundColor:getRandomColor(),
+                    ),
+                    title:Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("${_data[index]['uid']}"),
+                          ],
+                        ),
+
+
+                      ],
+                    ),
+                    subtitle: Text("${_data[index]['inputData']}"),
+
+                    trailing: IconButton(
+                      icon:Icon(Icons.arrow_forward),
+                      onPressed: () {
+                        // delete item at index
+
+                        Get.to(() =>ParticipateHistPage(),arguments:[_data[index]['inputData'],_data[index]['uid']]);
+                      },
+                    ),
+                  ),
+                );
+
+              }
+              else{
+                return  Padding(
+                  padding:EdgeInsets.symmetric(vertical: 32),
+                  child:Center(
+                      child:hasMoreData?
+                      CircularProgressIndicator()
+                          :Text("no more Data")
+
+                  ),
+                );
+              }
+
+            },
+          ),
         ),
-      ),
+      ],
     );
   }
+  void initState()
+  {
+    super.initState();
+    //getapi();
+    scrolldata();
+    _scrollController.addListener(_scrollListener);
+  }
+  void _scrollListener() {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      _page=_page+10;
+      //getapi();
+      scrolldata();
+    }
+  }
 
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+  Color getRandomColor() {
+    Random random = Random();
+    return Color.fromARGB(
+      255,
+      random.nextInt(256),
+      random.nextInt(256),
+      random.nextInt(256),
+    );
+  }
+  IconData _getRandomIcon() {
+    Random random = Random();
+    List<IconData> icons = [Icons.favorite,Icons.star,Icons.thumb_up,Icons.access_time,Icons.access_time,Icons.fastfood,Icons.directions_bike,      Icons.directions_walk,      Icons.directions_car,      Icons.directions_boat,      Icons.airplanemode_active,      Icons.airport_shuttle,      Icons.beach_access,      Icons.camera,      Icons.movie,      Icons.music_note,      Icons.spa,      Icons.palette,      Icons.account_balance,      Icons.attach_money,    ];
+    return icons[random.nextInt(icons.length)];
+  }
+  scrolldata()async
+  {
+    if(isLoading) return;
+    isLoading=true;
+    int limit=10;
+    //var Resul=(await ScrollQuery().getapi(limit,_page)).data;
+    ///var Resul=(await TopupQuery().GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",startlimit:limit,endlimit:_page,optionCase:'balance'))).data;
+    var Resul=(await ParticipatedQuery().getAllParticipateEventOnline(Participated(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"),Topups(startlimit:limit,endlimit:_page,optionCase:'balance'))).data;
+    setState(() {
+      isLoading=false;
+      if(Resul["result"].length<limit)
+      {
+        isLoading=false;
+        hasMoreData=false;
+      }
+
+      _data.addAll(Resul["result"]);
+    });
+  }
 }
 
 

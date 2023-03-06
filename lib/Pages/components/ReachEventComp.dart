@@ -167,7 +167,7 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
                   GestureDetector(
                       onTap: () async{
                         // This function will be called when the icon is tapped.
-                        (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+                       // (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
                         Get.to(() =>ParticipateHistPage());
                       },

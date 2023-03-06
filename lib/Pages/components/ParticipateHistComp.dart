@@ -1,76 +1,170 @@
+import 'dart:math';
+
+import 'package:dcard/models/Participated.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
+import '../../Query/CardQuery.dart';
 import '../../Query/ParticipatedQuery.dart';
+import '../../Query/ScrollQuery.dart';
+import '../../Pages/components/ProfilePic.dart';
+import '../../models/Topups.dart';
 
-class ParticipateHistComp extends StatelessWidget {
+class ParticipateHistComp extends StatefulWidget {
   const ParticipateHistComp({Key? key}) : super(key: key);
 
   @override
+  State<ParticipateHistComp> createState() => _ParticipateHistCompState();
+}
+
+class _ParticipateHistCompState extends State<ParticipateHistComp> {
+  ScrollController _scrollController = ScrollController();// detect scroll
+  List<dynamic> _data = [];
+  int _page=0;
+  bool hasMoreData=true;
+  bool isLoading=false;
+  final args = Get.arguments;
+
+  //final myInt = args['int'] as int;
+  @override
   Widget build(BuildContext context) {
 
-    return ListView(
 
 
-      children: [
-
-        profile(),
-        const SizedBox(height: 6.0,),
-        divLine(),
-        for(var i=0;i<(Get.put(ParticipatedQuery()).hist)["resultData"]["result"].length;i++)
-          ...[
-
-            detailsProfile("${(Get.put(ParticipatedQuery()).hist)["resultData"]["result"][i]["uid"]}",Icons.account_balance_wallet,"${(Get.put(ParticipatedQuery()).hist)["resultData"]["result"][i]["inputData"]}",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
-            const SizedBox(height:5,),
-
-          ]
+         return listdata();
 
 
 
-      ],
-    );
   }
+  Widget listdata(){
+    return  Column(
+      children: [
+        ProfilePic().profile(),
+        Text("${args[1]}"),
+        Text("Event History"),
+        Expanded(
+          child: ListView.builder(
 
-  Widget profile(){
-    return Column(
+            controller: _scrollController,
+            itemCount: _data.length+1,
+            itemBuilder: (context, index) {
+              if(index<_data.length)
+              {
+                return Card(
+                  elevation:0,
+                  //margin: EdgeInsets.symmetric(vertical:1,horizontal:5),
+                  //color:Colors.yellow,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    //side: BorderSide(color:getRandomColor(), width: 1),
+                  ),
 
-      children: <Widget>[
-        SizedBox(
-          width: 100,
-          height: 100,
-          child: CircleAvatar(
-            backgroundImage: AssetImage("images/profile.jpg"),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Icon(_getRandomIcon()),
+                      backgroundColor:getRandomColor(),
+                    ),
+                    title:Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Submitted"),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text("${_data[index]['created_at']}"),
+                          ],
+                        ),
+
+
+                      ],
+                    ),
+                    subtitle: Text("${_data[index]['inputData']}"),
+
+
+                  ),
+                );
+
+              }
+              else{
+                return  Padding(
+                  padding:EdgeInsets.symmetric(vertical: 32),
+                  child:Center(
+                      child:hasMoreData?
+                      CircularProgressIndicator()
+                          :Text("no more Data")
+
+                  ),
+                );
+              }
+
+            },
           ),
         ),
-        SizedBox(height:6.0),
-
-        //Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
-        SizedBox(height:3.0),
-        //Text("Eric Ford",style: TextStyle(color: Colors.teal,fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25,
-              height: 25,
-              decoration: BoxDecoration(
-                //shape: BoxShape.circle,
-                //border: Border.all(color: Colors.black,width: 2)
-              ),
-              child: Icon(Icons.phone
-                ,size: 18,
-                color: Colors.black,),
-            ),
-            SizedBox(width: 1,),
-            // Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
-          ],
-        ),
       ],
     );
   }
+  void initState()
+  {
+    super.initState();
+    //getapi();
+    scrolldata();
+    _scrollController.addListener(_scrollListener);
+  }
+  void _scrollListener() {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      _page=_page+10;
+      //getapi();
+      scrolldata();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+  Color getRandomColor() {
+    Random random = Random();
+    return Color.fromARGB(
+      255,
+      random.nextInt(256),
+      random.nextInt(256),
+      random.nextInt(256),
+    );
+  }
+  IconData _getRandomIcon() {
+    Random random = Random();
+    List<IconData> icons = [Icons.favorite,Icons.star,Icons.thumb_up,Icons.access_time,Icons.access_time,Icons.fastfood,Icons.directions_bike,      Icons.directions_walk,      Icons.directions_car,      Icons.directions_boat,      Icons.airplanemode_active,      Icons.airport_shuttle,      Icons.beach_access,      Icons.camera,      Icons.movie,      Icons.music_note,      Icons.spa,      Icons.palette,      Icons.account_balance,      Icons.attach_money,    ];
+    return icons[random.nextInt(icons.length)];
+  }
+  scrolldata()async
+  {
+    if(isLoading) return;
+    isLoading=true;
+    int limit=10;
+    var Resul=(await ParticipatedQuery().getParticipateHistEventOnline(Participated(uid:"${args[1]}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"),Topups(startlimit:limit,endlimit:_page))).data;
+    setState(() {
+      isLoading=false;
+      if(Resul["result"].length<limit)
+      {
+        hasMoreData=false;
+      }
+      _data.addAll(Resul["result"]);
+    });
+  }
 }
+
+
+
 Widget divLine(){
   return Container(
     margin: const EdgeInsets.all(8),

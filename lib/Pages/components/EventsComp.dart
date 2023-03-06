@@ -202,7 +202,7 @@ Reachedfunct()async{
   Get.to(() =>ReachEventPage());
 }
 AllEventfunct()async{
-  (await Get.put(ParticipatedQuery()).getAllParticipateEventOnline(Participated(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+  //(await Get.put(ParticipatedQuery()).getAllParticipateEventOnline(Participated(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>AllEventPage());
 }

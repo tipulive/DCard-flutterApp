@@ -1,83 +1,164 @@
+import 'dart:math';
+
+import 'package:dcard/models/Topups.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
 import '../../Query/CardQuery.dart';
-import '../../Query/TopupQuery.dart';
 
-class BonusComp extends StatelessWidget {
+import '../../Query/TopupQuery.dart';
+import 'ProfilePic.dart';
+
+
+class BonusComp extends StatefulWidget {
   const BonusComp({Key? key}) : super(key: key);
 
   @override
+  State<BonusComp> createState() => _BonusCompState();
+}
+
+class _BonusCompState extends State<BonusComp> {
+  ScrollController _scrollController = ScrollController();// detect scroll
+  List<dynamic> _data = [];
+  int _page=0;
+  bool hasMoreData=true;
+  bool isLoading=false;
+  @override
   Widget build(BuildContext context) {
 
-    return ListView(
 
 
-      children: [
-
-        profile(),
-        const SizedBox(height: 6.0,),
-        divLine(),
-        for(var i=0;i<(Get.put(TopupQuery()).obj2)["resultData"]["result"].length;i++)
-          ...[
-            if((Get.put(TopupQuery()).obj2)["resultData"]["result"][i]["bonus"]=="0")
-              ...[
-
-              ]
-            else
-              ...[
-                detailsProfile("Bonus",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj2)["resultData"]["result"][i]["bonus"]}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff),
-                const SizedBox(height:5,),
-              ]
-          ]
+    return listdata();
 
 
 
-
-
-      ],
-    );
   }
+  Widget listdata(){
+    return  Column(
+      children: [
+       ProfilePic().profile(),
+        Text("Bonus History"),
+        Expanded(
+          child: ListView.builder(
 
-  Widget profile(){
-    return Column(
+            controller: _scrollController,
+            itemCount: _data.length+1,
+            itemBuilder: (context, index) {
+              if(index<_data.length)
+              {
+                return Card(
+                  elevation:0,
+                  //margin: EdgeInsets.symmetric(vertical:1,horizontal:5),
+                  //color:Colors.yellow,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    //side: BorderSide(color:getRandomColor(), width: 1),
+                  ),
 
-      children: <Widget>[
-        SizedBox(
-          width: 100,
-          height: 100,
-          child: CircleAvatar(
-            backgroundImage: AssetImage("images/profile.jpg"),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Icon(_getRandomIcon()),
+                      backgroundColor:getRandomColor(),
+                    ),
+                    title:Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Text("Bonus"),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Text("${_data[index]['created_at']}"),
+                          ],
+                        ),
+
+                      ],
+                    ),
+                    subtitle: Text("${_data[index]['bonus']}\$"),
+
+                    //trailing: Text()
+                  ),
+                );
+
+              }
+              else{
+                return  Padding(
+                  padding:EdgeInsets.symmetric(vertical: 32),
+                  child:Center(
+                      child:hasMoreData?
+                      CircularProgressIndicator()
+                          :Text("no more Data")
+
+                  ),
+                );
+              }
+
+            },
           ),
         ),
-        SizedBox(height:6.0),
-
-        //Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
-        SizedBox(height:3.0),
-        //Text("Eric Ford",style: TextStyle(color: Colors.teal,fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 25,
-              height: 25,
-              decoration: BoxDecoration(
-                //shape: BoxShape.circle,
-                //border: Border.all(color: Colors.black,width: 2)
-              ),
-              child: Icon(Icons.phone
-                ,size: 18,
-                color: Colors.black,),
-            ),
-            SizedBox(width: 1,),
-             Text("Bonus",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
-          ],
-        ),
       ],
     );
   }
+  void initState()
+  {
+    super.initState();
+    //getapi();
+    scrolldata();
+    _scrollController.addListener(_scrollListener);
+  }
+  void _scrollListener() {
+    if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
+        !_scrollController.position.outOfRange) {
+      _page=_page+10;
+      //getapi();
+      scrolldata();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+  Color getRandomColor() {
+    Random random = Random();
+    return Color.fromARGB(
+      255,
+      random.nextInt(256),
+      random.nextInt(256),
+      random.nextInt(256),
+    );
+  }
+  IconData _getRandomIcon() {
+    Random random = Random();
+    List<IconData> icons = [Icons.favorite,Icons.star,Icons.thumb_up,Icons.access_time,Icons.access_time,Icons.fastfood,Icons.directions_bike,      Icons.directions_walk,      Icons.directions_car,      Icons.directions_boat,      Icons.airplanemode_active,      Icons.airport_shuttle,      Icons.beach_access,      Icons.camera,      Icons.movie,      Icons.music_note,      Icons.spa,      Icons.palette,      Icons.account_balance,      Icons.attach_money,    ];
+    return icons[random.nextInt(icons.length)];
+  }
+  scrolldata()async
+  {
+    if(isLoading) return;
+    isLoading=true;
+    int limit=10;
+    //var Resul=(await ScrollQuery().getapi(limit,_page)).data;
+    var Resul=(await TopupQuery().GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",startlimit:limit,endlimit:_page,optionCase:'bonus'))).data;
+    setState(() {
+      isLoading=false;
+      if(Resul["result"].length<limit)
+      {
+        isLoading=false;
+        hasMoreData=false;
+      }
+
+      _data.addAll(Resul["result"]);
+    });
+  }
 }
+
 Widget divLine(){
   return Container(
     margin: const EdgeInsets.all(8),
@@ -163,17 +244,19 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
               children: [
                 Container(
 
-                  width: 30,
-                  height: 30,
+                    width: 30,
+                    height: 30,
 
-                  child:
-                  new IconButton(
-                    icon: new Icon(iconright,color:
-                    Colors.teal,size: 22,),
-                    onPressed: () {
-                      print(IconText);
-                    },
-                  ),
+                    child:
+                    GestureDetector(
+                        onTap: () {
+                          // This function will be called when the icon is tapped.
+                          // myfunct();
+                          //print(IconText);
+                        },
+                        child: Icon(iconright,color:
+                        Colors.teal,size: 22,)
+                    )
 
 
 

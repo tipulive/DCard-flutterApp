@@ -12,7 +12,9 @@ class HomeNavigator extends StatelessWidget {
 
 
  Widget build(BuildContext context) {
-  final myindex = Get.arguments??0;
+  //final myindex = Get.arguments??0;
+  final myindex =0;
+
   return BottomNavigationBar(
    backgroundColor: Colors.yellow,
    currentIndex:myindex,

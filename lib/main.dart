@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dcard/Pages/ScrollPage.dart';
 import 'package:dio/dio.dart';
 //import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -116,14 +117,15 @@ class _MyHomePageState extends State<MyHomePage> {
     {
       //print((adminStatedata.obj)["result"]);
       return Login();
-     // return ScrollPage();
+
+      return ScrollPage();
 
     }
     else{
       //print((adminStatedata.obj)["result"]);
 
       return Login();
-      //return ScrollPage();
+     // return ScrollPage();
     }
 
 

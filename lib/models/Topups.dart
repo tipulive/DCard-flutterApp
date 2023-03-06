@@ -7,6 +7,10 @@ class Topups {
   final String ?subscriber;
   final String ?purpose;
   final String ?desc;
+  final int ?startlimit;
+  final int ?endlimit;
+  final String?optionCase;
+
 
   final String ?created_at;
   final String ?updated_at;
@@ -21,6 +25,9 @@ class Topups {
     this.subscriber,
     this.purpose,
     this.desc,
+    this.startlimit,
+    this.endlimit,
+    this.optionCase,
 
     this.created_at,
     this.updated_at
@@ -36,6 +43,9 @@ class Topups {
       subscriber:json['subscriber'],
       purpose:json['purpose'],
       desc:json['desc'],
+      startlimit:json['startlimit'],
+      endlimit:json['endlimit'],
+      optionCase:json['optionCase'],
 
       created_at:json['created_at'],
       updated_at:json['updated_at']
@@ -51,7 +61,9 @@ class Topups {
       'subscriber': subscriber,
       'purpose': purpose,
       'desc': desc,
-
+      'startlimit':startlimit,
+      'endlimit':endlimit,
+      'optionCase':optionCase,
       'created_at': created_at,
       'updated_at': updated_at
 

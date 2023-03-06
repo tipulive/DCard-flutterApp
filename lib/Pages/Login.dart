@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:dcard/Pages/ParticipateHistPage.dart';
 import 'package:dcard/Query/CardQuery.dart';
 import 'package:dcard/models/CardModel.dart';
 import 'package:dio/dio.dart';
@@ -31,7 +32,7 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Center(child: Text('Login Screen')),
+          title: Center(child: Text('Login')),
         ),
         body: Stack(
           children: [
@@ -45,8 +46,10 @@ class _LoginState extends State<Login> {
                     children: <Widget>[
                       Container(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 70),
-                        child: FlutterLogo(
-                          size: 40,
+                        child: Image.asset(
+                          'images/playstore.png',
+                          width: 80,
+                          height: 80,
                         ),
                       ),
 
@@ -72,7 +75,8 @@ class _LoginState extends State<Login> {
                         else{
                           print("failed");
                         }*/
-                            topupfunc();
+                           // topupfunc();
+                            Get.to(() => ParticipateHistPage());
                            // showon();
                             // print(((await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid: "kebineericMuna_1674160265",name:"voga",email:"on@gmail.com",Ccode:"+250",phone:"782389359",country:"Rwanda",password:"1",status:"edit",subscriber:"none"))).data).runtimeType);
 

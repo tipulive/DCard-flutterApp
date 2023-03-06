@@ -235,7 +235,7 @@ class _HomepageState extends State<Homepage> {
       ) ,
       bottomNavigationBar:HomeNavigator(),
 
-       // This trailing comma makes auto-formatting nicer for build methods.
+      // This trailing comma makes auto-formatting nicer for build methods.
 
     );
 
@@ -285,15 +285,15 @@ class _HomepageState extends State<Homepage> {
                   setState(() {
                     showOveray=true;
                   });
-              ResultDatas=(await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))).data;
-              if(ResultDatas["status"])
-                {
-                  await Get.put(TopupQuery()).updateTopupState(ResultDatas);
-                  Get.to(() => ProfilePage());
-                }
+                  ResultDatas=(await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))).data;
+                  if(ResultDatas["status"])
+                  {
+                    await Get.put(TopupQuery()).updateTopupState(ResultDatas);
+                    Get.to(() => ProfilePage());
+                  }
 
 
-              },
+                },
                 tooltip: 'Increment',
                 child: CircleAvatar(
                   radius: 50,
@@ -428,9 +428,9 @@ class _HomepageState extends State<Homepage> {
                                   children: <Widget> [
 
 
-                                 if(((Get.put(PromotionQuery()).obj)["id"])==1)...[Center(child: CircularProgressIndicator())],
+                                    if(((Get.put(PromotionQuery()).obj)["id"])==1)...[Center(child: CircularProgressIndicator())],
 
-                          for(var i=0;i<(Get.put(PromotionQuery()).obj)["resultData"]["result"].length;i++)
+                                    for(var i=0;i<(Get.put(PromotionQuery()).obj)["resultData"]["result"].length;i++)
                                       RadioListTile(
                                         title: Text("${i==null?"none":(Get.put(PromotionQuery()).obj)["resultData"]["result"][i]["promoName"]}"),
                                         value: "${i==null?"none":(Get.put(PromotionQuery()).obj)["resultData"]["result"][i]["uid"]}",
@@ -518,9 +518,9 @@ class _HomepageState extends State<Homepage> {
                     ),
                     onPressed: ()async =>{
 
-                    setState(() {
-                    showOveray=true;
-                    }),
+                      setState(() {
+                        showOveray=true;
+                      }),
 
 
                       await Get.put(ParticipatedQuery()).ParticipateEventOnline(Participated(uid:uidInput.text,uidUser:uidInput2.text,inputData:uidInput3.text),Promotions(reach:uidInput4.text,gain:uidInput5.text)),
@@ -571,8 +571,8 @@ class _HomepageState extends State<Homepage> {
 
                         //print((Get.put(ParticipatedQuery()).obj)),
                       },
-                     //
-                     //
+                      //
+                      //
 
 
                       //print(promotionState)
@@ -607,62 +607,62 @@ class _HomepageState extends State<Homepage> {
       await scanMethod();
     });
   }
- scanMethod() async{
+  scanMethod() async{
 
-       // uidInput2.text="${result!.code}";
-        //uidInput2.text="${(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}";
-if(result!=null)
-  {
+    // uidInput2.text="${result!.code}";
+    //uidInput2.text="${(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}')))["UserDetail"]["uid"]}";
+    if(result!=null)
+    {
 
-    controller!.pauseCamera();
-    setState(() {
-      showOveray=true;
-    });
-    try {
-
-
-     // controller!.pauseCamera();
-    //controller!.pauseCamera();
-var ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}'))).data;
-    if(ResultData["status"])
-      {
-        setState(() {
-          showOveray=false;
-        });
-
-        //print(ResultData["UserDetail"]["uid"]);
-        ScanPopup(ResultData["UserDetail"]["uid"],ResultData["UserDetail"]["name"]);
-        (await Get.put(CardQuery()).updateCardState(ResultData));
-      }
-    else{
       controller!.pauseCamera();
       setState(() {
-        showOveray=false;
+        showOveray=true;
       });
-      CoolAlert.show(
-        context: context,
-        backgroundColor:Color(0xff940e4b),
-        type: CoolAlertType.error,
-        title:"Error !!!",
-        text: "This Card is not exist",
+      try {
 
-      ).then((value) {
-        // Event to trigger when the alert is dismissed
-        controller!.resumeCamera();
-      });
-      //uidInput2.text="${ResultData["status"]}";
+
+        // controller!.pauseCamera();
+        //controller!.pauseCamera();
+        var ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${result!.code}'))).data;
+        if(ResultData["status"])
+        {
+          setState(() {
+            showOveray=false;
+          });
+
+          //print(ResultData["UserDetail"]["uid"]);
+          ScanPopup(ResultData["UserDetail"]["uid"],ResultData["UserDetail"]["name"]);
+          (await Get.put(CardQuery()).updateCardState(ResultData));
+        }
+        else{
+          controller!.pauseCamera();
+          setState(() {
+            showOveray=false;
+          });
+          CoolAlert.show(
+            context: context,
+            backgroundColor:Color(0xff940e4b),
+            type: CoolAlertType.error,
+            title:"Error !!!",
+            text: "This Card is not exist",
+
+          ).then((value) {
+            // Event to trigger when the alert is dismissed
+            controller!.resumeCamera();
+          });
+          //uidInput2.text="${ResultData["status"]}";
+        }
+
+      } catch (e) {
+        //return false;
+        //print(e);
+      }
+
     }
+    else{
 
-    } catch (e) {
-      //return false;
-      //print(e);
+      uidInput2.text="test";
     }
-
-  }
-else{
-
-  uidInput2.text="test";
-}
 
 
 

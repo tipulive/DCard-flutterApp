@@ -169,7 +169,7 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
                         // This function will be called when the icon is tapped.
                         // myfunct();
                         //print(IconText);
-                        (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+                       // (await Get.put(ParticipatedQuery()).getParticipateHistEventOnline(Participated(uid:"${IconDescr}",uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
                         Get.to(() =>ParticipateHistPage());
                       },

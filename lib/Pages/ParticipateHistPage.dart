@@ -38,7 +38,7 @@ class ParticipateHistPage extends StatelessWidget {
         ),
 
       ),
-      backgroundColor: Colors.yellow,
+     // backgroundColor: Colors.yellow,
 
       body: const ParticipateHistComp(),
       bottomNavigationBar:ProfileNavigator(),
