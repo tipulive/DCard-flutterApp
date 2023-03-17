@@ -4,7 +4,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import '../models/Admin.dart';
+
+import '../models/BonusModel.dart';
+import '../models/QuickBonus.dart';
 import '../models/Participated.dart';
 import 'package:get/get.dart';
 import '../models/Topups.dart';
@@ -14,7 +16,7 @@ import 'AdminQuery.dart';
 
 import '../DatabaseHelper.dart';
 import '../Utilconfig/ConstantClassUtil.dart';
-import '../Pages/Homepage.dart';
+
 class ParticipatedQuery extends GetxController{
   UserQuery userStatedata=Get.put(UserQuery());
   PromotionQuery promotionStateData=Get.put(PromotionQuery());
@@ -29,6 +31,7 @@ class ParticipatedQuery extends GetxController{
       }
     ],
   }.obs;
+
   Map<String,dynamic> active={
     "name":"name",
     "id":1,
@@ -75,13 +78,443 @@ class ParticipatedQuery extends GetxController{
     ],
   }.obs;
 
+  Map<String,dynamic> dataCartui={
+    "id":1,
+    "cartshow":false,
+    "resultData":[
+      {
+        "id":10
+      }
+    ],
+  }.obs;
+ updateCartUi(cartui,cardStatus,UpdateCartui) {
+
+    dataCartui={
+      "id":2,
+      "countData":{},
+      "products":{},
+      "cartshow":cardStatus,
+      "resultData":UpdateCartui?cartui:Get.put(ParticipatedQuery()).dataCartui["resultData"],
+    };
+    update(); // call update method to update the state
+  }
+
   //Participated in events  after getting user Data
   //search events
   //set events as default one
   //sync events online to offline vice versa
   //get event details and save to stateManagement
 
+  getAllQuickBonusEventOnline(Topups TopupData) async{//all participated events reached or not reached
+    try {
 
+      var params =  {
+
+        "LimitStart":TopupData.endlimit,  //page
+        "LimitEnd":TopupData.startlimit//limit
+
+        //"options": [1,2,3],
+      };
+
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/GetAllQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+         // HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+  }
+
+  SearchQuickBonusEventOnline(BonusModel BonusData) async{//all participated events reached or not reached
+    try {
+
+      var params =  {
+
+        "productName":BonusData.productName, //page
+
+
+        //"options": [1,2,3],
+      };
+
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/SearchQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+  }
+
+  SubmitQuickBonusEventOnline(BonusModel quickData) async{
+
+
+    try {
+
+      var params =  {
+        "uid":quickData.uid,
+        "uidUser":quickData.uidUser,
+        "productName":quickData.productName,
+         "qty":quickData.qty,
+         "price":quickData.price,
+         "status":quickData.status??'on',
+         "bonusType":quickData.bonusType,
+         "giftName":quickData.giftName,
+         "giftPcs":quickData.giftPcs,
+         "bonusValue":quickData.bonusValue,
+         "totBonusValue":quickData.totBonusValue,
+         "description":quickData.description??'none'
+
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/SubmitQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+
+  UpdateSubmitQuickBonusEventOnline(BonusModel quickData) async{
+
+
+    try {
+
+      var params =  {
+        "id":quickData.uid,
+        "uidUser":quickData.uidUser,
+        "productName":quickData.productName,
+        "qty":quickData.qty,
+        "price":quickData.price,
+        "status":quickData.status??'on',
+        "bonusType":quickData.bonusType,
+        "giftName":quickData.giftName,
+        "giftPcs":quickData.giftPcs,
+        "bonusValue":quickData.bonusValue,
+        "totBonusValue":quickData.totBonusValue,
+        "description":quickData.description??'none'
+
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/UpdateSubmitQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  ConfirmAllSubmitQuickBonusEventOnline(BonusModel quickData) async{
+
+
+    try {
+
+      var params =  {
+        "uid":quickData.uid,
+        "uidUser":quickData.uidUser
+
+
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/ConfirmAllSubmitQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  ConfirmOnlySubmitQuickBonusEventOnline(BonusModel quickData) async{
+
+
+    try {
+
+      var params =  {
+        "id":quickData.uid,
+        "uidUser":quickData.uidUser
+
+
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/ConfirmOnlySubmitQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  SearchSubmitQuickBonusEventOnline(BonusModel quickData,Topups TopupData) async{//this will display all Data in Cart that their status are on
+
+
+    try {
+
+      var params =  {
+        "uidUser":quickData.uidUser,
+        "productName":quickData.productName,
+        "LimitStart":TopupData.endlimit,  //page
+        "LimitEnd":TopupData.startlimit//limit
+
+
+
+
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/SearchSubmitQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+         // HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  GetUidSubmitQuickBonusEventOnline(BonusModel quickData) async{//this will display all Data in Cart that their status are on
+
+
+    try {
+
+      var params =  {
+        "uidUser":quickData.uidUser
+
+
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/GetUidSubmitQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  DeleteAllSubmitQuickBonusEventOnline(BonusModel quickData) async{//this will display all Data in Cart that their status are on
+
+
+    try {
+
+      var params =  {
+        "uid":quickData.uid,
+        "uidUser":quickData.uidUser
+
+
+
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/DeleteAllSubmitQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
+  DeleteOnlySubmitQuickBonusEventOnline(BonusModel quickData) async{//this will display all Data in Cart that their status are on
+
+
+    try {
+
+      var params =  {
+        "id":quickData.uid,
+        "uidUser":quickData.uidUser
+
+
+
+
+        //"options": [1,2,3],
+      };
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/DeleteOnlySubmitQuickBonus";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateAllParticipateState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+
+  }
 
   ParticipateEventOnline(Participated participateddata,Promotions promotionData) async{
 

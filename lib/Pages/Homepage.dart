@@ -6,14 +6,17 @@ import 'package:dcard/Query/CardQuery.dart';
 import 'package:dcard/Query/TopupQuery.dart';
 import 'package:dcard/models/CardModel.dart';
 import 'package:dcard/models/Topups.dart';
+import '../models/BonusModel.dart';
 
 import '../Pages/ProfilePage.dart';
+import '../Pages/QuickBonusPage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:get/get.dart';
+
 
 
 import 'package:dcard/models/Admin.dart';
@@ -106,7 +109,7 @@ class _HomepageState extends State<Homepage> {
           Column(
             children: [
               Visibility(
-                visible:true,
+                visible:false,
                 child: Expanded(
                     flex: 5,
                     child:Stack(
@@ -199,7 +202,7 @@ class _HomepageState extends State<Homepage> {
                                   // await controller!.resumeCamera(),
                                   // Wakelock.enable()
                                   // print((Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?"yes":"none"),
-                                  await controller!.pauseCamera(),
+                                  //await controller!.pauseCamera(),
                                   // ResultData=(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175'))).data,
                                   //print((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175'))))
                                   // print(ResultData["status"])
@@ -208,6 +211,49 @@ class _HomepageState extends State<Homepage> {
 
                                 },
                                 child: const Text("resume")
+                            ),
+
+                            TextButton(
+                                onPressed: ()  async{
+
+                                  try {
+                                    var Resul=(await ParticipatedQuery().GetUidSubmitQuickBonusEventOnline(BonusModel(uidUser:'juma'))).data;
+                                    if(Resul["status"])
+                                    {
+                                      print(Resul);
+                                      setState(() {
+                                        Get.put(ParticipatedQuery()).updateCartUi(Resul,true,true);
+                                        Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=Resul["count"];
+
+
+                                        // Update the value of _counter and trigger a rebuild
+                                      });
+
+
+
+
+                                      //Get.put(ParticipatedQuery()).dataCartui["nyota"]="test";
+                                      print(Get.put(ParticipatedQuery()).dataCartui);
+
+                                      Get.to(() => QuickBonusPage());
+                                    }
+                                    else{
+                                      Get.put(ParticipatedQuery()).updateCartUi(Resul,false,false); //hide cart
+
+                                      Get.to(() => QuickBonusPage());
+
+
+                                    }
+
+
+                                  } catch (e) {
+                                    print('Error: $e');
+                                  }
+
+                                  //print(this._data[index]["total_var"]);
+                                  // print("Text changed to: $text");
+                                },
+                                child: const Text("QuickBonus")
                             ),
 
 

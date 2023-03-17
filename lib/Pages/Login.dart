@@ -5,9 +5,9 @@ import 'package:dcard/Pages/ParticipateHistPage.dart';
 import 'package:dcard/Query/CardQuery.dart';
 import 'package:dcard/models/CardModel.dart';
 import 'package:dio/dio.dart';
+import 'package:dotted_line/dotted_line.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 
 import '../Query/AdminQuery.dart';
 import '../models/Admin.dart';
@@ -28,6 +28,9 @@ class _LoginState extends State<Login> {
   TextEditingController uidInput2=TextEditingController();
   AdminQuery adminStatedata=Get.put(AdminQuery());
   bool showOveray=false;
+  bool _canShowButton=true;
+ FocusNode focusNode=FocusNode() ;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,7 +56,45 @@ class _LoginState extends State<Login> {
                         ),
                       ),
 
-                      Container(
+                      SizedBox(
+                        width: 50,
+                        child: Stack(
+                          children:[
+
+                            TextField(
+                              focusNode:focusNode,
+                        textAlign: TextAlign.center,
+                              decoration: InputDecoration(
+                                //hintText: '------',
+                                border: InputBorder.none,
+                                filled: true,
+                                fillColor: Colors.transparent,
+                                contentPadding:EdgeInsets.zero,
+
+                              ),
+                              onChanged: (text) {
+                                print("Text changed to: $text");
+                              },
+                            ),
+                            Positioned(
+                                top:32,
+                                child: InkWell(
+                                  child: Text("-  -  -  -  -  -  -  -  -  -"),
+                                  onTap: () {
+                                    focusNode.requestFocus();
+                                  },
+                                ),
+                            ),
+
+//
+
+                          ],
+                        ),
+                      ),
+                    //
+
+
+                      !_canShowButton?const SizedBox.shrink(): Container(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child:ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -62,6 +103,8 @@ class _LoginState extends State<Login> {
 
                           child: const Text('Action btn'),
                           onPressed: () async{
+                            print("eric");
+                            hideWidget();
                             // ResultData=(await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",name:name.text,email:email.text,Ccode:Ccode.text,phone:phone.text,country:country.text,password:password.text,status:edit.text,subscriber:"none"))).data,
                             /*var ResultData=(await CardQuery().GetDataOnline(CardModel(uid:"none"))).data;
 
@@ -75,9 +118,9 @@ class _LoginState extends State<Login> {
                         else{
                           print("failed");
                         }*/
-                           // topupfunc();
-                            Get.to(() => ParticipateHistPage());
-                           // showon();
+                            // topupfunc();
+
+                            // showon();
                             // print(((await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid: "kebineericMuna_1674160265",name:"voga",email:"on@gmail.com",Ccode:"+250",phone:"782389359",country:"Rwanda",password:"1",status:"edit",subscriber:"none"))).data).runtimeType);
 
 
@@ -86,8 +129,8 @@ class _LoginState extends State<Login> {
                         ) ,
 
                       ),
-                      Text("${Get.put(CardQuery()).obj["id"]==1?"hello":Get.put(CardQuery()).obj["resultData"]["result"]}"),
-                      Container(
+
+    Container(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: IntlPhoneField(
                           decoration: InputDecoration(
@@ -178,6 +221,11 @@ class _LoginState extends State<Login> {
     );
   }
 
+  hideWidget() {
+    setState(() {
+      _canShowButton = !_canShowButton;
+    });
+  }
   loginOnline() async{
   // print(await SyncService().SyncDownloadCard());
     //print(await SyncService().SyncUploadCard());

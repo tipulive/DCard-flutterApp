@@ -5,6 +5,8 @@ import '../Pages/ProfilePage.dart';
 import '../Pages/EventsPage.dart';
 import '../Pages/ReachEventPage.dart';
 import '../Pages/UserAccountPage.dart';
+import '../Pages/QuickBonusPage.dart';
+import '../Pages/QuickCartPage.dart';
 
 class AppRoutes {
   static final routes = [
@@ -14,5 +16,8 @@ class AppRoutes {
     GetPage(name: '/ProfilePage', page: () =>ProfilePage()),
     GetPage(name: '/EventsPage', page: () =>EventsPage()),
     GetPage(name: '/UserAccount', page: () =>UserAccountPage()),
+    GetPage(name: '/UserAccount', page: () =>UserAccountPage()),
+    GetPage(name: '/QuickBonus', page: () =>QuickBonusPage()),
+    GetPage(name: '/QuickCart', page: () =>QuickCartPage()),
   ];
 }
