@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'components/QuickBonusComp.dart';
+import 'components/BottomNavigator/HomeNavigator.dart';
+import 'components/SetPartHistComp.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import 'components/BottomNavigator/ProfileNavigator.dart';
 
-class QuickBonusPage extends StatelessWidget {
-  const QuickBonusPage({Key? key}) : super(key: key);
+class SetPartHistPage extends StatelessWidget {
+  const SetPartHistPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: PreferredSize(
         preferredSize: Size.fromHeight(27.0), // customize toolbar height
         child: AppBar(
@@ -25,17 +24,16 @@ class QuickBonusPage extends StatelessWidget {
           ),
         ),
       ),
+
       //backgroundColor: Colors.yellow,
       //backgroundColor: Color(0xff010a0e),
 
-      body:QuickBonusComp(),
-      bottomNavigationBar:ProfileNavigator(),
+      body:SetPartHistComp(),
+      bottomNavigationBar:HomeNavigator(),
+
 
 
     );
 
   }
-}
-loaddata(){
-  //print("hello");
 }

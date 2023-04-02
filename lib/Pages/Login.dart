@@ -56,6 +56,55 @@ class _LoginState extends State<Login> {
                         ),
                       ),
 
+
+
+
+
+                      Row(
+                        children: [
+                          Text(
+                            'Your Name: ',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          IntrinsicWidth(
+                            child: TextField(
+
+
+                              decoration: InputDecoration(
+                                hintText: '-1-',
+                                hintStyle: TextStyle(color: Colors.blue),
+                                contentPadding: EdgeInsets.all(0),
+                                isDense: true,
+
+
+
+                              ),
+                              style: TextStyle(
+                                color: Colors.blue, // Set the text color to red
+
+                              ),
+                            ),
+                            stepWidth: 0.5, // set minimum width to 100
+                          ),
+                          Expanded(
+                            child: Text(
+                              'Your Name: ',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+
+
+                      Text("richText"),
+
                       SizedBox(
                         width: 50,
                         child: Stack(
@@ -94,41 +143,6 @@ class _LoginState extends State<Login> {
                     //
 
 
-                      !_canShowButton?const SizedBox.shrink(): Container(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child:ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            minimumSize: const Size.fromHeight(50),
-                          ),
-
-                          child: const Text('Action btn'),
-                          onPressed: () async{
-                            print("eric");
-                            hideWidget();
-                            // ResultData=(await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",name:name.text,email:email.text,Ccode:Ccode.text,phone:phone.text,country:country.text,password:password.text,status:edit.text,subscriber:"none"))).data,
-                            /*var ResultData=(await CardQuery().GetDataOnline(CardModel(uid:"none"))).data;
-
-                        if(ResultData["status"])
-                          {
-                            await Get.put(CardQuery()).updateCardState(ResultData);
-                           setState(() {
-                             Get.put(CardQuery()).obj;
-                           });
-                          }
-                        else{
-                          print("failed");
-                        }*/
-                            // topupfunc();
-
-                            // showon();
-                            // print(((await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid: "kebineericMuna_1674160265",name:"voga",email:"on@gmail.com",Ccode:"+250",phone:"782389359",country:"Rwanda",password:"1",status:"edit",subscriber:"none"))).data).runtimeType);
-
-
-                          },
-
-                        ) ,
-
-                      ),
 
     Container(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),

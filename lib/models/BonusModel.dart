@@ -2,6 +2,7 @@ class BonusModel {//Sync to Online
   final int? id;
   final String? uid;
   final String? uidUser;
+  final String? quickUid;
   final String? productName;
   final String? qty;
   final String? price;
@@ -24,6 +25,7 @@ class BonusModel {//Sync to Online
     this.id,
     this.uid,
     this.uidUser,
+    this.quickUid,
     this.productName,
     this.qty,
     this.price,
@@ -48,6 +50,7 @@ class BonusModel {//Sync to Online
       id:json['id'],
       uid:json['uid'],
       uidUser:json['uidUser'],
+      quickUid:json['quickUid'],
       productName:json['productName'],
       qty:json['qty'],
       price:json['price'],
@@ -70,6 +73,7 @@ class BonusModel {//Sync to Online
       'id': id,
       'uid': uid,
       'uidUser':uidUser,
+      'quickUid':quickUid,
       'productName':productName,
       'qty': qty,
       'price':price,

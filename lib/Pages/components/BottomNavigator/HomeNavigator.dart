@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../Card/AddCardPage.dart';
 import '../../Homepage.dart';
+import '../../SettingPage.dart';
 
 
 
@@ -16,7 +17,8 @@ class HomeNavigator extends StatelessWidget {
   final myindex =0;
 
   return BottomNavigationBar(
-   backgroundColor: Colors.yellow,
+   //backgroundColor: Colors.yellow,
+   //backgroundColor: Color(0xff010a0e),
    currentIndex:myindex,
    items: [
     BottomNavigationBarItem(
@@ -47,6 +49,11 @@ class HomeNavigator extends StatelessWidget {
     {
 
      Get.to(() =>AddCardPage(),arguments:1);
+    }
+    if(index==2)
+    {
+
+     Get.to(() =>SettingPage(),arguments:1);
     }
    },
   );

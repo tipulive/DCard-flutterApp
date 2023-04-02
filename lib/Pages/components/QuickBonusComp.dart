@@ -105,21 +105,41 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
             onChanged: (text) async{
 
               try {
-                var Resul=(await ParticipatedQuery().SearchQuickBonusEventOnline(BonusModel(productName:text))).data;
-                if(Resul["status"])
-                {
-                  setState(() {
-                    //print(Resul);
-                    isLoading=false;
-                    hasMoreData=false;
-                    _data.clear();
+                if(text=="")
+                  {
+                    //print("empty text");
+                   setState(() {
+                     _data.clear();
+                     _page=0;
+                    hasMoreData=true;
+                  isLoading=false;
 
-                    _data.addAll(Resul["result"]);
-                  });
-                }
-                else{
-                  _data.clear();
-                  Quickdata();
+                   });
+                   await Quickdata();
+
+                  }else{
+                  var Resul=(await ParticipatedQuery().SearchQuickBonusEventOnline(BonusModel(productName:text))).data;
+                  if(Resul["status"])
+                  {
+                    setState(() {
+                      //print(Resul);
+                      isLoading=false;
+                      hasMoreData=false;
+                      _data.clear();
+
+                      _data.addAll(Resul["result"]);
+                    });
+                  }
+                  else{
+                    //print("no data find");
+
+                    _data.clear();
+                    Quickdata();
+
+
+
+
+                  }
                 }
 
 
@@ -138,6 +158,7 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
 
             controller: _scrollController,
             itemCount: _data.length+1,
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             itemBuilder: (context, index) {
 
               if(index<_data.length)
@@ -162,7 +183,7 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
                     ),
                     title: Row(
                       children: [
-                        Text("${_data[index]["productName"]}:"),
+                        Text("${_data[index]["id"]} ${_data[index]["productName"]}:"),
                         SizedBox(
                           width: 24,
                           child: Stack(
@@ -198,8 +219,12 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
                                         _data[index]["textchange_var"]=text;
                                         _data[index]["bonus_var"]=checkBonus;
                                         _data[index]["qty_var"]=text;
-                                        _data[index]["giftPcs_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}":"${(_data[index]["giftPcs"])}";
-                                        _data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}":"${(num.parse(text)*num.parse(_data[index]["bonusValue"]))}";
+                                        _data[index]["giftPcs_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}":"${(_data[index]["giftPerPcs"])}";
+                                        _data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?
+                                        ((num.parse(_data[index]["giftMin"])>((num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()))?"0":"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}"):
+                                        ((num.parse(_data[index]["moneyMin"])>num.parse(text)*num.parse(_data[index]["bonusValue"]))?"0":
+                                        "${(num.parse(text)*num.parse(_data[index]["bonusValue"]))}");
+
                                         (num.parse(text)>1)?_data[index]["showBtn"]=true:_data[index]["showBtn"]=false;
 
 
@@ -211,15 +236,22 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
                                         _data[index]['textchange']=true;//return to 1
                                         this._data[index]["total_var"]=num.parse(this._data[index]["price"])*num.parse("1");
 
-                                        var checkBonus=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}":"${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}\$";
+                                        //var checkBonus=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}":"${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}\$";
+                                        var checkBonus=(_data[index]["bonusType"]=='Gift')?((num.parse(_data[index]["giftMin"])>((num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()))?"0 Pcs (Min:${_data[index]["giftMin"]})":"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}"):
+                                        ((num.parse(_data[index]["moneyMin"])>num.parse("1")*num.parse(_data[index]["bonusValue"]))?"0 \$ Min ${_data[index]["moneyMin"]} \$":
+                                        "${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}\$");
+
                                         _data[index]["textchange_var"]="1";
                                         _data[index]["bonus_var"]=checkBonus;
                                         _data[index]["qty_var"]="1";
-                                        _data[index]["giftPcs_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}":"${(_data[index]["giftPcs"])}";
-                                        _data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}":"${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}";
+                                        _data[index]["giftPcs_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}":"${(_data[index]["giftPerPcs"])}";
+                                        //_data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}":"${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}";
                                         //(num.parse(text)>1)?_data[index]["showBtn"]=true:_data[index]["showBtn"]=false;
 
-
+                                        _data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?
+                                        ((num.parse(_data[index]["giftMin"])>((num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()))?"0":"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}"):
+                                        ((num.parse(_data[index]["moneyMin"])>num.parse("1")*num.parse(_data[index]["bonusValue"]))?"0":
+                                        "${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}");
 
                                         // Update the value of _counter and trigger a rebuild
                                       });
@@ -260,7 +292,27 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
                         Text("X${_data[index]['price']}=${_data[index]["total_var"]?? _data[index]['price']}")
                       ],
                     ),
-                   subtitle: Text("Bonus:${_data[index]["bonus_var"]??0}"),
+                   //subtitle: Text("Bonus:${_data[index]["bonus_var"]??0}"),
+                    subtitle: Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      children: [
+                        (_data[index]["bonusType"]=='Gift')?CircleAvatar(
+                          backgroundColor:Colors.deepOrange,
+                          radius: 10,
+                          child: Icon(Icons.redeem,color:Colors.white,size:12,),
+                        ):
+                        CircleAvatar(
+                          backgroundColor: Colors.green,
+                          radius: 10,
+                          child: Icon(Icons.attach_money_rounded,color:Colors.white,size:13,),
+                        ),
+                        Text(" Bonus"),
+
+                     //   (_data[index]["bonusType"]=='Gift')?Icon(Icons.card_giftcard_rounded,color: Colors.red,size: 20,):Icon(Icons.paid,color: Colors.green,size:20,),
+                        Text(":${_data[index]["bonus_var"]??0}"),
+
+                      ],
+                    ),
                     trailing:_data[index]["showBtn"]??false? Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
@@ -272,12 +324,12 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
 
                             try {
 
-                              if((Get.put(ParticipatedQuery()).dataCartui["products"].containsKey('${_data[index]["productName"]}')))
+                              if((Get.put(ParticipatedQuery()).dataCartui["products"].containsKey('${_data[index]["quickUid"]}')))
                               {
                                 //product Existed
                                 Get.dialog(
                                   AlertDialog(
-                                    title: Text('${_data[index]["productName"]} exist in Cart'),
+                                    title: Text('${_data[index]["productName"]} exist in Cart with ${_data[index]["bonusType"]} Promotion'),
                                     content: Text('Do you want to go in Cart and change Qty or Delete ?'),
                                     actions: [
                                       ElevatedButton(
@@ -309,7 +361,7 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
                                 var uidForm=Get.put(ParticipatedQuery()).dataCartui['cartshow']?Get.put(ParticipatedQuery()).dataCartui['resultData']["uid"]:'none';
                                 bool updateTrueFalse=Get.put(ParticipatedQuery()).dataCartui['cartshow']?false:true;
 
-                                var Resul=(await ParticipatedQuery().SubmitQuickBonusEventOnline(BonusModel(uid:uidForm,uidUser:'juma',productName:_data[index]["productName"],qty:_data[index]["qty_var"]??1,price:_data[index]["price"],bonusType:_data[index]["bonusType"],giftName:_data[index]["giftName"],giftPcs:_data[index]["giftPcs_var"]??_data[index]["giftPcs"],bonusValue:_data[index]["bonusValue"],totBonusValue:_data[index]["totBonus_var"]))).data;
+                                var Resul=(await ParticipatedQuery().SubmitQuickBonusEventOnline(BonusModel(uid:uidForm,uidUser:'${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}',quickUid:_data[index]['quickUid'],productName:_data[index]["productName"],qty:_data[index]["qty_var"]??1,price:_data[index]["price"],bonusType:_data[index]["bonusType"],giftName:_data[index]["giftName"],giftPcs:_data[index]["giftPcs_var"]??_data[index]["giftPcs"],bonusValue:_data[index]["bonusValue"],totBonusValue:_data[index]["totBonus_var"]))).data;
                                 if(Resul["status"])
                                 {
 
@@ -317,7 +369,7 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
                                   setState(() {
 
                                     Get.put(ParticipatedQuery()).updateCartUi(Resul,true,updateTrueFalse);
-                                    Get.put(ParticipatedQuery()).dataCartui["products"]["${_data[index]["productName"]}"]=_data[index]["price"];
+                                    Get.put(ParticipatedQuery()).dataCartui["products"]["${_data[index]["quickUid"]}"]=_data[index]["price"];
                                     Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=countAdd;
                                   });
 
@@ -357,7 +409,7 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
                                     ),
                                     onPressed: () async{
                                       try {
-                                        var Resul=(await ParticipatedQuery().SubmitQuickBonusEventOnline(BonusModel(uid:'none',uidUser:'viki',productName:_data[index]["productName"],qty:_data[index]["qty_var"]??1,price:_data[index]["price"],bonusType:_data[index]["bonusType"],giftName:_data[index]["giftName"],giftPcs:_data[index]["giftPcs_var"]??_data[index]["giftPcs"],bonusValue:_data[index]["bonusValue"],totBonusValue:_data[index]["totBonus_var"],status:"confirm"))).data;
+                                        var Resul=(await ParticipatedQuery().SubmitQuickBonusEventOnline(BonusModel(uid:'none',uidUser:'${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}',quickUid:_data[index]['quickUid'],productName:_data[index]["productName"],qty:_data[index]["qty_var"]??1,price:_data[index]["price"],bonusType:_data[index]["bonusType"],giftName:_data[index]["giftName"],giftPcs:_data[index]["giftPcs_var"]??_data[index]["giftPcs"],bonusValue:_data[index]["bonusValue"],totBonusValue:_data[index]["totBonus_var"],status:"confirm"))).data;
                                         if(Resul["status"])
                                         {
                                           Get.back();

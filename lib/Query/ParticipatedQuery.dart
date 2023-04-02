@@ -6,7 +6,7 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 
 import '../models/BonusModel.dart';
-import '../models/QuickBonus.dart';
+
 import '../models/Participated.dart';
 import 'package:get/get.dart';
 import '../models/Topups.dart';
@@ -104,25 +104,97 @@ class ParticipatedQuery extends GetxController{
   //set events as default one
   //sync events online to offline vice versa
   //get event details and save to stateManagement
+getSearchAllStockOnline(Topups topupData,BonusModel bonusData)async{
+  try {
 
-  getAllQuickBonusEventOnline(Topups TopupData) async{//all participated events reached or not reached
+    var params =  {
+      "productCode":bonusData.productName??'none',//productCode=productName
+      "LimitStart":topupData.endlimit,  //page
+      "LimitEnd":topupData.startlimit//limit
+
+      //"options": [1,2,3],
+    };
+
+    String authToken =(adminStateData.obj)["result"][0]["AuthToken"];
+    var url="${ConstantClassUtil.StockLink}/viewSearchAllStock";
+    var response = await Dio().get(url,
+      options: Options(headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader:"Bearer ${authToken}"
+        //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+      }),
+      queryParameters: params,
+    );
+    if (response.statusCode == 200) {
+
+      //updateAllParticipateState(response.data);
+      return response;
+
+
+    } else {
+      return false;
+      //print(false);
+    }
+  } catch (e) {
+    //return false;
+    print(e);
+  }
+}
+getPreviousPriceOnline(Topups topupData,BonusModel bonusData)async{
+  try {
+
+    var params =  {
+
+      "productCode":bonusData.productName,  //here productName=productCode
+      "limitData":topupData.endlimit??10//limit
+
+      //"options": [1,2,3],
+    };
+
+    String authToken =(adminStateData.obj)["result"][0]["AuthToken"];
+    var url="${ConstantClassUtil.StockLink}/cardSearchPreviousPrice";
+    var response = await Dio().get(url,
+      options: Options(headers: {
+        HttpHeaders.contentTypeHeader: "application/json",
+        HttpHeaders.authorizationHeader:"Bearer ${authToken}"
+        //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+      }),
+      queryParameters: params,
+    );
+    if (response.statusCode == 200) {
+
+      //updateAllParticipateState(response.data);
+      return response;
+
+
+    } else {
+      return false;
+      //print(false);
+    }
+  } catch (e) {
+    //return false;
+    print(e);
+  }
+
+}
+  getAllQuickBonusEventOnline(Topups topupData) async{//all participated events reached or not reached
     try {
 
       var params =  {
 
-        "LimitStart":TopupData.endlimit,  //page
-        "LimitEnd":TopupData.startlimit//limit
+        "LimitStart":topupData.endlimit,  //page
+        "LimitEnd":topupData.startlimit//limit
 
         //"options": [1,2,3],
       };
 
-      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      String authToken =(adminStateData.obj)["result"][0]["AuthToken"];
       var url="${ConstantClassUtil.urlLink}/GetAllQuickBonus";
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-         // HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${authToken}"
+          //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -142,24 +214,24 @@ class ParticipatedQuery extends GetxController{
     }
   }
 
-  SearchQuickBonusEventOnline(BonusModel BonusData) async{//all participated events reached or not reached
+  SearchQuickBonusEventOnline(BonusModel bonusData) async{//all participated events reached or not reached
     try {
 
       var params =  {
 
-        "productName":BonusData.productName, //page
+        "productName":bonusData.productName, //page
 
 
         //"options": [1,2,3],
       };
 
-      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      String authToken =(adminStateData.obj)["result"][0]["AuthToken"];
       var url="${ConstantClassUtil.urlLink}/SearchQuickBonus";
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${authToken}"
+          //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -187,6 +259,7 @@ class ParticipatedQuery extends GetxController{
       var params =  {
         "uid":quickData.uid,
         "uidUser":quickData.uidUser,
+        "quickUid":quickData.quickUid,
         "productName":quickData.productName,
          "qty":quickData.qty,
          "price":quickData.price,
@@ -201,13 +274,13 @@ class ParticipatedQuery extends GetxController{
 
         //"options": [1,2,3],
       };
-      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      String authToken =(adminStateData.obj)["result"][0]["AuthToken"];
       var url="${ConstantClassUtil.urlLink}/SubmitQuickBonus";
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${authToken}"
+          //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -236,6 +309,7 @@ class ParticipatedQuery extends GetxController{
       var params =  {
         "id":quickData.uid,
         "uidUser":quickData.uidUser,
+       // "quickUid":quickData.quickUid,
         "productName":quickData.productName,
         "qty":quickData.qty,
         "price":quickData.price,
@@ -250,13 +324,13 @@ class ParticipatedQuery extends GetxController{
 
         //"options": [1,2,3],
       };
-      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      String authToken =(adminStateData.obj)["result"][0]["AuthToken"];
       var url="${ConstantClassUtil.urlLink}/UpdateSubmitQuickBonus";
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${authToken}"
+         // HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -294,8 +368,8 @@ class ParticipatedQuery extends GetxController{
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -333,8 +407,8 @@ class ParticipatedQuery extends GetxController{
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+         // HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -362,6 +436,7 @@ class ParticipatedQuery extends GetxController{
       var params =  {
         "uidUser":quickData.uidUser,
         "productName":quickData.productName,
+        "status":quickData.status,
         "LimitStart":TopupData.endlimit,  //page
         "LimitEnd":TopupData.startlimit//limit
 
@@ -376,8 +451,8 @@ class ParticipatedQuery extends GetxController{
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-         // HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -414,8 +489,8 @@ class ParticipatedQuery extends GetxController{
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -454,8 +529,8 @@ class ParticipatedQuery extends GetxController{
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -494,8 +569,8 @@ class ParticipatedQuery extends GetxController{
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",
-          //HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
-          HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+          //HttpHeaders.authorizationHeader:"Bearer 244|ygdCii7TkgEHjyyRmp8XZAt0Yt7iC8x8sjE7BQaI"
         }),
         queryParameters: params,
       );
@@ -746,6 +821,41 @@ class ParticipatedQuery extends GetxController{
 
       String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
       var url="${ConstantClassUtil.urlLink}/GetParticipatedHist";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateParticipateHistState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+  }
+  getAllParticipateHistEventOnline(Topups TopupData) async{//reached
+    try {
+
+      var params =  {
+        //"kebineericMuna_1668935593",
+        "LimitStart":TopupData.endlimit,  //page
+        "LimitEnd":TopupData.startlimit//limit
+
+        //"options": [1,2,3],
+      };
+
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/GetAllParticipatedHist";
       var response = await Dio().get(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",

@@ -238,7 +238,14 @@ class _HomepageState extends State<Homepage> {
                                       Get.to(() => QuickBonusPage());
                                     }
                                     else{
-                                      Get.put(ParticipatedQuery()).updateCartUi(Resul,false,false); //hide cart
+                                     //hide cart
+                                      setState(() {
+                                        Get.put(ParticipatedQuery()).updateCartUi(Resul,false,false);
+                                        Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=0;
+
+
+                                        // Update the value of _counter and trigger a rebuild
+                                      });
 
                                       Get.to(() => QuickBonusPage());
 
@@ -374,7 +381,56 @@ class _HomepageState extends State<Homepage> {
               child: Column(
 
                 children: [
-                  Center(child: Text(name)),
+
+                  TextButton(
+                      onPressed: ()  async{
+
+                        try {
+                          var Resul=(await ParticipatedQuery().GetUidSubmitQuickBonusEventOnline(BonusModel(uidUser:'juma'))).data;
+                          if(Resul["status"])
+                          {
+                            print(Resul);
+                            setState(() {
+                              Get.put(ParticipatedQuery()).updateCartUi(Resul,true,true);
+                              Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=Resul["count"];
+
+
+                              // Update the value of _counter and trigger a rebuild
+                            });
+
+
+
+
+                            //Get.put(ParticipatedQuery()).dataCartui["nyota"]="test";
+                            print(Get.put(ParticipatedQuery()).dataCartui);
+
+                            Get.to(() => QuickBonusPage());
+                          }
+                          else{
+                            //hide cart
+                            setState(() {
+                              Get.put(ParticipatedQuery()).updateCartUi(Resul,false,false);
+                              Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=0;
+
+
+                              // Update the value of _counter and trigger a rebuild
+                            });
+
+                            Get.to(() => QuickBonusPage());
+
+
+                          }
+
+
+                        } catch (e) {
+                          print('Error: $e');
+                        }
+
+                        //print(this._data[index]["total_var"]);
+                        // print("Text changed to: $text");
+                      },
+                      child: const Text("QuickBonus Qr")
+                  ),                  Center(child: Text(name)),
                   SizedBox(height:10.0,),
                   TextField(
                     controller:PromoName,

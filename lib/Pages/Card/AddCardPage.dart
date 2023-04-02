@@ -43,7 +43,7 @@ class _AddCardPageState extends State<AddCardPage> {
   TextEditingController uidInput=TextEditingController();
   TextEditingController uidInput2=TextEditingController(text:"kebine eric Muna");
   TextEditingController uidInput3=TextEditingController(text:"on1@gmail.com");
-  TextEditingController uidInput4=TextEditingController(text:"243");
+  TextEditingController uidInput4=TextEditingController(text:"+243");
   TextEditingController initCountry=TextEditingController(text:"CD");
   TextEditingController uidInput5=TextEditingController(text:"Congo,Democratic Republic of the Congo");
   TextEditingController uidInput6=TextEditingController(text:"1");
@@ -54,6 +54,7 @@ class _AddCardPageState extends State<AddCardPage> {
   bool Cameravalues=false;
   bool Flashvalues=false;
   bool showOveray=false;
+  bool isValid = false;
 
   @override
 
@@ -354,21 +355,44 @@ uidInput7.text=checkcode;
                           ),
                           onChanged: (phone) {
 
-                            //uidInput2.text=phone.countryCode;
+                            //uidInput4.text=phone.countryCode;
                             //uidInput2.text=phone.number;
                             // uidInput2.text=phone.countryISOCode;
                             //print(phone.completeNumber);
 
-
+                            if(phone.number.isPhoneNumber)
+                            {
+                              setState(() {
+                                isValid=true;
+                              });
+                            }
+                            else{
+                              setState(() {
+                                isValid=false;
+                              });
+                              // print("not empty");
+                            }
 
                           },
 
                           onCountryChanged: (country) {
-                            uidInput4.text=country.dialCode;
+                            uidInput4.text="+"+country.dialCode;
                             uidInput5.text=country.name;
                             initCountry.text=country.code;
                             // print('Country changed to: ' + country.name);
                             // print('Country changed to: ' + country.dialCode);
+
+                            if((uidInput.text).isPhoneNumber)
+                            {
+                              setState(() {
+                                isValid=true;
+                              });
+                            }
+                            else{
+                              setState(() {
+                                isValid=false;
+                              });
+                            }
                           },
                         ),
                         TextField(
@@ -482,7 +506,7 @@ uidInput7.text=checkcode;
                       ],
                     ),
                     SizedBox(height: 10.0,),
-                    FloatingActionButton.extended(
+                    isValid?FloatingActionButton.extended(
                         label: Text('Add Card'), // <-- Text
                         backgroundColor: Color(0xff940e4b),
                         icon: Icon( // <-- Icon
@@ -535,7 +559,9 @@ uidInput7.text=checkcode;
 
                         },
 
-                    ),
+                    ):Visibility(
+                        visible: false,
+                        child: Text("")),
 
 
 

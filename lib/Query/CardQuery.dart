@@ -67,6 +67,47 @@ class CardQuery extends GetxController{
       return false;
     }
   }
+  getNumberDetailCardOnline(Admin adminData) async{
+    try {
+
+      var params =  {
+
+        "Ccode":adminData.Ccode,//ccode
+        "phone":adminData.phone,
+
+        //"options": [1,2,3],
+      };
+
+      String Authtoken =(adminStatedata.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/GetNumberDetail";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+
+        // return (response.data).length;
+        //updateEventState(response.data);
+        //return "hello";
+        // updateCardState(response.data);
+       return response;
+
+
+      } else {
+        //return null;
+        //print(false);
+      }
+    } catch (e) {
+      throw Exception('Failed to load API data');
+      //return false;
+      //return false;
+    }
+
+  }
 
   GetDetailCardOnline(CardModel CardData) async{
     try {
@@ -181,6 +222,7 @@ class CardQuery extends GetxController{
          // HttpHeaders.authorizationHeader:"Bearer 259|bR1wtUu26VkiGlY49AF9UVW0xsxaykI5wHNhiNl6"
         }),
         data: jsonEncode(params),
+
       );
       if (response.statusCode == 200) {
 

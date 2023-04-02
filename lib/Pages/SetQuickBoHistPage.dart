@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'components/QuickBonusComp.dart';
+import 'components/BottomNavigator/HomeNavigator.dart';
+import 'components/SetQuickBoHistComp.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import 'components/BottomNavigator/ProfileNavigator.dart';
 
-class QuickBonusPage extends StatelessWidget {
-  const QuickBonusPage({Key? key}) : super(key: key);
+class SetQuickBoHistPage extends StatelessWidget {
+  const SetQuickBoHistPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -25,17 +25,14 @@ class QuickBonusPage extends StatelessWidget {
           ),
         ),
       ),
-      //backgroundColor: Colors.yellow,
-      //backgroundColor: Color(0xff010a0e),
 
-      body:QuickBonusComp(),
-      bottomNavigationBar:ProfileNavigator(),
+
+      body:SetQuickBoHistComp(),
+      bottomNavigationBar:HomeNavigator(),
+
 
 
     );
 
   }
-}
-loaddata(){
-  //print("hello");
 }
