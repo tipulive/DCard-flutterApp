@@ -11,7 +11,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../Query/CardQuery.dart';
 
 import '../../Query/TopupQuery.dart';
-import 'ProfilePic.dart';
+
 
 
 class QuickBonusComp extends StatefulWidget {
@@ -164,8 +164,8 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
               if(index<_data.length)
               {
 
-                FocusNode test=FocusNode() ;
-                this._data[index]['focusNode']=test;
+
+
 
                 return Card(
                   elevation:0,
@@ -183,113 +183,96 @@ class _QuickBonusCompState extends State<QuickBonusComp> {
                     ),
                     title: Row(
                       children: [
-                        Text("${_data[index]["id"]} ${_data[index]["productName"]}:"),
-                        SizedBox(
-                          width: 24,
-                          child: Stack(
-                            children:[
+                        Text("${_data[index]["productName"]}:"),
+                        IntrinsicWidth(
+                          child: TextField(
 
-                              TextField(
-                                //controller: TextEditingController(text:_data[index]["textchange_var"]??"1"),
-
-                                textAlign: TextAlign.center,
-                                focusNode:_data[index]['focusNode'],
-                                decoration: InputDecoration(
-                                  //hintText: '------',
-                                  border: InputBorder.none,
-                                  filled: true,
-                                  fillColor: Colors.transparent,
-                                  contentPadding:EdgeInsets.zero,
-
-                                ),
-                                onChanged: (text) {
-                                  try {
-                                    //numVal = num.parse(str);
-                                    var myValue = double.tryParse(text);
-
-                                    if (myValue != null && !myValue.isNaN) {
-                                      //print('myValue is a number');
-                                      setState(() {
-                                        _data[index]['textchange']=false;
-                                        this._data[index]["total_var"]=num.parse(this._data[index]["price"])*num.parse(text);
-
-                                        var checkBonus=(_data[index]["bonusType"]=='Gift')?((num.parse(_data[index]["giftMin"])>((num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()))?"0 Pcs (Min:${_data[index]["giftMin"]})":"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}"):
-                                        ((num.parse(_data[index]["moneyMin"])>num.parse(text)*num.parse(_data[index]["bonusValue"]))?"0 \$ Min ${_data[index]["moneyMin"]} \$":
-                                        "${(num.parse(text)*num.parse(_data[index]["bonusValue"]))}\$");
-                                        _data[index]["textchange_var"]=text;
-                                        _data[index]["bonus_var"]=checkBonus;
-                                        _data[index]["qty_var"]=text;
-                                        _data[index]["giftPcs_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}":"${(_data[index]["giftPerPcs"])}";
-                                        _data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?
-                                        ((num.parse(_data[index]["giftMin"])>((num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()))?"0":"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}"):
-                                        ((num.parse(_data[index]["moneyMin"])>num.parse(text)*num.parse(_data[index]["bonusValue"]))?"0":
-                                        "${(num.parse(text)*num.parse(_data[index]["bonusValue"]))}");
-
-                                        (num.parse(text)>1)?_data[index]["showBtn"]=true:_data[index]["showBtn"]=false;
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              hintText: '-1-',
+                              hintStyle: TextStyle(color: Colors.blue),
+                              contentPadding: EdgeInsets.all(0),
+                              isDense: true,
 
 
 
-                                        // Update the value of _counter and trigger a rebuild
-                                      });
-                                    } else {
-                                      setState(() {
-                                        _data[index]['textchange']=true;//return to 1
-                                        this._data[index]["total_var"]=num.parse(this._data[index]["price"])*num.parse("1");
+                            ),
+                            style: TextStyle(
+                              color: Colors.blue, // Set the text color to red
 
-                                        //var checkBonus=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}":"${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}\$";
-                                        var checkBonus=(_data[index]["bonusType"]=='Gift')?((num.parse(_data[index]["giftMin"])>((num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()))?"0 Pcs (Min:${_data[index]["giftMin"]})":"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}"):
-                                        ((num.parse(_data[index]["moneyMin"])>num.parse("1")*num.parse(_data[index]["bonusValue"]))?"0 \$ Min ${_data[index]["moneyMin"]} \$":
-                                        "${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}\$");
+                            ),
+                            onChanged: (text) {
+                              try {
+                                //numVal = num.parse(str);
+                                var myValue = double.tryParse(text);
 
-                                        _data[index]["textchange_var"]="1";
-                                        _data[index]["bonus_var"]=checkBonus;
-                                        _data[index]["qty_var"]="1";
-                                        _data[index]["giftPcs_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}":"${(_data[index]["giftPerPcs"])}";
-                                        //_data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}":"${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}";
-                                        //(num.parse(text)>1)?_data[index]["showBtn"]=true:_data[index]["showBtn"]=false;
+                                if (myValue != null && !myValue.isNaN) {
+                                  //print('myValue is a number');
+                                  setState(() {
+                                    _data[index]['textchange']=false;
+                                    this._data[index]["total_var"]=num.parse(this._data[index]["price"])*num.parse(text);
 
-                                        _data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?
-                                        ((num.parse(_data[index]["giftMin"])>((num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()))?"0":"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}"):
-                                        ((num.parse(_data[index]["moneyMin"])>num.parse("1")*num.parse(_data[index]["bonusValue"]))?"0":
-                                        "${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}");
+                                    var checkBonus=(_data[index]["bonusType"]=='Gift')?((num.parse(_data[index]["giftMin"])>((num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()))?"0 Pcs (Min:${_data[index]["giftMin"]})":"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}"):
+                                    ((num.parse(_data[index]["moneyMin"])>num.parse(text)*num.parse(_data[index]["bonusValue"]))?"0 \$ Min ${_data[index]["moneyMin"]} \$":
+                                    "${(num.parse(text)*num.parse(_data[index]["bonusValue"]))}\$");
+                                    _data[index]["textchange_var"]=text;
+                                    _data[index]["bonus_var"]=checkBonus;
+                                    _data[index]["qty_var"]=text;
+                                    _data[index]["giftPcs_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}":"${(_data[index]["giftPerPcs"])}";
+                                    _data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?
+                                    ((num.parse(_data[index]["giftMin"])>((num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()))?"0":"${(num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()}"):
+                                    ((num.parse(_data[index]["moneyMin"])>num.parse(text)*num.parse(_data[index]["bonusValue"]))?"0":
+                                    "${(num.parse(text)*num.parse(_data[index]["bonusValue"]))}");
 
-                                        // Update the value of _counter and trigger a rebuild
-                                      });
-                                    }
-
-                                  } catch (e) {
-
-                                    _data[index]["showBtn"]=false;
-                                    print('Error: $e');
-                                  }
+                                    (num.parse(text)>1)?_data[index]["showBtn"]=true:_data[index]["showBtn"]=false;
 
 
-                                  //print(this._data[index]["total_var"]);
-                                  // print("Text changed to: $text");
-                                },
-                              ),
+
+                                    // Update the value of _counter and trigger a rebuild
+                                  });
+                                } else {
+                                  setState(() {
+                                    _data[index]['textchange']=true;//return to 1
+                                    this._data[index]["total_var"]=num.parse(this._data[index]["price"])*num.parse("1");
+
+                                    //var checkBonus=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}":"${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}\$";
+                                    var checkBonus=(_data[index]["bonusType"]=='Gift')?((num.parse(_data[index]["giftMin"])>((num.parse(text)*num.parse(_data[index]["bonusValue"])).toInt()))?"0 Pcs (Min:${_data[index]["giftMin"]})":"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}Pcs of ${_data[index]["giftName"]}"):
+                                    ((num.parse(_data[index]["moneyMin"])>num.parse("1")*num.parse(_data[index]["bonusValue"]))?"0 \$ Min ${_data[index]["moneyMin"]} \$":
+                                    "${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}\$");
+
+                                    _data[index]["textchange_var"]="1";
+                                    _data[index]["bonus_var"]=checkBonus;
+                                    _data[index]["qty_var"]="1";
+                                    _data[index]["giftPcs_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}":"${(_data[index]["giftPerPcs"])}";
+                                    //_data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}":"${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}";
+                                    //(num.parse(text)>1)?_data[index]["showBtn"]=true:_data[index]["showBtn"]=false;
+
+                                    _data[index]["totBonus_var"]=(_data[index]["bonusType"]=='Gift')?
+                                    ((num.parse(_data[index]["giftMin"])>((num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()))?"0":"${(num.parse("1")*num.parse(_data[index]["bonusValue"])).toInt()}"):
+                                    ((num.parse(_data[index]["moneyMin"])>num.parse("1")*num.parse(_data[index]["bonusValue"]))?"0":
+                                    "${(num.parse("1")*num.parse(_data[index]["bonusValue"]))}");
+
+                                    // Update the value of _counter and trigger a rebuild
+                                  });
+                                }
+
+                              } catch (e) {
+
+                                _data[index]["showBtn"]=false;
+                                print('Error: $e');
+                              }
 
 
-                              Positioned(
-                                  top:13.6,
-                                  child:InkWell(
-                                    child:_data[index]['textchange']??true?Text("-  1-  -  ",style: TextStyle(fontSize: 17)):Text("-  -  -  ",style: TextStyle(fontSize: 17)),
-                                    onTap: () {
-                                      _data[index]['focusNode'].requestFocus();
-                                    },
-
-
-                                  )),
-
-//
-
-                            ],
+                              //print(this._data[index]["total_var"]);
+                              // print("Text changed to: $text");
+                            },
                           ),
+                          stepWidth: 0.5, // set minimum width to 100
                         ),
 
 
 
-                        Text("X${_data[index]['price']}=${_data[index]["total_var"]?? _data[index]['price']}")
+                        Expanded(child: Text("X${_data[index]['price']}=${_data[index]["total_var"]?? _data[index]['price']}"))
                       ],
                     ),
                    //subtitle: Text("Bonus:${_data[index]["bonus_var"]??0}"),

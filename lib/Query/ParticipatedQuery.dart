@@ -22,6 +22,8 @@ class ParticipatedQuery extends GetxController{
   PromotionQuery promotionStateData=Get.put(PromotionQuery());
   AdminQuery adminStateData=Get.put(AdminQuery());
 
+
+
   Map<String,dynamic> obj={
     "name":"name",
     "id":1,
@@ -87,6 +89,7 @@ class ParticipatedQuery extends GetxController{
       }
     ],
   }.obs;
+
  updateCartUi(cartui,cardStatus,UpdateCartui) {
 
     dataCartui={

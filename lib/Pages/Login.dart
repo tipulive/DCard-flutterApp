@@ -71,6 +71,8 @@ class _LoginState extends State<Login> {
                           ),
                           IntrinsicWidth(
                             child: TextField(
+                              keyboardType: TextInputType.number,
+                              textInputAction: TextInputAction.done,
 
 
                               decoration: InputDecoration(
@@ -86,6 +88,10 @@ class _LoginState extends State<Login> {
                                 color: Colors.blue, // Set the text color to red
 
                               ),
+                              onSubmitted: (text) {
+                                // Handle text submission here
+                                print("Eric ${text}");
+                              },
                             ),
                             stepWidth: 0.5, // set minimum width to 100
                           ),

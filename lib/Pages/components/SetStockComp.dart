@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:flutter/gestures.dart';
+
 
 
 
@@ -322,7 +322,7 @@ setState(() {
         isLoading=false;
         hasMoreData=false;
       }
-      _data.clear();
+      //_data.clear();
 
       _data.addAll(resultData["result"]);
     });

@@ -1,6 +1,5 @@
 
-import 'dart:convert';
-import 'dart:io';
+
 
 import 'package:dcard/Query/CardQuery.dart';
 import 'package:dcard/Query/TopupQuery.dart';
@@ -14,12 +13,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:qr_code_scanner/qr_code_scanner.dart';
-import 'package:wakelock/wakelock.dart';
+//import 'package:wakelock/wakelock.dart';
 import 'package:get/get.dart';
 
 
 
-import 'package:dcard/models/Admin.dart';
+
 import 'package:dcard/models/Participated.dart';
 import 'package:dcard/models/Promotions.dart';
 import '../Query/AdminQuery.dart';
@@ -31,7 +30,8 @@ import 'package:cool_alert/cool_alert.dart';
 
 import 'package:dcard/Query/PromotionQuery.dart';
 import '../Query/ParticipatedQuery.dart';
-import 'package:dcard/Dateconfig/DateClassUtil.dart';
+import '../Utilconfig/HideShowState.dart';
+
 
 
 class Homepage extends StatefulWidget {
@@ -60,6 +60,7 @@ class _HomepageState extends State<Homepage> {
   String PromoMsg="none";
   bool showprofile=false;
   bool showOveray=false;
+  bool IsSubmitted=false;
   final GlobalKey qrkey = GlobalKey(debugLabel: 'QR');
   Barcode?result;
   QRViewController?controller;
@@ -79,7 +80,7 @@ class _HomepageState extends State<Homepage> {
   {
 
 
-    void reassemble(){
+    /*void reassemble(){
       super.reassemble();
       //controller!.resumeCamera();
       if(Platform.isAndroid)
@@ -90,7 +91,7 @@ class _HomepageState extends State<Homepage> {
       {
         controller!.pauseCamera();
       }
-    }
+    }*/
 
     //hidekeyboard();
     //UserQuery userQueryData = Get.put(UserQuery());
@@ -98,7 +99,6 @@ class _HomepageState extends State<Homepage> {
 
 
     // ParticipatedQuery participatedState=Get.put(ParticipatedQuery());
-    DateClassUtil DateState=Get.put(DateClassUtil());
 
     //Map<String,dynamic> Promo_data=promotionState.obj["resultData"]??promotionState.obj;
 
@@ -109,7 +109,7 @@ class _HomepageState extends State<Homepage> {
           Column(
             children: [
               Visibility(
-                visible:false,
+                visible:true,
                 child: Expanded(
                     flex: 5,
                     child:Stack(
@@ -213,55 +213,7 @@ class _HomepageState extends State<Homepage> {
                                 child: const Text("resume")
                             ),
 
-                            TextButton(
-                                onPressed: ()  async{
 
-                                  try {
-                                    var Resul=(await ParticipatedQuery().GetUidSubmitQuickBonusEventOnline(BonusModel(uidUser:'juma'))).data;
-                                    if(Resul["status"])
-                                    {
-                                      print(Resul);
-                                      setState(() {
-                                        Get.put(ParticipatedQuery()).updateCartUi(Resul,true,true);
-                                        Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=Resul["count"];
-
-
-                                        // Update the value of _counter and trigger a rebuild
-                                      });
-
-
-
-
-                                      //Get.put(ParticipatedQuery()).dataCartui["nyota"]="test";
-                                      print(Get.put(ParticipatedQuery()).dataCartui);
-
-                                      Get.to(() => QuickBonusPage());
-                                    }
-                                    else{
-                                     //hide cart
-                                      setState(() {
-                                        Get.put(ParticipatedQuery()).updateCartUi(Resul,false,false);
-                                        Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=0;
-
-
-                                        // Update the value of _counter and trigger a rebuild
-                                      });
-
-                                      Get.to(() => QuickBonusPage());
-
-
-                                    }
-
-
-                                  } catch (e) {
-                                    print('Error: $e');
-                                  }
-
-                                  //print(this._data[index]["total_var"]);
-                                  // print("Text changed to: $text");
-                                },
-                                child: const Text("QuickBonus")
-                            ),
 
 
                           ],
@@ -297,66 +249,98 @@ class _HomepageState extends State<Homepage> {
   ScanPopup(uid,name){
 
     Get.bottomSheet(
-        Stack(
-          alignment: Alignment.bottomCenter,
-          children: [
-            Container(
-              height: 300,
+      StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+         return
 
-              child: Column(
-                children: [
-                  Container(
+           Stack(
+            alignment: Alignment.bottomCenter,
+            children: [
+              Container(
+                height:400,
 
-                    height: 300,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(16),
-                        topRight: Radius.circular(16),
+                child: Column(
+                  children: [
+                    Container(
+
+                      height: 400,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(16),
+                          topRight: Radius.circular(16),
+                        ),
+                      ),
+                      child: ListView(
+                        children: [
+
+                          MyTextWidget(uid,name)
+                        ],
                       ),
                     ),
-                    child: ListView(
-                      children: [
-
-                        MyTextWidget(uid,name)
-                      ],
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Container(
-              // height: 60,
-              //color: Colors.white,
-              child: HomeNavigator(),
-            ),
-            Positioned(
-              right: 15.0,
-              bottom:70,
-              child: FloatingActionButton(
-                onPressed:()async {
-                  setState(() {
-                    showOveray=true;
-                  });
-                  ResultDatas=(await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))).data;
-                  if(ResultDatas["status"])
-                  {
-                    await Get.put(TopupQuery()).updateTopupState(ResultDatas);
-                    Get.to(() => ProfilePage());
-                  }
+              Container(
+                // height: 60,
+                //color: Colors.white,
+                child: HomeNavigator(),
+              ),
+
+              Positioned(
+                right: 15.0,
+                bottom:70,
+                child: FloatingActionButton(
+                  onPressed:()async {
+                    setState(() {
+                      showOveray=true;
+                    });
+                    ResultDatas=(await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))).data;
+                    if(ResultDatas["status"])
+                    {
+                      await Get.put(TopupQuery()).updateTopupState(ResultDatas);
+                      Get.to(() => ProfilePage());
+                    }
 
 
-                },
-                tooltip: 'Increment',
-                child: CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage("images/profile.jpg",
+                  },
+                  tooltip: 'Increment',
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage("images/profile.jpg",
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
-        )
+
+              Positioned.fill(
+                  child:  Obx(
+          () =>Visibility(
+            visible: Get.put(HideShowState()).isVisible.value,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.65),
+                    ),
+                  ),
+                  )
+                ),
+
+                Positioned(
+                  top: 0,
+
+                  child:  Obx(
+          () =>Visibility(
+            visible: Get.put(HideShowState()).isVisible.value,
+                    child: Container(
+                      //padding: EdgeInsets.all(16),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  )
+                ),
+            ],
+          );
+        },
+      ),
     ).whenComplete(() {
       controller!.resumeCamera();
       //do whatever you want after closing the bottom sheet
@@ -371,6 +355,7 @@ class _HomepageState extends State<Homepage> {
     uidInput5.text="${(promotionState.obj["resultData"]["result"][0]["gain"])}";
     uidInput2.text="${uid}";
     ClientName.text="${name}";
+
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -386,30 +371,36 @@ class _HomepageState extends State<Homepage> {
                       onPressed: ()  async{
 
                         try {
-                          var Resul=(await ParticipatedQuery().GetUidSubmitQuickBonusEventOnline(BonusModel(uidUser:'juma'))).data;
-                          if(Resul["status"])
+                         setState(() {
+                           showOveray=true;
+                         });
+                          var resul=(await ParticipatedQuery().GetUidSubmitQuickBonusEventOnline(BonusModel(uidUser:'${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}'))).data;
+
+
+                          if(resul["status"])
                           {
-                            print(Resul);
-                            setState(() {
-                              Get.put(ParticipatedQuery()).updateCartUi(Resul,true,true);
-                              Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=Resul["count"];
+                         var dataresult=resul["resultData"];
+                         for(int i=0;i<resul["count"];i++)
+                           {
+                             setState(() {
+                               showOveray=false;
+                               Get.put(ParticipatedQuery()).updateCartUi(resul,true,true);
+                               Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=resul["count"];
+                               Get.put(ParticipatedQuery()).dataCartui["products"]["${dataresult[i]["quickUid"]}"]=dataresult[i]["price"];
 
+                               // Update the value of _counter and trigger a rebuild
+                             });
+                           }
 
-                              // Update the value of _counter and trigger a rebuild
-                            });
-
-
-
-
-                            //Get.put(ParticipatedQuery()).dataCartui["nyota"]="test";
-                            print(Get.put(ParticipatedQuery()).dataCartui);
 
                             Get.to(() => QuickBonusPage());
+
+
                           }
                           else{
                             //hide cart
                             setState(() {
-                              Get.put(ParticipatedQuery()).updateCartUi(Resul,false,false);
+                              Get.put(ParticipatedQuery()).updateCartUi(resul,false,false);
                               Get.put(ParticipatedQuery()).dataCartui["countData"]["count"]=0;
 
 
@@ -423,6 +414,9 @@ class _HomepageState extends State<Homepage> {
 
 
                         } catch (e) {
+                          setState(() {
+                            showOveray=false;
+                          });
                           print('Error: $e');
                         }
 
@@ -611,6 +605,8 @@ class _HomepageState extends State<Homepage> {
                     ),
                   ),
 
+
+
                   FloatingActionButton.extended(
                     label: Text('Participate'), // <-- Text
                     backgroundColor: Colors.black,
@@ -619,19 +615,25 @@ class _HomepageState extends State<Homepage> {
                       size: 24.0,
                     ),
                     onPressed: ()async =>{
+                      Get.put(HideShowState()).isVisible(true),
 
-                      setState(() {
+                     /* setState(() {
+
+
                         showOveray=true;
-                      }),
+                      }),*/
 
 
                       await Get.put(ParticipatedQuery()).ParticipateEventOnline(Participated(uid:uidInput.text,uidUser:uidInput2.text,inputData:uidInput3.text),Promotions(reach:uidInput4.text,gain:uidInput5.text)),
                       //print((Get.put(ParticipatedQuery()).obj)),
                       if((Get.put(ParticipatedQuery()).obj)["resultData"]["reach"]!=null)
                         {
-                          setState(() {
+                         /* setState(() {
+
+
                             showOveray=false;
-                          }),
+                          }),*/
+                          Get.put(HideShowState()).isVisible(false),
                           uidInput3.text="",
                           Get.close(1),
                           controller!.resumeCamera(),
@@ -651,9 +653,11 @@ class _HomepageState extends State<Homepage> {
                         }else{
                         if((Get.put(ParticipatedQuery()).obj)["resultData"]["status"])
                           {
-                            setState(() {
+                            /*setState(() {
+
                               showOveray=false;
-                            }),
+                            }),*/
+                            Get.put(HideShowState()).isVisible(false),
                             uidInput3.text="",
                             Get.close(1),
                             controller!.resumeCamera(),
@@ -675,19 +679,6 @@ class _HomepageState extends State<Homepage> {
                       },
                       //
                       //
-
-
-                      //print(promotionState)
-                      // print(promotionState.obj["resultData"]["result"][0]["uid"]),
-                      //print((await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]),
-                      //uidInput2.text='${(await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]}',
-                      //CardQuery CardData=Get.put(CardQuery());
-                      //print((await CardQuery().GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))),
-                      //print((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"]),
-
-                      //await loadData(true),
-                      //(await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'TEALTD_7hEnj_1672352175')))["UserDetail"]["uid"],
-                      //print((Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]),
 
 
                     },
