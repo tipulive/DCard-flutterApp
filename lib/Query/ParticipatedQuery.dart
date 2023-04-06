@@ -10,6 +10,7 @@ import '../models/BonusModel.dart';
 import '../models/Participated.dart';
 import 'package:get/get.dart';
 import '../models/Topups.dart';
+import '../models/User.dart';
 import 'PromotionQuery.dart';
 import 'UserQuery.dart';
 import 'AdminQuery.dart';
@@ -846,13 +847,14 @@ getPreviousPriceOnline(Topups topupData,BonusModel bonusData)async{
       print(e);
     }
   }
-  getAllParticipateHistEventOnline(Topups TopupData) async{//reached
+  getAllParticipateHistEventOnline(Topups topupData,User userData) async{//reached
     try {
 
       var params =  {
         //"kebineericMuna_1668935593",
-        "LimitStart":TopupData.endlimit,  //page
-        "LimitEnd":TopupData.startlimit//limit
+        "LimitStart":topupData.endlimit,  //page
+        "LimitEnd":topupData.startlimit,//limit
+        "name":userData.name??'none'
 
         //"options": [1,2,3],
       };

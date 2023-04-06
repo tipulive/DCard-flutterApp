@@ -16,29 +16,18 @@ class UserAccountPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text("demo",style: TextStyle(color: Colors.teal)),
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Get.back();
-          },
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(27.0), // customize toolbar height
+        child: AppBar(
+          backgroundColor: Colors.transparent, // set the background color to transparent
+          elevation: 0, // remove the shadow
+          leading: IconButton(
+            icon: Icon(Icons.arrow_back,color: Colors.black,),
+            onPressed: () {
+              Get.back();
+            },
+          ),
         ),
-
-        toolbarHeight:0, //hide Text in appbar
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        centerTitle: true,
-        systemOverlayStyle: const SystemUiOverlayStyle( //this to remove status Bar Background Colors
-          statusBarColor: Colors.transparent, // <-- SEE HERE
-          statusBarIconBrightness:
-          Brightness.dark, //<-- For Android SEE HERE (dark icons)
-          statusBarBrightness: Brightness.light,
-        ),
-
       ),
       backgroundColor: Colors.yellow,
 

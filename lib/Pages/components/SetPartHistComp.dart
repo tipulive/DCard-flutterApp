@@ -1,15 +1,15 @@
 import 'dart:math';
 
-import 'package:dcard/models/Participated.dart';
+
+import 'package:dcard/models/User.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
-import '../../Query/CardQuery.dart';
+
 import '../../Query/ParticipatedQuery.dart';
-import '../../Query/ScrollQuery.dart';
-import '../../Pages/components/ProfilePic.dart';
+
 import '../../models/Topups.dart';
 
 class SetPartHistComp extends StatefulWidget {
@@ -48,7 +48,49 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
         ),
 
 
+        Container(
+          height: 55,
+          //padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+          margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
+          child: TextField(
 
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(50.0),
+              ),
+              labelText: 'Search',
+            ),
+            onChanged: (text) async{
+
+              try {
+int limit=10;
+                var resultData=(await ParticipatedQuery().getAllParticipateHistEventOnline(Topups(startlimit:limit,endlimit:_page),User(uid: "none",name:text))).data;
+                if(resultData["status"])
+                {
+                  setState(() {
+                    //print(Resul);
+                    isLoading=false;
+                    hasMoreData=false;
+                    _data.clear();
+
+                    _data.addAll(resultData["result"]);
+                  });
+                }
+                else{
+                  _data.clear();
+
+                }
+
+
+              } catch (e) {
+                print('Error: $e');
+              }
+
+              //print(this._data[index]["total_var"]);
+              // print("Text changed to: $text");
+            },
+          ),
+        ),
         Expanded(
           child: ListView.builder(
 
@@ -57,7 +99,12 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
             itemBuilder: (context, index) {
               if(index<_data.length)
               {
-                return Card(
+                return GestureDetector(
+                      onTap: () {
+                        // Handle card click event here
+                        print('Card clicked');
+                      },
+                      child:Card(
                   elevation:0,
                   //margin: EdgeInsets.symmetric(vertical:1,horizontal:5),
                   //color:Colors.yellow,
@@ -110,7 +157,8 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
 
 
                   ),
-                );
+                )
+              );
 
               }
               else{
@@ -171,7 +219,7 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
     if(isLoading) return;
     isLoading=true;
     int limit=10;
-    var Resul=(await ParticipatedQuery().getAllParticipateHistEventOnline(Topups(startlimit:limit,endlimit:_page))).data;
+    var Resul=(await ParticipatedQuery().getAllParticipateHistEventOnline(Topups(startlimit:limit,endlimit:_page),User(uid: "none",name:"none"))).data;
     setState(() {
       isLoading=false;
       if(Resul["result"].length<limit)
@@ -181,6 +229,8 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
       _data.addAll(Resul["result"]);
     });
   }
+  //popup
+//popup
 }
 
 

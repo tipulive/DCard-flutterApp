@@ -2,10 +2,6 @@
 import 'package:dcard/Pages/AllEventPage.dart';
 import 'package:dcard/Pages/BalancePage.dart';
 import 'package:dcard/Pages/BonusPage.dart';
-import 'package:dcard/Pages/EventsPage.dart';
-
-import 'package:dcard/Query/ParticipatedQuery.dart';
-import 'package:dcard/models/Participated.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';

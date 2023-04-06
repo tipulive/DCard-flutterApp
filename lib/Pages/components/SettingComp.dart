@@ -42,7 +42,7 @@ class _SettingCompState extends State<SettingComp> {
             const SizedBox(height:5,),
             detailsProfile("QuickBonus",Icons.paid,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,QuickBoHistfunc),
             const SizedBox(height:5,),
-            detailsProfile("Edit Card",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,EditCardfunc),
+            detailsProfile("Logout",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,logout),
             const SizedBox(height:5,),
 
 
@@ -207,6 +207,9 @@ QuickBoHistfunc() async{
 }
 
 EditCardfunc() async{
+  Get.to(() =>SetEditCardNoPage());
+}
+logout() async{
   Get.to(() =>SetEditCardNoPage());
 }
 
