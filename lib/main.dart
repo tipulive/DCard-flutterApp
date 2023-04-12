@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dcard/Pages/ScrollPage.dart';
+
 import 'package:dio/dio.dart';
-//import 'package:flutter/foundation.dart';
+
 import 'package:flutter/material.dart';
 import 'Pages/routes.dart';
 
@@ -12,7 +12,6 @@ import 'package:wakelock/wakelock.dart';
 import 'package:get/get.dart';
 
 
-import 'Pages/Login.dart';
 import 'Query/AdminQuery.dart';
 
 
@@ -80,7 +79,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
-  AdminQuery adminStatedata=Get.put(AdminQuery());
+  //AdminQuery adminStatedata=Get.put(AdminQuery());
 
 
 
@@ -102,31 +101,40 @@ class _MyHomePageState extends State<MyHomePage> {
 
     //yourFunction();
     //ConnectivityResult connectivity;
-    return checkAuth();
+    //return checkAuth();
+    return Text("App");
 
 
 
   }
+  void initState()
+  {
+    super.initState();
+    //getapi();
+    checkAuth();
+  }
+  void dispose() {
+    //WidgetsFlutterBinding.ensureInitialized();
+    checkAuth();
+    super.dispose();
+  }
 
+  checkAuth() async{
 
-  checkAuth(){
-    //print((await adminStatedata.obj));
-    //AdminQuery().auth();
-    adminStatedata.auth();
-    if(((adminStatedata.obj)["result"])==0)
-    {
-      //print((adminStatedata.obj)["result"]);
-      return Login();
-
-      return ScrollPage();
-
-    }
+    if(await Get.put(AdminQuery()).auth()==0)//no data in localDb
+      {
+      //i will add full screen pics with delay
+      Get.toNamed('/Login');
+      }
     else{
-      //print((adminStatedata.obj)["result"]);
+      //i will add full screen pics with delay
+      //print(await Get.put(AdminQuery()).obj["result"][0]["name"]);
+      Get.toNamed('/home');
+      //print(await Get.put(AdminQuery()).logout());
 
-      return Login();
-     // return ScrollPage();
     }
+   // print(await Get.put(AdminQuery()).obj);
+    //Get.toNamed('/Login');
 
 
 

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Query/AdminQuery.dart';
-import '../Utilconfig/HideShowState.dart';
+
 import '../models/Admin.dart';
 import '../Utilconfig/ConstantClassUtil.dart';
 import 'Homepage.dart';
@@ -29,6 +29,7 @@ class _LoginState extends State<Login> {
   AdminQuery adminStatedata=Get.put(AdminQuery());
   bool showOveray=false;
   bool _canShowButton=true;
+  bool isValid=false;
  FocusNode focusNode=FocusNode() ;
 
   @override
@@ -65,16 +66,17 @@ class _LoginState extends State<Login> {
 
 
     Container(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                         child: IntlPhoneField(
                           controller: uidInput,
                           initialCountryCode: 'RW',
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
                             border: OutlineInputBorder(
-                              borderSide: BorderSide(),
+                              borderRadius: BorderRadius.circular(5.0),
                             ),
-                            suffixIcon:Obx(() => Get.put(HideShowState()).isNumberValid.value?Icon(Icons.done,color:Colors.green,):Icon(Icons.dangerous,color:Colors.red,)),
+                            //suffixIcon:Obx(() => Get.put(HideShowState()).isNumberValid.value?Icon(Icons.done,color:Colors.green,):Icon(Icons.dangerous,color:Colors.red,)),
+                            suffixIcon:isValid?Icon(Icons.done,color:Colors.green,):Icon(Icons.dangerous,color:Colors.red,)
 
                           ),
                           onChanged: (phone) {
@@ -82,13 +84,19 @@ class _LoginState extends State<Login> {
 
                             if((uidInput.text).isPhoneNumber)
                             {
-                              Get.put(HideShowState()).isValid(true);
+                             // Get.put(HideShowState()).isValid(true);
+                              setState(() {
+                                isValid=true;
+                              });
 
 
                             }
                             else{
-                              Get.put(HideShowState()).isValid(false);
+                             // Get.put(HideShowState()).isValid(false);
 
+                              setState(() {
+                                isValid=false;
+                              });
                               // print("not empty");
                             }
                           },
@@ -98,10 +106,16 @@ class _LoginState extends State<Login> {
                             uidInput2.text="+"+country.dialCode;
                             if((uidInput.text).isPhoneNumber)
                             {
-                              Get.put(HideShowState()).isValid(true);
+                              //Get.put(HideShowState()).isValid(true);
+                              setState(() {
+                                isValid=true;
+                              });
                             }
                             else{
-                              Get.put(HideShowState()).isValid(false);
+                             // Get.put(HideShowState()).isValid(false);
+                              setState(() {
+                                isValid=false;
+                              });
                             }
                           },
                         ),
@@ -109,7 +123,7 @@ class _LoginState extends State<Login> {
                       Visibility(
                         visible: false,
                         child: Container(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+
                           child: TextField(
                             controller: uidInput2,
                             decoration: InputDecoration(
@@ -123,20 +137,20 @@ class _LoginState extends State<Login> {
                       ),
 
                       Container(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 5, 20, 0),
                         child: TextField(
                           controller: uidInput3,
                           obscureText: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(90.0),
+                              borderRadius: BorderRadius.circular(5.0),
                             ),
                             labelText: 'Password',
                           ),
                         ),
                       ),
-                    Obx(()=>Visibility(
-                      visible:Get.put(HideShowState()).isNumberValid.value,
+                    Visibility(
+                      visible:isValid,
                       child: Container(
                           height: 80,
                           padding: const EdgeInsets.all(20),
@@ -154,7 +168,7 @@ class _LoginState extends State<Login> {
                           )),
                     ),
 
-                    ),
+
                       TextButton(
                         onPressed: () {
                           print(uidInput.text);
@@ -238,11 +252,17 @@ setState(() {
 
       } else {
         //return false;
-        print(false);
+        setState(() {
+          showOveray=false;
+        });
+        Get.toNamed('/ErrorPage');
       }
     } catch (e) {
       //return false;
-      print(e);
+      setState(() {
+        showOveray=false;
+      });
+      Get.toNamed('/ErrorPage');
     }
 
 

@@ -3,6 +3,7 @@
 
 import 'package:dcard/Pages/SetEditCardNoPage.dart';
 import 'package:dcard/Pages/SetStockPage.dart';
+import 'package:dcard/Query/AdminQuery.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -34,6 +35,13 @@ class _SettingCompState extends State<SettingComp> {
 
           children: [
 
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(Get.put(AdminQuery()).obj["result"][0]["name"]),
+              ),
+            ),
+
             divLine(),
             detailsProfile("Stocks",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,ViewStock),//Last Time Purchase
             const SizedBox(height:5,),
@@ -45,7 +53,39 @@ class _SettingCompState extends State<SettingComp> {
 
             detailsProfile("Edit Card",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,EditCardfunc),
             const SizedBox(height:5,),
-            detailsProfile("Logout",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,logout),
+            GestureDetector(
+                onTap: () {
+                  Get.dialog(
+                    AlertDialog(
+                      title: Text('Confirmation'),
+                      content: Text('Do you Want to Logout?'),
+                      actions: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+
+                            //primary: Colors.grey[300],
+                            backgroundColor: Color(0xff9a1c55),
+                            elevation:0,
+                          ),
+                          onPressed: () async{
+                            await Get.put(AdminQuery()).logout();
+
+                            Get.toNamed('/Login');
+                          },
+                          child: Text('Yes'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Get.back(); // close the alert dialog
+                          },
+                          child: Text('Close'),
+                        ),
+                      ],
+                    ),
+                  );
+
+                },
+                child: detailsProfile("Logout",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,logout)),
             const SizedBox(height:5,),
 
 

@@ -36,6 +36,25 @@ void onReady(){
     }
 
   }
+  logout() async{//this is our Admin Auth template
+
+    Database db = await DatabaseHelper.instance.database;
+    //List<Map> list=await db.rawQuery("select *from admins where uid='ndaje' limit 1");
+    int result=await db.rawDelete("DELETE FROM `admins` WHERE id=1");
+    //return list;
+    if(result>0)
+    {
+      //there is user associated with this Account
+      // updateState();
+      updateAdminState(0);
+      return result;
+    }
+    else{
+      //updateAdminState(list);
+      return result;
+    }
+
+  }
 
   updateAdminState(list){ //save State
     adminAuth.value=9;

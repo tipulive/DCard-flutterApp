@@ -4,7 +4,6 @@ import 'components/SettingComp.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-import 'components/BottomNavigator/ProfileNavigator.dart';
 
 class SettingPage extends StatelessWidget {
   const SettingPage({Key? key}) : super(key: key);
