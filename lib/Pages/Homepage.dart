@@ -108,8 +108,9 @@ class _HomepageState extends State<Homepage> {
         children: [
           Column(
             children: [
-              Visibility(
-                visible:true,
+          Obx(
+          () =>Visibility(
+                visible:Get.put(HideShowState()).isCameraVisible.value,
                 child: Expanded(
                     flex: 5,
                     child:Stack(
@@ -144,6 +145,7 @@ class _HomepageState extends State<Homepage> {
                 ),
 
               ),
+          ),
 
               Visibility(
                 visible: true,
@@ -299,6 +301,9 @@ class _HomepageState extends State<Homepage> {
                     if(ResultDatas["status"])
                     {
                       await Get.put(TopupQuery()).updateTopupState(ResultDatas);
+                      Get.to(() => ProfilePage());
+                    }
+                    else{
                       Get.to(() => ProfilePage());
                     }
 

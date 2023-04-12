@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:dcard/Pages/ParticipateHistPage.dart';
-import 'package:dcard/Query/CardQuery.dart';
-import 'package:dcard/models/CardModel.dart';
+
 import 'package:dio/dio.dart';
-import 'package:dotted_line/dotted_line.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../Query/AdminQuery.dart';
+import '../Utilconfig/HideShowState.dart';
 import '../models/Admin.dart';
 import '../Utilconfig/ConstantClassUtil.dart';
 import 'Homepage.dart';
@@ -24,8 +23,9 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  final uidInput=TextEditingController();
-  TextEditingController uidInput2=TextEditingController();
+  TextEditingController  uidInput=TextEditingController();
+  TextEditingController uidInput2=TextEditingController(text:"+250");
+  TextEditingController uidInput3=TextEditingController();
   AdminQuery adminStatedata=Get.put(AdminQuery());
   bool showOveray=false;
   bool _canShowButton=true;
@@ -60,92 +60,6 @@ class _LoginState extends State<Login> {
 
 
 
-                      Row(
-                        children: [
-                          Text(
-                            'Your Name: ',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          IntrinsicWidth(
-                            child: TextField(
-                              keyboardType: TextInputType.number,
-                              textInputAction: TextInputAction.done,
-
-
-                              decoration: InputDecoration(
-                                hintText: '-1-',
-                                hintStyle: TextStyle(color: Colors.blue),
-                                contentPadding: EdgeInsets.all(0),
-                                isDense: true,
-
-
-
-                              ),
-                              style: TextStyle(
-                                color: Colors.blue, // Set the text color to red
-
-                              ),
-                              onSubmitted: (text) {
-                                // Handle text submission here
-                                print("Eric ${text}");
-                              },
-                            ),
-                            stepWidth: 0.5, // set minimum width to 100
-                          ),
-                          Expanded(
-                            child: Text(
-                              'Your Name: ',
-                              style: TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-
-
-                      Text("richText"),
-
-                      SizedBox(
-                        width: 50,
-                        child: Stack(
-                          children:[
-
-                            TextField(
-                              focusNode:focusNode,
-                        textAlign: TextAlign.center,
-                              decoration: InputDecoration(
-                                //hintText: '------',
-                                border: InputBorder.none,
-                                filled: true,
-                                fillColor: Colors.transparent,
-                                contentPadding:EdgeInsets.zero,
-
-                              ),
-                              onChanged: (text) {
-                                print("Text changed to: $text");
-                              },
-                            ),
-                            Positioned(
-                                top:32,
-                                child: InkWell(
-                                  child: Text("-  -  -  -  -  -  -  -  -  -"),
-                                  onTap: () {
-                                    focusNode.requestFocus();
-                                  },
-                                ),
-                            ),
-
-//
-
-                          ],
-                        ),
-                      ),
                     //
 
 
@@ -153,29 +67,57 @@ class _LoginState extends State<Login> {
     Container(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: IntlPhoneField(
+                          controller: uidInput,
+                          initialCountryCode: 'RW',
                           decoration: InputDecoration(
                             labelText: 'Phone Number',
                             border: OutlineInputBorder(
                               borderSide: BorderSide(),
                             ),
+                            suffixIcon:Obx(() => Get.put(HideShowState()).isNumberValid.value?Icon(Icons.done,color:Colors.green,):Icon(Icons.dangerous,color:Colors.red,)),
+
                           ),
                           onChanged: (phone) {
-                            print(phone.completeNumber);
+                            print(uidInput.text);
+
+                            if((uidInput.text).isPhoneNumber)
+                            {
+                              Get.put(HideShowState()).isValid(true);
+
+
+                            }
+                            else{
+                              Get.put(HideShowState()).isValid(false);
+
+                              // print("not empty");
+                            }
                           },
                           onCountryChanged: (country) {
-                            print('Country changed to: ' + country.code);
+
+
+                            uidInput2.text="+"+country.dialCode;
+                            if((uidInput.text).isPhoneNumber)
+                            {
+                              Get.put(HideShowState()).isValid(true);
+                            }
+                            else{
+                              Get.put(HideShowState()).isValid(false);
+                            }
                           },
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
-                        child: TextField(
-                          controller: uidInput,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(90.0),
+                      Visibility(
+                        visible: false,
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                          child: TextField(
+                            controller: uidInput2,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(90.0),
+                              ),
+                              labelText: 'Ccode',
                             ),
-                            labelText: 'Email',
                           ),
                         ),
                       ),
@@ -183,7 +125,7 @@ class _LoginState extends State<Login> {
                       Container(
                         padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
                         child: TextField(
-                          controller: uidInput2,
+                          controller: uidInput3,
                           obscureText: true,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -193,7 +135,9 @@ class _LoginState extends State<Login> {
                           ),
                         ),
                       ),
-                      Container(
+                    Obx(()=>Visibility(
+                      visible:Get.put(HideShowState()).isNumberValid.value,
+                      child: Container(
                           height: 80,
                           padding: const EdgeInsets.all(20),
                           child: ElevatedButton(
@@ -208,6 +152,9 @@ class _LoginState extends State<Login> {
                               // Get.to(() =>Aboutpage());
                             },
                           )),
+                    ),
+
+                    ),
                       TextButton(
                         onPressed: () {
                           print(uidInput.text);
@@ -256,13 +203,13 @@ setState(() {
     try {
 
       var params =  {
-        "email":uidInput.text,
-        "password":uidInput2.text,
+        "PhoneNumber":"${uidInput2.text}${uidInput.text}",
+        "password":uidInput3.text,
         //"options": [1,2,3],
       };
 
 
-      var url="${ConstantClassUtil.urlLink}/AdminLoginEmail";
+      var url="${ConstantClassUtil.urlLink}/AdminLoginPhone";
       var response = await Dio().post(url,
         options: Options(headers: {
           HttpHeaders.contentTypeHeader: "application/json",

@@ -10,7 +10,10 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../Query/ParticipatedQuery.dart';
 
+import '../../Utilconfig/HideShowState.dart';
 import '../../models/Topups.dart';
+import '../../models/Participated.dart';
+import '../../models/Promotions.dart';
 
 class SetPartHistComp extends StatefulWidget {
   const SetPartHistComp({Key? key}) : super(key: key);
@@ -21,11 +24,14 @@ class SetPartHistComp extends StatefulWidget {
 
 class _SetPartHistCompState extends State<SetPartHistComp> {
   ScrollController _scrollController = ScrollController();// detect scroll
+  TextEditingController inputData=TextEditingController();
   List<dynamic> _data = [];
   int _page=0;
   bool hasMoreData=true;
   bool isLoading=false;
   final args = Get.arguments;
+
+  var resultDatas;
 
   //final myInt = args['int'] as int;
   @override
@@ -33,7 +39,26 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
 
 
 
-    return listdata();
+    return Stack(
+
+      children: [
+        listdata(),
+        Positioned.fill(
+            child:  Obx(
+                  () =>Visibility(
+                visible: Get.put(HideShowState()).isVisible.value,
+                child: Container(
+                  color: Colors.black.withOpacity(0.65),
+                ),
+              ),
+            )
+        ),
+
+
+
+      ],
+    );
+
 
 
 
@@ -51,7 +76,7 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
         Container(
           height: 55,
           //padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-          margin: EdgeInsets.fromLTRB(10, 20, 10, 10),
+          margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
           child: TextField(
 
             decoration: InputDecoration(
@@ -102,7 +127,9 @@ int limit=10;
                 return GestureDetector(
                       onTap: () {
                         // Handle card click event here
-                        print('Card clicked');
+                        //Get.put(HideShowState()).isVisible(true);
+
+                        EditParticipatePopup(_data[index]);
                       },
                       child:Card(
                   elevation:0,
@@ -230,6 +257,147 @@ int limit=10;
     });
   }
   //popup
+
+  EditParticipatePopup(data){
+
+    Get.bottomSheet(
+      StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+          return
+
+            Stack(
+              alignment: Alignment.bottomCenter,
+              children: [
+                Container(
+                  height:200,
+
+                  child: Column(
+                    children: [
+                      Container(
+
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(16),
+                            topRight: Radius.circular(16),
+                          ),
+                        ),
+                        child: ListView(
+                          padding: EdgeInsets.all(10),
+                          children: [
+                          Center(child: Text(data["name"])),
+                            Center(child: Text("Promotion:${data["promoName"]}")),
+                            TextField(
+                              controller:inputData,
+                              keyboardType: TextInputType.number,
+
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                                border: OutlineInputBorder(),
+                                labelText: 'Enter Value',
+                                hintText: 'Enter Value',
+                                hintStyle: TextStyle(
+                                  color: Colors.grey,
+                                ),
+
+                              ),
+                            ),
+                            SizedBox(height: 10.0,),
+                            SizedBox(height: 10.0,),
+                            Center(
+                              child: FloatingActionButton.extended(
+                                label: Text('Edit'), // <-- Text
+                                backgroundColor: Color(0xff010a0e),
+                                icon: Icon( // <-- Icon
+                                  Icons.redeem,
+                                  size: 24.0,
+                                ),
+                                onPressed: () async=> {
+
+
+                                 Get.put(HideShowState()).isVisible(true),
+                                  resultDatas=(await ParticipatedQuery().ParticipateEditEventOnline(Participated(uid:data["uid"],uidUser:data["uidUser"],inputData:inputData.text),Promotions(reach:data["reach"],gain:data["gain"]))).data,
+                                  if(resultDatas["status"])
+                                    {
+                                      Get.put(HideShowState()).isVisible(false),
+                                      Get.snackbar("Success", "Successfully Edited ",backgroundColor: Color(0xff9a1c55),
+                                          colorText: Color(0xffffffff),
+                                          titleText: const Text("Events",style:TextStyle(color:Color(
+                                              0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
+
+                                          icon: Icon(Icons.access_alarm),
+                                          duration: Duration(seconds: 4)),
+
+
+                                    }else{
+                                    Get.put(HideShowState()).isVisible(false),
+
+                                    Get.snackbar("Error", "something wrong",backgroundColor: Color(
+                                        0xffdc2323),
+                                        colorText: Color(0xffffffff),
+                                        titleText: const Text("Events",style:TextStyle(color:Color(
+                                            0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
+
+                                        icon: Icon(Icons.access_alarm),
+                                        duration: Duration(seconds: 4))
+                                  }
+
+
+                                },
+
+
+
+
+                              ),
+                            ),
+
+
+
+                            //MyTextWidget(uid,name)
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+
+
+
+                Positioned.fill(
+                    child:  Obx(
+                          () =>Visibility(
+                        visible: Get.put(HideShowState()).isVisible.value,
+                        child: Container(
+                          color: Colors.black.withOpacity(0.65),
+                        ),
+                      ),
+                    )
+                ),
+
+                Positioned(
+                    top: 0,
+
+                    child:  Obx(
+                          () =>Visibility(
+                        visible: Get.put(HideShowState()).isVisible.value,
+                        child: Container(
+                          //padding: EdgeInsets.all(16),
+                          child: CircularProgressIndicator(),
+                        ),
+                      ),
+                    )
+                ),
+              ],
+            );
+        },
+      ),
+    ).whenComplete(() {
+
+      //do whatever you want after closing the bottom sheet
+    });
+  }
 //popup
 }
 
@@ -329,6 +497,7 @@ Widget detailsProfile(IconText,icon,IconDescr,listBackground,IconrightText,iconr
                           // This function will be called when the icon is tapped.
                           // myfunct();
                           //print(IconText);
+
                         },
                         child: Icon(iconright,color:
                         Colors.teal,size: 22,)

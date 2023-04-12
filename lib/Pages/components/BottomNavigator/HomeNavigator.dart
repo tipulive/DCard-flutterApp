@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../Card/AddCardPage.dart';
 import '../../Homepage.dart';
 import '../../SettingPage.dart';
+import '../../../Utilconfig/HideShowState.dart';
 
 
 
@@ -42,7 +43,7 @@ class HomeNavigator extends StatelessWidget {
    onTap: (index){
     if(index==0)
     {
-
+     Get.put(HideShowState()).isCameraVisible(true);
      Get.to(() => const Homepage());
 
     }
@@ -53,6 +54,7 @@ class HomeNavigator extends StatelessWidget {
     }
     if(index==2)
     {
+     Get.put(HideShowState()).isCameraVisible(false);
 
      Get.to(() =>const SettingPage(),arguments:1);
     }

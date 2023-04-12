@@ -658,8 +658,8 @@ getPreviousPriceOnline(Topups topupData,BonusModel bonusData)async{
       );
       if (response.statusCode == 200) {
 
-        updateParticipateState(response.data);
-        return response.data;
+       // updateParticipateState(response.data);
+        return response;
 
 
 
