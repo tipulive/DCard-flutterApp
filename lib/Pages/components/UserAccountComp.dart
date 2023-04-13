@@ -1,5 +1,6 @@
 
 import 'package:dcard/Pages/Card/EditCardPage.dart';
+import 'package:dcard/Utilconfig/HideShowState.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ import '../Card/AddCardPage.dart';
 
 import '../../models/CardModel.dart';
 import '../../models/Admin.dart';
+import 'ProfilePic.dart';
 
 class UserAccountComp extends StatefulWidget {
   const UserAccountComp({Key? key}) : super(key: key);
@@ -29,7 +31,7 @@ class _UserAccountCompState extends State<UserAccountComp> {
 
       children: [
 
-        profile(),
+        ProfilePic().profile(),
         const SizedBox(height: 6.0,),
         divLine(),
         detailsProfile("Edit Profile",Icons.account_balance_wallet,":",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,editprofile),
@@ -42,58 +44,7 @@ class _UserAccountCompState extends State<UserAccountComp> {
       ],
     );
   }
-  Widget profile(){
-    return Stack(
-      children: [
-        Column(
 
-          children: <Widget>[
-            SizedBox(
-              width: 100,
-              height: 100,
-              child: CircleAvatar(
-                backgroundImage: AssetImage("images/profile.jpg"),
-              ),
-            ),
-            SizedBox(height:6.0),
-
-            Text("${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["name"]??'none'}",style:GoogleFonts.pacifico(fontSize: 18,color: Colors.teal,fontWeight:FontWeight.w100),),
-            SizedBox(height:3.0),
-            Text("+ ${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["PhoneNumber"]??'none'}",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 25,
-                  height: 25,
-                  decoration: BoxDecoration(
-                    //shape: BoxShape.circle,
-                    //border: Border.all(color: Colors.black,width: 2)
-                  ),
-                  child: Icon(Icons.phone
-                    ,size: 18,
-                    color: Colors.black,),
-                ),
-                SizedBox(width: 1,),
-                Text("Profile",style: GoogleFonts.robotoCondensed(fontSize: 18,color: Colors.deepOrange,fontWeight: FontWeight.bold),),
-              ],
-            ),
-          ],
-        ),
-        if(showOveray)
-          Positioned.fill(
-            child: Center(
-              child: Container(
-                alignment: Alignment.center,
-                color: Colors.white70,
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          ),
-
-      ],
-    );
-  }
   editprofile() async{
     await scanPopup();
   }
@@ -105,13 +56,13 @@ class _UserAccountCompState extends State<UserAccountComp> {
           children: [
             SingleChildScrollView(
               child: Container(
-                height: 400,
+                height: 300,
 
                 child: Column(
                   children: [
                     Container(
 
-                      height: 400,
+                      height: 300,
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
@@ -148,7 +99,8 @@ class _UserAccountCompState extends State<UserAccountComp> {
     final TextEditingController Country = TextEditingController(text:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["country"]??'none'}");
     final TextEditingController edit = TextEditingController(text:"edit");
     final TextEditingController password = TextEditingController(text:"1");
-    var ResultData;
+    var resultData;
+
     return Padding(
       padding: const EdgeInsets.all(10.0),
       child: Column(
@@ -179,18 +131,21 @@ class _UserAccountCompState extends State<UserAccountComp> {
                           ),
                         ),
                         SizedBox(height: 10,),
-                        TextField(
-                          controller:email,
-                          //obscureText: true,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                            border: OutlineInputBorder(),
-                            labelText: 'Enter email',
-                            hintText: 'Enter email',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller:email,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Enter email',
+                              hintText: 'Enter email',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
 
+                            ),
                           ),
                         ),
                         SizedBox(height: 10,),
@@ -202,157 +157,201 @@ class _UserAccountCompState extends State<UserAccountComp> {
                             border: OutlineInputBorder(
                               borderSide: BorderSide(),
                             ),
+                            suffixIcon:Obx(()=>Get.put(HideShowState()).isNumber.value?Icon(Icons.done,color:Colors.green,):Icon(Icons.dangerous,color:Colors.red,),
+                            )
                           ),
-                          onChanged: (phone) {
+                          onChanged: (myphone) {
 
                             //uidInput2.text=phone.countryCode;
                             //uidInput2.text=phone.number;
                             // uidInput2.text=phone.countryISOCode;
                             //print(phone.completeNumber);
+                            if((phone.text).isPhoneNumber)
+                            {
 
+                             Get.put(HideShowState()).isNumberCorrect(true);
+
+
+
+                            }
+                            else{
+                              Get.put(HideShowState()).isNumberCorrect(false);
+                            }
 
 
                           },
 
                           onCountryChanged: (country) {
-                            Ccode.text=country.dialCode;
+                            Ccode.text="+"+country.dialCode;
                             Country.text=country.name;
                             initCountry.text=country.code;
+
+                            if((phone.text).isPhoneNumber)
+                            {
+
+                              Get.put(HideShowState()).isNumberCorrect(true);
+
+
+
+                            }
+                            else{
+                              Get.put(HideShowState()).isNumberCorrect(false);
+                            }
+
+                            //
                             // print('Country changed to: ' + country.name);
                             // print('Country changed to: ' + country.dialCode);
                           },
                         ),
-                        TextField(
-                          controller:Ccode,
-                          //obscureText: true,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                            border: OutlineInputBorder(),
-                            labelText: 'Enter Ccode',
-                            hintText: 'Enter Ccode',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller:Ccode,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Enter Ccode',
+                              hintText: 'Enter Ccode',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
 
+                            ),
                           ),
                         ),
-                        SizedBox(height: 10,),
-                        TextField(
-                          controller:phone,
-                          //obscureText: true,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                            border: OutlineInputBorder(),
-                            labelText: 'Enter Phone',
-                            hintText: 'Enter Phone',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
 
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller:phone,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Enter Phone',
+                              hintText: 'Enter Phone',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
                           ),
                         ),
-                        SizedBox(height: 10,),
-                        TextField(
-                          controller:Country,
-                          //obscureText: true,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                            border: OutlineInputBorder(),
-                            labelText: 'Enter Country',
-                            hintText: 'Enter Country',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
 
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller:Country,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Enter Country',
+                              hintText: 'Enter Country',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
                           ),
                         ),
-                        SizedBox(height:10,),
-                        TextField(
-                          controller:edit,
-                          //obscureText: true,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                            border: OutlineInputBorder(),
-                            labelText: 'Enter edit',
-                            hintText: 'Enter edit',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
 
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller:edit,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Enter edit',
+                              hintText: 'Enter edit',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
                           ),
                         ),
-                        SizedBox(height:10,),
-                        TextField(
-                          controller:password,
-                          //obscureText: true,
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                            border: OutlineInputBorder(),
-                            labelText: 'Enter password',
-                            hintText: 'Enter password',
-                            hintStyle: TextStyle(
-                              color: Colors.grey,
-                            ),
 
+                        Visibility(
+                          visible: false,
+                          child: TextField(
+                            controller:password,
+                            //obscureText: true,
+                            decoration: InputDecoration(
+                              contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                              border: OutlineInputBorder(),
+                              labelText: 'Enter password',
+                              hintText: 'Enter password',
+                              hintStyle: TextStyle(
+                                color: Colors.grey,
+                              ),
+
+                            ),
                           ),
                         ),
 
                       ],
                     ),
-                    SizedBox(height: 10.0,),
-                    FloatingActionButton.extended(
-                      label: Text('Edit Profile'), // <-- Text
-                      backgroundColor: Color(0xff940e4b),
-                      icon: Icon( // <-- Icon
-                        Icons.add_card,
-                        size: 24.0,
-                      ),
-                      onPressed: ()async =>{
-                        setState(() {
-                          showOveray=true;
-                        }),
-                        ResultData=(await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",name:name.text,email:email.text,Ccode:Ccode.text,phone:phone.text,initCountry:initCountry.text,country:Country.text,password:password.text,status:edit.text,subscriber:"none"))).data,
-                        if(ResultData["status"])
-                          {
 
-                            await Get.put(CardQuery()).updateCardState((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["carduid"]}'))).data),
-                            setState(() {
-                              Get.put(CardQuery()).obj;
-                            }),
+                    Obx(() => Visibility(
+                      visible:Get.put(HideShowState()).isNumber.value,
+                      child: FloatingActionButton.extended(
+                        label: Text('Edit Profile'), // <-- Text
+                        backgroundColor: Color(0xff940e4b),
+                        icon: Icon( // <-- Icon
+                          Icons.add_card,
+                          size: 24.0,
+                        ),
+                        onPressed: ()async =>{
+                          setState(() {
+                            showOveray=true;
+                          }),
+                          resultData=(await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",name:name.text,email:email.text,Ccode:Ccode.text,phone:phone.text,initCountry:initCountry.text,country:Country.text,password:password.text,status:edit.text,subscriber:"none"))).data,
+                          if(resultData["status"])
+                            {
+
+                              await Get.put(CardQuery()).updateCardState((await Get.put(CardQuery()).GetDetailCardOnline(CardModel(uid:'${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["carduid"]}'))).data),
+                              setState(() {
+                                Get.put(CardQuery()).obj;
+                              }),
+                              Get.close(1),
+                              setState(() {
+                                showOveray=false;
+                              }),
+                              Get.snackbar("Success", "Profile Edited Successfuly",backgroundColor: Color(0xff9a1c55),
+                                  colorText: Color(0xffffffff),
+                                  titleText: const Text("Card User",style:TextStyle(color:Color(
+                                      0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
+
+                                  icon: Icon(Icons.access_alarm),
+                                  duration: Duration(seconds: 4))
+                            }
+                          else{
+
                             Get.close(1),
                             setState(() {
                               showOveray=false;
                             }),
-                            Get.snackbar("Success", "Profile Edited Successfuly",backgroundColor: Color(0xff9a1c55),
+                            Get.snackbar("Error", "Something is Wrong Please Contact System Admin",backgroundColor: Color(
+                                0xffdc2323),
                                 colorText: Color(0xffffffff),
                                 titleText: const Text("Card User",style:TextStyle(color:Color(
                                     0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
 
                                 icon: Icon(Icons.access_alarm),
                                 duration: Duration(seconds: 4))
+
                           }
-                        else{
-
-                          Get.close(1),
-                          setState(() {
-                            showOveray=false;
-                          }),
-                          Get.snackbar("Error", "Something is Wrong Please Contact System Admin",backgroundColor: Color(
-                              0xffdc2323),
-                              colorText: Color(0xffffffff),
-                              titleText: const Text("Card User",style:TextStyle(color:Color(
-                                  0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-
-                              icon: Icon(Icons.access_alarm),
-                              duration: Duration(seconds: 4))
-
-                        }
 
 
 
-                      },
+                        },
 
-                    ),
+                      ),
+                    ))
 
 
 

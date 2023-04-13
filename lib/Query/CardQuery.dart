@@ -239,6 +239,7 @@ class CardQuery extends GetxController{
     }
 
   }
+
   AssignCardEventOnline(CardModel CardData,Admin AdminData) async{//when you were registered before by assign with u with new card
 
     try {

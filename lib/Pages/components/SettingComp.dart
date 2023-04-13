@@ -38,7 +38,9 @@ class _SettingCompState extends State<SettingComp> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Text(Get.put(AdminQuery()).obj["result"][0]["name"]),
+                child: Text(Get.put(AdminQuery()).obj["result"][0]["name"],
+                  style:GoogleFonts.bebasNeue(fontSize:20),
+                ),
               ),
             ),
 
@@ -87,6 +89,10 @@ class _SettingCompState extends State<SettingComp> {
                 },
                 child: detailsProfile("Logout",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,logout)),
             const SizedBox(height:5,),
+            detailsProfile("WithDraw Balance",Icons.payments_rounded,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,EditCardfunc),
+            const SizedBox(height:5,),
+            detailsProfile("Widraw Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,EditCardfunc),
+
 
 
 

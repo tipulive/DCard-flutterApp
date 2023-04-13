@@ -137,7 +137,7 @@ int limit=10;
                   //color:Colors.yellow,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20.0),
-                    //side: BorderSide(color:getRandomColor(), width: 1),
+                    side: BorderSide(color:((_data[index]["actionName"])=="reverse")?Colors.white:Colors.red, width: 1),
                   ),
 
                   child: ListTile(

@@ -35,6 +35,7 @@ class SettingPage extends StatelessWidget {
         ),
 
       ),
+      //backgroundColor: Colors.grey[100],
       //backgroundColor: Colors.yellow,
       //backgroundColor: Color(0xff010a0e),
 

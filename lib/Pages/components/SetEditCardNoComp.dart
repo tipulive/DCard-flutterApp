@@ -32,12 +32,13 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
   TextEditingController initCountry=TextEditingController(text:"CD");
   TextEditingController uidInput5=TextEditingController(text:"Congo,Democratic Republic of the Congo");
   TextEditingController password=TextEditingController();
-  TextEditingController status=TextEditingController(text:"confirm");
+  TextEditingController status=TextEditingController(text:"card");
   TextEditingController carduid=TextEditingController();
 
   bool isValid = false;
   bool isSubmit=false;
   bool isQrShow=false;
+
 
 
   int limit=0;
@@ -62,7 +63,23 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
 
       QuickBonus();
     });*/
-    return Scaffold(body: listdata());
+    return Scaffold(body: Stack(
+      children: [
+        listdata(),
+        if(isLoading)
+          Positioned.fill(
+            child: Center(
+              child: Container(
+                alignment: Alignment.center,
+                color: Colors.white70,
+                child: CircularProgressIndicator(),
+              ),
+            ),
+          ),
+      ],
+
+    )
+    );
     //return Center(child: Text("hello"));
 
 
@@ -78,6 +95,8 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
           padding: const EdgeInsets.all(0.0),
           child: Text("Edit Your Card",style:GoogleFonts.pacifico(fontSize:15,color: Colors.teal,fontWeight: FontWeight.w700)),
         ),
+        Text(name.text,style:GoogleFonts.bebasNeue(fontSize:20),),
+        Text(carduid.text,style: GoogleFonts.robotoCondensed(fontSize:15),),
         isQrShow?
         Expanded(
             flex: 5,
@@ -114,6 +133,27 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
             :Visibility(
             visible: false,
             child: Text("")),
+        isValid?Container(
+            height: 80,
+            padding: const EdgeInsets.all(20),
+            child: ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size.fromHeight(50),
+              ),
+              child: const Text('scan card'),
+              onPressed: (){
+
+                setState(() {
+                  isQrShow=true;
+                });
+                //print(uidInput.text);
+                //print(await loginOnline());
+
+                // Get.to(() =>Aboutpage());
+              },
+            )):Visibility(
+            visible: false,
+            child: Text("")),
 
 //component
       Expanded(
@@ -122,7 +162,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
             children: [
 
               Container(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child:  IntlPhoneField(
                   initialCountryCode: 'CD',
                   controller: uidInput,
@@ -142,14 +182,16 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
 
                     if((uidInput.text).isPhoneNumber)
                     {
-                      isLoading=true;
+
                       getDataFromNo(phone.number);
+
 
 
                     }
                     else{
                       setState(() {
                         isValid=false;
+
                       });
                     }
 
@@ -171,11 +213,14 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
 
                     if((uidInput.text).isPhoneNumber)
                     {
+
                       getDataFromNo(uidInput.text);
+
                     }
                     else{
                       setState(() {
                         isValid=false;
+
                       });
                     }
                     // print('Country changed to: ' + country.name);
@@ -184,7 +229,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                 ),
               ),
               Visibility(
-                visible: true,
+                visible: false,
                 child: TextField(
                   controller: uidData,
                   //obscureText: true,
@@ -200,8 +245,8 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                   ),
                 ),
               ),
-              Visibility(
-                visible: true,
+              Container(
+                padding: EdgeInsets.fromLTRB(16,0, 16, 0),
                 child: TextField(
                   controller: name,
                   //obscureText: true,
@@ -220,7 +265,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                 ),
               ),
               Visibility(
-                visible: true,
+                visible: false,
                 child: TextField(
                   controller: email,
                   //obscureText: true,
@@ -238,7 +283,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
               ),
 
               Visibility(
-                visible: true,
+                visible:false,
                 child: TextField(
                   controller: uidInput4,
                   //obscureText: true,
@@ -255,7 +300,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                 ),
               ),
               Visibility(
-                visible: true,
+                visible: false,
                 child: TextField(
                   controller: uidInput5,
                   //obscureText: true,
@@ -272,7 +317,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                 ),
               ),
               Visibility(
-                visible: true,
+                visible: false,
                 child: TextField(
                   controller: initCountry,
                   //obscureText: true,
@@ -289,7 +334,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                 ),
               ),
               Visibility(
-                visible: true,
+                visible:false,
                 child: TextField(
                   controller:password,
                   //obscureText: true,
@@ -306,7 +351,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                 ),
               ),
               Visibility(
-                visible: true,
+                visible:false,
                 child: TextField(
                   controller:status,
                   //obscureText: true,
@@ -323,59 +368,54 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                 ),
               ),
               Visibility(
-                visible: true,
-                child: TextField(
-                  controller:carduid,
-                  //obscureText: true,
-                  decoration: InputDecoration(
-                    contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                    border: OutlineInputBorder(),
-                    labelText: 'cardui',
-                    hintText: 'cardui',
-                    hintStyle: TextStyle(
-                      color: Colors.grey,
-                    ),
+                visible: false,
+                child: Container(
+                  padding: EdgeInsets.fromLTRB(16,16,16,0),
+                  child: TextField(
+                    controller:carduid,
+                    //obscureText: true,
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
+                      border: OutlineInputBorder(),
+                      labelText: 'cardui',
+                      hintText: 'cardui',
+                      hintStyle: TextStyle(
+                        color: Colors.grey,
+                      ),
 
+                    ),
                   ),
                 ),
               ),
               //Qr Show
 
               //Qr Show
-              isValid?Container(
-                  height: 80,
-                  padding: const EdgeInsets.all(20),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(50),
-                    ),
-                    child: const Text('scan card'),
-                    onPressed: (){
 
-                      setState(() {
-                        isQrShow=true;
-                      });
-                      //print(uidInput.text);
-                      //print(await loginOnline());
-
-                      // Get.to(() =>Aboutpage());
-                    },
-                  )):Visibility(
-                  visible: false,
-                  child: Text("")),
               isSubmit?isValid?Container(
-                  height: 80,
-                  padding: const EdgeInsets.all(20),
+                  height: 90,
+                  padding: const EdgeInsets.all(15),
                   child: ElevatedButton(
+
                     style: ElevatedButton.styleFrom(
                       minimumSize: const Size.fromHeight(50),
+                      backgroundColor:Colors.black
+
                     ),
                     child: const Text('Edit'),
                     onPressed: () async{
+                      setState(() {
+                        isLoading=true;
+                      });
 
-                      var resultData=(await CardQuery().editAssignCardEventOnline(CardModel(uid:"none"),Admin(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",name:name.text,email:email.text,Ccode:uidInput4.text,phone:uidInput.text,initCountry:initCountry.text,country:uidInput5.text,password:password.text,status:status.text,subscriber:"none"))).data;
+
+                      var resultData=(await CardQuery().editAssignCardEventOnline(CardModel(uid:carduid.text),Admin(uid:uidData.text,name:name.text,email:email.text,Ccode:uidInput4.text,phone:uidInput.text,initCountry:initCountry.text,country:uidInput5.text,password:password.text,status:status.text,subscriber:"none"))).data;
+                    //print(resultData);
+
                       if(resultData["status"])
                       {
+                        setState(() {
+                          isLoading=false;
+                        });
 
 
 
@@ -388,9 +428,12 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
                             duration: Duration(seconds: 4));
                       }
                       else{
+                        setState(() {
+                          isLoading=false;
+                        });
 
 
-                        Get.snackbar("Error", "Something is Wrong Please Contact System Admin",backgroundColor: Color(
+                        Get.snackbar("Error", "${resultData["message"]??"System Error use another Card"} ,Or Please Contact System Admin",backgroundColor: Color(
                             0xffdc2323),
                             colorText: Color(0xffffffff),
                             titleText: const Text("Card User",style:TextStyle(color:Color(
@@ -432,6 +475,10 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
   }
 
   getDataFromNo(phoneNumber) async{
+    setState(() {
+      isLoading=true;
+    });
+
     var resultData=(await CardQuery().getNumberDetailCardOnline(Admin(uid: "tets", subscriber: "test",phone:phoneNumber,Ccode: uidInput4.text))).data;
     if(resultData["status"])
     {
@@ -444,12 +491,14 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
     //print(resultData);
     setState(() {
     isValid=true;
+    isLoading=false;
     });
     }
     else{
 
     setState(() {
     isValid=false;
+    isLoading=false;
     });
 
 
@@ -461,6 +510,7 @@ class _SetEditCardNoCompState extends State<SetEditCardNoComp> {
     carduid.text=checkcode;
     setState((){
     isQrShow=false;
+    isSubmit=true;
     });
 
 

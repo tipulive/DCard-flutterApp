@@ -52,7 +52,7 @@ class _ProfileCompState extends State<ProfileComp> {
     const SizedBox(height:5,),
     detailsProfile("WithDraw Balance",Icons.payments_rounded,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawFunc),
     const SizedBox(height:5,),
-    detailsProfile("Redeem Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,redeemBonus),
+    detailsProfile("Widraw Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,redeemBonus),
 
 
 
