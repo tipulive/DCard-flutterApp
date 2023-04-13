@@ -10,19 +10,20 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../Query/ParticipatedQuery.dart';
 
+import '../../Query/TopupQuery.dart';
 import '../../Utilconfig/HideShowState.dart';
 import '../../models/Topups.dart';
 import '../../models/Participated.dart';
 import '../../models/Promotions.dart';
 
-class SetPartHistComp extends StatefulWidget {
-  const SetPartHistComp({Key? key}) : super(key: key);
+class SetWithdrawBonusComp extends StatefulWidget {
+  const SetWithdrawBonusComp({Key? key}) : super(key: key);
 
   @override
-  State<SetPartHistComp> createState() => _SetPartHistCompState();
+  State<SetWithdrawBonusComp> createState() => _SetWithdrawBonusCompState();
 }
 
-class _SetPartHistCompState extends State<SetPartHistComp> {
+class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
   ScrollController _scrollController = ScrollController();// detect scroll
   TextEditingController inputData=TextEditingController();
   List<dynamic> _data = [];
@@ -69,7 +70,7 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
 
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
-          child: Text("Participated History",style:GoogleFonts.pacifico(fontSize:15,color: Colors.teal,fontWeight: FontWeight.w700)),
+          child: Text("Bonus History",style:GoogleFonts.pacifico(fontSize:15,color: Colors.teal,fontWeight: FontWeight.w700)),
         ),
 
 
@@ -88,8 +89,8 @@ class _SetPartHistCompState extends State<SetPartHistComp> {
             onChanged: (text) async{
 
               try {
-int limit=10;
-                var resultData=(await ParticipatedQuery().getAllParticipateHistEventOnline(Topups(startlimit:limit,endlimit:_page),User(uid: "none",name:text))).data;
+                int limit=10;
+                var resultData=(await TopupQuery().getBalanceHistCreator(Topups(startlimit:limit,endlimit:_page,optionCase:'bonus'),User(uid: "none",name:text))).data;
                 if(resultData["status"])
                 {
                   setState(() {
@@ -125,67 +126,67 @@ int limit=10;
               if(index<_data.length)
               {
                 return GestureDetector(
-                      onTap: () {
-                        // Handle card click event here
-                        //Get.put(HideShowState()).isVisible(true);
+                    onTap: () {
+                      // Handle card click event here
+                      //Get.put(HideShowState()).isVisible(true);
 
-                        EditParticipatePopup(_data[index]);
-                      },
-                      child:Card(
-                  elevation:0,
-                  //margin: EdgeInsets.symmetric(vertical:1,horizontal:5),
-                  //color:Colors.yellow,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                    side: BorderSide(color:((_data[index]["actionName"])=="reverse")?Colors.white:Colors.red, width: 1),
-                  ),
+                      EditParticipatePopup(_data[index]);
+                    },
+                    child:Card(
+                      elevation:0,
+                      //margin: EdgeInsets.symmetric(vertical:1,horizontal:5),
+                      //color:Colors.yellow,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                        //side: BorderSide(color:((_data[index]["actionName"])=="reverse")?Colors.white:Colors.red, width: 1),
+                      ),
 
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: Icon(_getRandomIcon()),
-                      backgroundColor:getRandomColor(),
-                    ),
-                    title:Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          child: Icon(_getRandomIcon()),
+                          backgroundColor:getRandomColor(),
+                        ),
+                        title:Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
-                      children: [
-
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text("${_data[index]['name']}"),
+
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text("${_data[index]['name']}"),
+                              ],
+                            ),
+
+
+
                           ],
                         ),
+                        subtitle: Text("${_data[index]['bonus']}"),
+                        trailing:Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            //mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment:CrossAxisAlignment.start,
+                            mainAxisAlignment:MainAxisAlignment.spaceBetween,
+                            children: [
 
-
-
-                      ],
-                    ),
-                    subtitle: Text("${_data[index]['inputData']}"),
-                    trailing:Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment:CrossAxisAlignment.start,
-                        mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                        children: [
-
-                              Text("${_data[index]['promoName']}"),
+                              Text("${_data[index]['action']}"),
                               Text("${_data[index]['created_at']}"),
 
 
 
                             ],
                           ),
-                    ),
+                        ),
 
 
 
 
-                  ),
-                )
-              );
+                      ),
+                    )
+                );
 
               }
               else{
@@ -224,6 +225,7 @@ int limit=10;
 
   @override
   void dispose() {
+    scrolldata();
     _scrollController.dispose();
     super.dispose();
   }
@@ -246,7 +248,7 @@ int limit=10;
     if(isLoading) return;
     isLoading=true;
     int limit=10;
-    var resul=(await ParticipatedQuery().getAllParticipateHistEventOnline(Topups(startlimit:limit,endlimit:_page),User(uid: "none",name:"none"))).data;
+    var resul=(await TopupQuery().getBalanceHistCreator(Topups(startlimit:limit,endlimit:_page,optionCase:'bonus'),User(uid: "none",name:"none"))).data;
     setState(() {
       isLoading=false;
       if(resul["result"].length<limit)
@@ -286,7 +288,7 @@ int limit=10;
                         child: ListView(
                           padding: EdgeInsets.all(10),
                           children: [
-                          Center(child: Text(data["name"])),
+                            Center(child: Text(data["name"])),
                             Center(child: Text("Promotion:${data["promoName"]}")),
                             TextField(
                               controller:inputData,
@@ -316,7 +318,7 @@ int limit=10;
                                 onPressed: () async=> {
 
 
-                                 Get.put(HideShowState()).isVisible(true),
+                                  Get.put(HideShowState()).isVisible(true),
                                   resultDatas=(await ParticipatedQuery().ParticipateEditEventOnline(Participated(uid:data["uid"],uidUser:data["uidUser"],inputData:inputData.text),Promotions(reach:data["reach"],gain:data["gain"]))).data,
                                   if(resultDatas["status"])
                                     {

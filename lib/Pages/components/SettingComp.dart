@@ -3,7 +3,9 @@
 
 import 'package:dcard/Pages/SetEditCardNoPage.dart';
 import 'package:dcard/Pages/SetStockPage.dart';
+import 'package:dcard/Pages/SetWithdrawBonusPage.dart';
 import 'package:dcard/Query/AdminQuery.dart';
+import 'package:dcard/Query/TopupQuery.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -11,6 +13,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../SetPartHistPage.dart';
 import '../SetQuickBoHistPage.dart';
+import '../SetWithdrawBalancePage.dart';
 
 
 
@@ -24,6 +27,8 @@ class SettingComp extends StatefulWidget {
 class _SettingCompState extends State<SettingComp> {
 
   bool showOveray=false;
+  var balance="0";
+  var bonus="0";
 
 
   @override
@@ -45,28 +50,33 @@ class _SettingCompState extends State<SettingComp> {
             ),
 
             divLine(),
-            detailsProfile("Stocks",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,ViewStock),//Last Time Purchase
+            detailsProfile("Stocks",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,viewStock),//Last Time Purchase
             const SizedBox(height:5,),
 
             detailsProfile("Participate",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,partHistfunc),//Last Time Purchase
             const SizedBox(height:5,),
-            detailsProfile("QuickBonus",Icons.paid,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,QuickBoHistfunc),
+            detailsProfile("QuickBonus",Icons.paid,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,quickBoHistfunc),
             const SizedBox(height:5,),
 
-            detailsProfile("Edit Card",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,EditCardfunc),
+            detailsProfile("Edit Card",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,editCardfunc),
+
+            const SizedBox(height:5,),
+            detailsProfile('WithDraw Balance:$balance',Icons.payments_rounded,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBonusFunc),
+            const SizedBox(height:5,),
+            detailsProfile("Widraw Bonus:$bonus",Icons.redeem,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBalanceFunc),
             const SizedBox(height:5,),
             GestureDetector(
                 onTap: () {
                   Get.dialog(
                     AlertDialog(
-                      title: Text('Confirmation'),
-                      content: Text('Do you Want to Logout?'),
+                      title: const Text('Confirmation'),
+                      content: const Text('Do you Want to Logout?'),
                       actions: [
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
 
                             //primary: Colors.grey[300],
-                            backgroundColor: Color(0xff9a1c55),
+                            backgroundColor: const Color(0xff9a1c55),
                             elevation:0,
                           ),
                           onPressed: () async{
@@ -74,24 +84,20 @@ class _SettingCompState extends State<SettingComp> {
 
                             Get.toNamed('/Login');
                           },
-                          child: Text('Yes'),
+                          child: const Text('Yes'),
                         ),
                         ElevatedButton(
                           onPressed: () {
                             Get.back(); // close the alert dialog
                           },
-                          child: Text('Close'),
+                          child: const Text('Close'),
                         ),
                       ],
                     ),
                   );
 
                 },
-                child: detailsProfile("Logout",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,logout)),
-            const SizedBox(height:5,),
-            detailsProfile("WithDraw Balance",Icons.payments_rounded,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,EditCardfunc),
-            const SizedBox(height:5,),
-            detailsProfile("Widraw Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,EditCardfunc),
+                child: detailsProfile("Logout",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.power,"200\$",0xffffffff,logout)),
 
 
 
@@ -108,7 +114,7 @@ class _SettingCompState extends State<SettingComp> {
               child: Container(
                 alignment: Alignment.center,
                 color: Colors.white70,
-                child: CircularProgressIndicator(),
+                child: const CircularProgressIndicator(),
               ),
             ),
           ),
@@ -117,8 +123,48 @@ class _SettingCompState extends State<SettingComp> {
   }
 
 
+  void initState()
+  {
+    super.initState();
+    //getapi();
+    scrolldata();
+
+  }
 
 
+  @override
+  void dispose() {
+
+    super.dispose();
+  }
+
+  scrolldata()async
+  {
+    if(showOveray) return;
+    showOveray=true;
+
+    var resul=(await TopupQuery().getCompanyRecord()).data;
+    if(resul["status"])
+    {
+      setState(() {
+        showOveray=false;
+        balance=resul["result"][0]["balance"];
+        bonus=resul["result"][0]["bonus"];
+
+
+      });
+    }
+    else{
+      setState(() {
+        showOveray=false;
+        balance="0";
+        bonus="0";
+
+
+      });
+    }
+
+  }
 
 
 }
@@ -167,9 +213,9 @@ Widget detailsProfile(iconText,icon,iconDescr,listBackground,iconrightText,iconr
   return ClipRRect(
     //borderRadius: BorderRadius.circular(32),
     child: Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       //margin: const EdgeInsets.all(8),
-      margin: EdgeInsets.fromLTRB(8,0,8,0),
+      margin: const EdgeInsets.fromLTRB(8,0,8,0),
       width: 400,
       height: 50,
       //color:Color(0xffffffff),
@@ -194,13 +240,13 @@ Widget detailsProfile(iconText,icon,iconDescr,listBackground,iconrightText,iconr
             Colors.amber,size: 22,),
 
           ),
-          SizedBox(width:3,),
-          Text("${iconText}:",style:GoogleFonts.pacifico(fontSize:15,color: Colors.teal,fontWeight: FontWeight.w700)),
-          SizedBox(width:5,),
+          const SizedBox(width:3,),
+          Text(iconText+":",style:GoogleFonts.pacifico(fontSize:15,color: Colors.teal,fontWeight: FontWeight.w700)),
+          const SizedBox(width:5,),
           Expanded(
             child: Container(
-              padding: EdgeInsets.only(top: 3.9),
-              child: Text("${iconDescr}",style:GoogleFonts.pacifico(fontSize: 15)),
+              padding: const EdgeInsets.only(top: 3.9),
+              child: Text(iconDescr,style:GoogleFonts.pacifico(fontSize: 15)),
             ),
           ),
 
@@ -237,7 +283,7 @@ Widget detailsProfile(iconText,icon,iconDescr,listBackground,iconrightText,iconr
   );
 }
 
-ViewStock() async{
+viewStock() async{
   //(await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
   Get.to(() =>SetStockPage());
 
@@ -249,17 +295,51 @@ partHistfunc() async{
 
 
 }
-QuickBoHistfunc() async{
+quickBoHistfunc() async{
   //(await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
   Get.to(() =>SetQuickBoHistPage());
 
 }
 
-EditCardfunc() async{
+editCardfunc() async{
   Get.to(() =>SetEditCardNoPage());
 }
 logout() async{
-  Get.to(() =>SetEditCardNoPage());
+  Get.dialog(
+    AlertDialog(
+      title: Text('Confirmation'),
+      content: Text('Do you Want to Logout?'),
+      actions: [
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+
+            //primary: Colors.grey[300],
+            backgroundColor: Color(0xff9a1c55),
+            elevation:0,
+          ),
+          onPressed: () async{
+            await Get.put(AdminQuery()).logout();
+
+            Get.toNamed('/Login');
+          },
+          child: Text('Yes'),
+        ),
+        ElevatedButton(
+          onPressed: () {
+            Get.back(); // close the alert dialog
+          },
+          child: Text('Close'),
+        ),
+      ],
+    ),
+  );
+}
+
+withdrawBonusFunc(){
+  Get.to(() =>SetWithdrawBonusPage());
+}
+withdrawBalanceFunc(){
+  Get.to(() =>SetWithdrawBalancePage());
 }
 
 

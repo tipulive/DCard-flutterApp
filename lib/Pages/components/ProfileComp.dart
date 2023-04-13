@@ -113,6 +113,7 @@ class _ProfileCompState extends State<ProfileComp> {
 
                                   TextField(
                                     controller:balance,
+                                    keyboardType: TextInputType.number,
                                     //obscureText: true,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
@@ -285,6 +286,7 @@ class _ProfileCompState extends State<ProfileComp> {
                                   TextField(
                                     controller:balance,
                                     //obscureText: true,
+                                    keyboardType: TextInputType.number,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
                                       border: OutlineInputBorder(),
@@ -433,6 +435,7 @@ class _ProfileCompState extends State<ProfileComp> {
 
                                   TextField(
                                     controller:balance,
+                                    keyboardType: TextInputType.number,
                                     //obscureText: true,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
@@ -580,6 +583,7 @@ class _ProfileCompState extends State<ProfileComp> {
 
                                   TextField(
                                     controller:balance,
+                                    keyboardType: TextInputType.number,
                                     //obscureText: true,
                                     decoration: InputDecoration(
                                       contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),

@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:dcard/Query/AdminQuery.dart';
+import 'package:dcard/models/User.dart';
 import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
@@ -107,6 +108,7 @@ class TopupQuery extends GetxController{
     }
 
   }
+
   RedeemBalanceOnline(Topups TopupData) async{
 
     try {
@@ -182,6 +184,89 @@ class TopupQuery extends GetxController{
       print(e);
     }
 
+  }
+  getCompanyRecord() async{//balance and Bonus History
+    try {
+
+      var params =  {
+
+
+        "name":"none",
+
+
+      };
+
+      String Authtoken =(Get.put(AdminQuery()).obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/GetCompanyRecord";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+
+        // return (response.data).length;
+        //updateEventState(response.data);
+        //return "hello";
+
+        //updateBalanceHistState(response.data);
+        //return response.data;
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+  }
+  getBalanceHistCreator(Topups topupData,User userData) async{//balance and Bonus History
+    try {
+
+      var params =  {
+
+        "LimitStart":topupData.endlimit,  //page
+        "LimitEnd":topupData.startlimit,//limit
+        "name":userData.name,
+        "optionCase":topupData.optionCase//optionCase
+
+      };
+
+      String Authtoken =(Get.put(AdminQuery()).obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/GetBalanceHistCreator";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+
+        // return (response.data).length;
+        //updateEventState(response.data);
+        //return "hello";
+
+        //updateBalanceHistState(response.data);
+        //return response.data;
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
   }
   GetBalanceHist(Topups TopupData) async{//balance and Bonus History
     try {
