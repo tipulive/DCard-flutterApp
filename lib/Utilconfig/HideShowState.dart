@@ -6,6 +6,7 @@ class HideShowState extends GetxController{
   var isCameraVisible=true.obs;
   var isNumberValid=false.obs;
   var isNumber=true.obs;
+  var profVisible=false.obs;
 
   isHiden(valData){
     isVisible.value=valData;
@@ -18,6 +19,9 @@ class HideShowState extends GetxController{
   }
   isNumberCorrect(valData){
     isNumber.value=valData;
+  }
+  isprofileVisible(valData){
+    profVisible.value=valData;
   }
 
 

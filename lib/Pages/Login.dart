@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 
 import '../Query/AdminQuery.dart';
 
+import '../Utilconfig/HideShowState.dart';
 import '../models/Admin.dart';
 import '../Utilconfig/ConstantClassUtil.dart';
 import 'Homepage.dart';
@@ -240,7 +241,7 @@ setState(() {
         {
           //Get.to(Homepage());
           //Get.to(() => Homepage());
-
+          Get.put(HideShowState()).isCameraVisible(true);
           await adminStatedata.auth();
           Get.to(() => Homepage());
           //print(await SyncService().SyncDownloadCard());

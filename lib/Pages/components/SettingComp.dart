@@ -61,9 +61,9 @@ class _SettingCompState extends State<SettingComp> {
             detailsProfile("Edit Card",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,editCardfunc),
 
             const SizedBox(height:5,),
-            detailsProfile('WithDraw Balance:$balance',Icons.payments_rounded,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBonusFunc),
+            detailsProfile('WithDraw Balance:',Icons.payments_rounded,"$balance\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBalanceFunc),
             const SizedBox(height:5,),
-            detailsProfile("Widraw Bonus:$bonus",Icons.redeem,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBalanceFunc),
+            detailsProfile("Widraw Bonus:",Icons.redeem,"$bonus\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBonusFunc),
             const SizedBox(height:5,),
             GestureDetector(
                 onTap: () {

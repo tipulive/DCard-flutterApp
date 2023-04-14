@@ -102,7 +102,27 @@ class _MyHomePageState extends State<MyHomePage> {
     //yourFunction();
     //ConnectivityResult connectivity;
     //return checkAuth();
-    return Text("App");
+    return Scaffold(
+      body:  Center(
+        child:Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Welcome TO Our Shop"),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white, // set background color
+                borderRadius: BorderRadius.circular(10.0), // set border radius if needed
+              ),
+              child: Image.asset(
+                'images/shop.png', // path to the image asset
+                width: 200, // set the width of the image
+                height: 200, // set how the image should fit inside the container
+              ),
+            ),
+          ],
+        )
+      ),
+    );
 
 
 
@@ -120,15 +140,17 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   checkAuth() async{
-
+    await Future.delayed(Duration(seconds: 5));
     if(await Get.put(AdminQuery()).auth()==0)//no data in localDb
       {
       //i will add full screen pics with delay
+
       Get.toNamed('/Login');
       }
     else{
       //i will add full screen pics with delay
       //print(await Get.put(AdminQuery()).obj["result"][0]["name"]);
+
       Get.toNamed('/home');
       //print(await Get.put(AdminQuery()).logout());
 

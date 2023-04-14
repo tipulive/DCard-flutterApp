@@ -294,13 +294,12 @@ class _HomepageState extends State<Homepage> {
                 bottom:70,
                 child: FloatingActionButton(
                   onPressed:()async {
-                    setState(() {
-                      showOveray=true;
-                    });
+                    Get.put(HideShowState()).isVisible(true);
                     ResultDatas=(await Get.put(TopupQuery()).GetBalance(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}"))).data;
                     if(ResultDatas["status"])
                     {
                       await Get.put(TopupQuery()).updateTopupState(ResultDatas);
+                      Get.put(HideShowState()).isVisible(false);
                       Get.to(() => ProfilePage());
                     }
                     else{

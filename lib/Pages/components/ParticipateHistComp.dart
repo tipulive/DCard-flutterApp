@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../Query/CardQuery.dart';
 import '../../Query/ParticipatedQuery.dart';
-import '../../Query/ScrollQuery.dart';
+//import '../../Query/ScrollQuery.dart';
 import '../../Pages/components/ProfilePic.dart';
 import '../../models/Topups.dart';
 

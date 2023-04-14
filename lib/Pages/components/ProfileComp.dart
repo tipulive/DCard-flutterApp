@@ -8,6 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../Query/CardQuery.dart';
 import '../../Query/TopupQuery.dart';
+import '../../Utilconfig/HideShowState.dart';
 import '../../models/Topups.dart';
 import '../ActiveEventPage.dart';
 import'../../Pages/components/ProfilePic.dart';
@@ -62,16 +63,8 @@ class _ProfileCompState extends State<ProfileComp> {
 
     ],
     ),
-        if(showOveray)
-          Positioned.fill(
-            child: Center(
-              child: Container(
-                alignment: Alignment.center,
-                color: Colors.white70,
-                child: CircularProgressIndicator(),
-              ),
-            ),
-          ),
+
+
       ],
     );
   }
@@ -153,19 +146,21 @@ class _ProfileCompState extends State<ProfileComp> {
                                         size: 24.0,
                                       ),
                                       onPressed: ()async =>{
-                                        setState(() {
+                                        Get.put(HideShowState()).isprofileVisible(true),
+                                        /*setState(() {
 
                                           showOveray=true;
 
-                                        }),
+                                        }),*/
                                         ResultData=(await Get.put(TopupQuery()).AddBalanceOnline(Topups(uid:"1",uidCreator:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",amount:balance.text,desc:description.text))).data,
 
                                         if(ResultData["status"])
                                           {
-                                            setState(() {
+                                          Get.put(HideShowState()).isprofileVisible(false),
+                                            /*setState(() {
                                               showOveray=false;
 
-                                            }),
+                                            }),*/
                                             Get.snackbar("Success", "Balance Added Successfuly",backgroundColor: Color(0xff9a1c55),
                                                 colorText: Color(0xffffffff),
                                                 titleText: const Text("Balance",style:TextStyle(color:Color(
@@ -188,10 +183,7 @@ class _ProfileCompState extends State<ProfileComp> {
                                               }
 
                                           }else{
-                                          setState(() {
-                                            showOveray=false;
-
-                                          }),
+                                          Get.put(HideShowState()).isprofileVisible(false),
                                           Get.snackbar("Error", "Balance",backgroundColor: Color(
                                               0xffdc2323),
                                               colorText: Color(0xffffffff),
@@ -223,22 +215,30 @@ class _ProfileCompState extends State<ProfileComp> {
               ),
             ),
 
-       if(showOveray)
-          ...[
             Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-              ),
+                child:  Obx(
+                      () =>Visibility(
+                    visible: Get.put(HideShowState()).profVisible.value,
+                    child: Container(
+                      color: Colors.black.withOpacity(0.65),
+                    ),
+                  ),
+                )
             ),
 
             Positioned(
+                top: 0,
 
-              child: Container(
-                padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator(),
-              ),
+                child:  Obx(
+                      () =>Visibility(
+                    visible: Get.put(HideShowState()).profVisible.value,
+                    child: Container(
+                      //padding: EdgeInsets.all(16),
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                )
             ),
-          ]
 
 
           ],
@@ -325,16 +325,12 @@ class _ProfileCompState extends State<ProfileComp> {
                                         size: 24.0,
                                       ),
                                       onPressed: ()async =>{
-                                        setState(() {
-                                          showOveray=true;
-                                        }),
+                                        Get.put(HideShowState()).isprofileVisible(true),
                                         ResultData=(await Get.put(TopupQuery()).EditBalanceOnline(Topups(uid:"1",uidCreator:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",amount:balance.text,desc:description.text))).data,
 
                                         if(ResultData["status"])
                                           {
-                                            setState(() {
-                                              showOveray=false;
-                                            }),
+                                            Get.put(HideShowState()).isprofileVisible(false),
                                             Get.snackbar("Success", "Balance Edited Successfuly",backgroundColor: Color(0xff9a1c55),
                                                 colorText: Color(0xffffffff),
                                                 titleText: const Text("Balance",style:TextStyle(color:Color(
@@ -355,9 +351,7 @@ class _ProfileCompState extends State<ProfileComp> {
                                               }
 
                                           }else{
-                                          setState(() {
-                                            showOveray=false;
-                                          }),
+                                          Get.put(HideShowState()).isprofileVisible(false),
                                           Get.snackbar("Error", "Something is Wrong Please Contact System Admin",backgroundColor: Color(
                                               0xffdc2323),
                                               colorText: Color(0xffffffff),
@@ -379,6 +373,30 @@ class _ProfileCompState extends State<ProfileComp> {
                                 ],
                               ),
                             ),
+                          ),
+                          Positioned.fill(
+                              child:  Obx(
+                                    () =>Visibility(
+                                  visible: Get.put(HideShowState()).profVisible.value,
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0.65),
+                                  ),
+                                ),
+                              )
+                          ),
+
+                          Positioned(
+                              top: 0,
+
+                              child:  Obx(
+                                    () =>Visibility(
+                                  visible: Get.put(HideShowState()).profVisible.value,
+                                  child: Container(
+                                    //padding: EdgeInsets.all(16),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              )
                           ),
 
                         ],
@@ -475,15 +493,11 @@ class _ProfileCompState extends State<ProfileComp> {
                                         size: 24.0,
                                       ),
                                       onPressed: ()async =>{
-                                        setState(() {
-                                          showOveray=true;
-                                        }),
+                                        Get.put(HideShowState()).isprofileVisible(true),
                                         ResultData=(await Get.put(TopupQuery()).RedeemBalanceOnline(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",amount:balance.text,desc:description.text))).data,
                                         if(ResultData["status"])
                                           {
-                                            setState(() {
-                                              showOveray=false;
-                                            }),
+                                            Get.put(HideShowState()).isprofileVisible(false),
                                             Get.snackbar("Success", "Successfully Withdraw",backgroundColor: Color(0xff9a1c55),
                                                 colorText: Color(0xffffffff),
                                                 titleText: const Text("Balance",style:TextStyle(color:Color(
@@ -504,9 +518,7 @@ class _ProfileCompState extends State<ProfileComp> {
                                               }
 
                                           }else{
-                                          setState(() {
-                                            showOveray=false;
-                                          }),
+                                          Get.put(HideShowState()).isprofileVisible(false),
                                           Get.snackbar("Error", "insufficient Balance in Your Account",backgroundColor: Color(
                                               0xffdc2323),
                                               colorText: Color(0xffffffff),
@@ -528,6 +540,30 @@ class _ProfileCompState extends State<ProfileComp> {
                                 ],
                               ),
                             ),
+                          ),
+                          Positioned.fill(
+                              child:  Obx(
+                                    () =>Visibility(
+                                  visible: Get.put(HideShowState()).profVisible.value,
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0.65),
+                                  ),
+                                ),
+                              )
+                          ),
+
+                          Positioned(
+                              top: 0,
+
+                              child:  Obx(
+                                    () =>Visibility(
+                                  visible: Get.put(HideShowState()).profVisible.value,
+                                  child: Container(
+                                    //padding: EdgeInsets.all(16),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              )
                           ),
 
                         ],
@@ -623,15 +659,11 @@ class _ProfileCompState extends State<ProfileComp> {
                                         size: 24.0,
                                       ),
                                       onPressed: ()async =>{
-                                        setState(() {
-                                          showOveray=true;
-                                        }),
+                                        Get.put(HideShowState()).isprofileVisible(true),
                                         ResultData=(await Get.put(TopupQuery()).RedeemBonusOnline(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",amount:balance.text,desc:description.text))).data,
                                         if(ResultData["status"])
                                           {
-                                            setState(() {
-                                              showOveray=false;
-                                            }),
+                                            Get.put(HideShowState()).isprofileVisible(false),
                                             Get.snackbar("Success", "Successfully Redeem Bonus",backgroundColor: Color(0xff9a1c55),
                                                 colorText: Color(0xffffffff),
                                                 titleText: const Text("Bonus",style:TextStyle(color:Color(
@@ -652,9 +684,7 @@ class _ProfileCompState extends State<ProfileComp> {
                                               }
 
                                           }else{
-                                          setState(() {
-                                            showOveray=false;
-                                          }),
+                                          Get.put(HideShowState()).isprofileVisible(false),
                                           Get.snackbar("Error", "insufficient Bonus in Your Account",backgroundColor: Color(
                                               0xffdc2323),
                                               colorText: Color(0xffffffff),
@@ -676,6 +706,30 @@ class _ProfileCompState extends State<ProfileComp> {
                                 ],
                               ),
                             ),
+                          ),
+                          Positioned.fill(
+                              child:  Obx(
+                                    () =>Visibility(
+                                  visible: Get.put(HideShowState()).profVisible.value,
+                                  child: Container(
+                                    color: Colors.black.withOpacity(0.65),
+                                  ),
+                                ),
+                              )
+                          ),
+
+                          Positioned(
+                              top: 0,
+
+                              child:  Obx(
+                                    () =>Visibility(
+                                  visible: Get.put(HideShowState()).profVisible.value,
+                                  child: Container(
+                                    //padding: EdgeInsets.all(16),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                ),
+                              )
                           ),
 
                         ],

@@ -173,7 +173,7 @@ class _SetWithdrawBalanceCompState extends State<SetWithdrawBalanceComp> {
                             mainAxisAlignment:MainAxisAlignment.spaceBetween,
                             children: [
 
-                              Text("${_data[index]['action']}"),
+                              //Text("${_data[index]['action']}"),
                               Text("${_data[index]['created_at']}"),
 
 

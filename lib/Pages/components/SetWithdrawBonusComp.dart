@@ -172,7 +172,7 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
                             mainAxisAlignment:MainAxisAlignment.spaceBetween,
                             children: [
 
-                              Text("${_data[index]['action']}"),
+                              //Text("${_data[index]['action']}"),
                               Text("${_data[index]['created_at']}"),
 
 
