@@ -39,21 +39,49 @@ class _ProfileCompState extends State<ProfileComp> {
         ProfilePic().profile(),
     const SizedBox(height: 6.0,),
     divLine(),
-    detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["balance"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,balancefunc),
+    GestureDetector(
+        onTap: (){
+          balancefunc();
+        },
+        child: detailsProfile("Balance",Icons.account_balance_wallet,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["balance"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,balancefunc)),
     const SizedBox(height:5,),
-    detailsProfile("Bonus",Icons.redeem,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["bonus"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,bonusfunc),
+    GestureDetector(
+        onTap: (){
+          bonusfunc();
+        },
+        child: detailsProfile("Bonus",Icons.redeem,"${(Get.put(TopupQuery()).obj)["resultData"]["result"].length>0?(Get.put(TopupQuery()).obj)["resultData"]["result"][0]["bonus"]:"0"}\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,bonusfunc)),
     const SizedBox(height:5,),
-    detailsProfile("Event",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,eventfunc),//Last Time Purchase
+    GestureDetector(
+        onTap: (){
+          eventfunc();
+        },
+        child: detailsProfile("Event",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,eventfunc)),//Last Time Purchase
     const SizedBox(height:5,),
     //   detailsProfile("Status",Icons.track_changes,"Redeemed",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,Statusfunc),
 
-    detailsProfile("Top Up",Icons.paid,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,topupFunc),
+    GestureDetector(
+        onTap: (){
+          topupFunc();
+        },
+        child: detailsProfile("Top Up",Icons.paid,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,topupFunc)),
     const SizedBox(height:5,),
-    detailsProfile("Edit Balance",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,editTopupfunc),
+    GestureDetector(
+        onTap: (){
+          editTopupfunc();
+        },
+        child: detailsProfile("Edit Balance",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,editTopupfunc)),
     const SizedBox(height:5,),
-    detailsProfile("WithDraw Balance",Icons.payments_rounded,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawFunc),
+    GestureDetector(
+        onTap: (){
+          withdrawFunc();
+        },
+        child: detailsProfile("WithDraw Balance",Icons.payments_rounded,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawFunc)),
     const SizedBox(height:5,),
-    detailsProfile("Widraw Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,redeemBonus),
+    GestureDetector(
+        onTap: (){
+          redeemBonus();
+        },
+        child: detailsProfile("Widraw Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,redeemBonus)),
 
 
 

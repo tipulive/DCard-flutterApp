@@ -6,12 +6,14 @@ import 'package:dcard/Pages/SetStockPage.dart';
 import 'package:dcard/Pages/SetWithdrawBonusPage.dart';
 import 'package:dcard/Query/AdminQuery.dart';
 import 'package:dcard/Query/TopupQuery.dart';
+import 'package:dcard/Utilconfig/HideShowState.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../SetPartHistPage.dart';
+import '../SetPartPage.dart';
 import '../SetQuickBoHistPage.dart';
 import '../SetWithdrawBalancePage.dart';
 
@@ -50,20 +52,51 @@ class _SettingCompState extends State<SettingComp> {
             ),
 
             divLine(),
-            detailsProfile("Stocks",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,viewStock),//Last Time Purchase
+            GestureDetector(
+                onTap: (){
+                  viewStock();
+                },
+                child: detailsProfile("Stocks",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,viewStock)),//Last Time Purchase
             const SizedBox(height:5,),
 
-            detailsProfile("Participate",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,partHistfunc),//Last Time Purchase
-            const SizedBox(height:5,),
-            detailsProfile("QuickBonus",Icons.paid,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,quickBoHistfunc),
+            GestureDetector(
+                onTap: (){
+                  partHistfunc();
+                },
+                child: detailsProfile("Participate History",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,partHistfunc)),//Last Time Purchase
             const SizedBox(height:5,),
 
-            detailsProfile("Edit Card",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,editCardfunc),
+            GestureDetector(
+                onTap: (){
+                  partfunc();
+                },
+                child: detailsProfile("Participate",Icons.calendar_month_outlined,"",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,partfunc)),//Last Time Purchase
+            const SizedBox(height:5,),
+            GestureDetector(
+                onTap: (){
+                  quickBoHistfunc();
+                },
+                child: detailsProfile("QuickBonus",Icons.paid,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,quickBoHistfunc)),
+            const SizedBox(height:5,),
+
+            GestureDetector(
+                onTap: (){
+                  editCardfunc();
+                },
+                child: detailsProfile("Edit Card",Icons.account_balance,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,editCardfunc)),
 
             const SizedBox(height:5,),
-            detailsProfile('WithDraw Balance:',Icons.payments_rounded,"$balance\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBalanceFunc),
+            GestureDetector(
+              onTap: (){
+                withdrawBalanceFunc();
+              },
+                child: detailsProfile('WithDraw Balance',Icons.payments_rounded,"$balance\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBalanceFunc)),
             const SizedBox(height:5,),
-            detailsProfile("Widraw Bonus:",Icons.redeem,"$bonus\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBonusFunc),
+            GestureDetector(
+                onTap: (){
+                  withdrawBonusFunc();
+                },
+                child: detailsProfile("Bonus History",Icons.redeem,"$bonus\$",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,withdrawBonusFunc)),
             const SizedBox(height:5,),
             GestureDetector(
                 onTap: () {
@@ -144,6 +177,7 @@ class _SettingCompState extends State<SettingComp> {
     showOveray=true;
 
     var resul=(await TopupQuery().getCompanyRecord()).data;
+
     if(resul["status"])
     {
       setState(() {
@@ -154,7 +188,9 @@ class _SettingCompState extends State<SettingComp> {
 
       });
     }
+
     else{
+
       setState(() {
         showOveray=false;
         balance="0";
@@ -288,6 +324,13 @@ viewStock() async{
   Get.to(() =>SetStockPage());
 
 }
+partfunc() async{
+  //(await Get.put(ParticipatedQuery()).getCountParticipateEventOnline(Participated(uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+
+  Get.to(() =>SetPartPage());
+
+
+}
 partHistfunc() async{
   //(await Get.put(ParticipatedQuery()).getCountParticipateEventOnline(Participated(uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
@@ -318,6 +361,8 @@ logout() async{
             elevation:0,
           ),
           onPressed: () async{
+            //Get.put(HideShowState()).setHomenavigator(0);
+            Get.put(HideShowState()).setHomenavigator(0);
             await Get.put(AdminQuery()).logout();
 
             Get.toNamed('/Login');

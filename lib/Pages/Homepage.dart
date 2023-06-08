@@ -303,6 +303,9 @@ class _HomepageState extends State<Homepage> {
                       Get.to(() => ProfilePage());
                     }
                     else{
+
+                      await Get.put(TopupQuery()).updateTopupState(ResultDatas);
+                      Get.put(HideShowState()).isVisible(false);
                       Get.to(() => ProfilePage());
                     }
 
@@ -751,6 +754,9 @@ class _HomepageState extends State<Homepage> {
         }
 
       } catch (e) {
+        setState(() {
+          showOveray=false;
+        });
         //return false;
         //print(e);
       }
@@ -758,6 +764,9 @@ class _HomepageState extends State<Homepage> {
     }
     else{
 
+      setState(() {
+        showOveray=false;
+      });
       uidInput2.text="test";
     }
 
@@ -808,32 +817,15 @@ class _HomepageState extends State<Homepage> {
     ),
   );
 
-  loadData(bole) async{
-
+  void initState()
+  {
+    super.initState();
+    //getapi();
     setState(() {
-      showprofile=bole;
+      showOveray=false;
     });
-    //await PromotionQuery().getAllPromotionEventOnline();
-    // Perform data loading here
-    // Map<String, dynamic> _data=((await PromotionQuery().getAllPromotionEventOnline()));
-    //print(_data);
-
-    // return _data;
-    //return ((await PromotionQuery().getAllPromotionEventOnline()));
   }
-  loadDatafalse(){
 
-    setState(() {
-      showprofile=false;
-    });
-    //await PromotionQuery().getAllPromotionEventOnline();
-    // Perform data loading here
-    // Map<String, dynamic> _data=((await PromotionQuery().getAllPromotionEventOnline()));
-    //print(_data);
-
-    // return _data;
-    //return ((await PromotionQuery().getAllPromotionEventOnline()));
-  }
 //Method
 
 //method

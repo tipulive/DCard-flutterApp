@@ -34,7 +34,11 @@ class _UserAccountCompState extends State<UserAccountComp> {
         ProfilePic().profile(),
         const SizedBox(height: 6.0,),
         divLine(),
-        detailsProfile("Edit Profile",Icons.account_balance_wallet,":",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,editprofile),
+        GestureDetector(
+            onTap: (){
+              editprofile();
+            },
+            child: detailsProfile("Edit Profile",Icons.account_balance_wallet,":",0xffffffff,"textright",Icons.arrow_forward,"200\$",0xffffffff,editprofile)),
 
 
 

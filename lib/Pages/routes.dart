@@ -8,6 +8,8 @@ import '../Pages/UserAccountPage.dart';
 import '../Pages/QuickBonusPage.dart';
 import '../Pages/QuickCartPage.dart';
 import '../Pages/ErrorPage.dart';
+import '../Pages/SetStockPage.dart';
+import '../Pages/SettingPage.dart';
 
 class AppRoutes {
   static final routes = [
@@ -21,5 +23,7 @@ class AppRoutes {
     GetPage(name: '/QuickBonus', page: () =>const QuickBonusPage()),
     GetPage(name: '/QuickCart', page: () =>const QuickCartPage()),
     GetPage(name: '/ErrorPage', page: () => const ErrorPage()),
+    GetPage(name: '/SetStock', page: () => const SetStockPage()),
+    GetPage(name: '/settings', page: () => const SettingPage()),
   ];
 }

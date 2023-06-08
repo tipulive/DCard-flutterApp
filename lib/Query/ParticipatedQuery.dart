@@ -847,6 +847,42 @@ getPreviousPriceOnline(Topups topupData,BonusModel bonusData)async{
       print(e);
     }
   }
+  getAllParticipateOnline(Topups topupData,User userData) async{//reached
+    try {
+
+      var params =  {
+        //"kebineericMuna_1668935593",
+        "LimitStart":topupData.endlimit,  //page
+        "LimitEnd":topupData.startlimit,//limit
+        "name":userData.name??'none'
+
+        //"options": [1,2,3],
+      };
+
+      String Authtoken =(adminStateData.obj)["result"][0]["AuthToken"];
+      var url="${ConstantClassUtil.urlLink}/GetAllParticipate";
+      var response = await Dio().get(url,
+        options: Options(headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader:"Bearer ${Authtoken}"
+        }),
+        queryParameters: params,
+      );
+      if (response.statusCode == 200) {
+
+        //updateParticipateHistState(response.data);
+        return response;
+
+
+      } else {
+        return false;
+        //print(false);
+      }
+    } catch (e) {
+      //return false;
+      print(e);
+    }
+  }
   getAllParticipateHistEventOnline(Topups topupData,User userData) async{//reached
     try {
 

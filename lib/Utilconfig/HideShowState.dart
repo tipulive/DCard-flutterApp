@@ -7,6 +7,9 @@ class HideShowState extends GetxController{
   var isNumberValid=false.obs;
   var isNumber=true.obs;
   var profVisible=false.obs;
+  var defaultInterest=5.obs;
+  var homenavigator=0.obs;
+  var profilenavigator=0.obs;
 
   isHiden(valData){
     isVisible.value=valData;
@@ -22,6 +25,15 @@ class HideShowState extends GetxController{
   }
   isprofileVisible(valData){
     profVisible.value=valData;
+  }
+  setDefaultInterest(valData){
+    defaultInterest.value=valData;
+  }
+  setHomenavigator(valData){
+    homenavigator.value=valData;
+  }
+  setProfilenavigator(valData){
+    profilenavigator.value=valData;
   }
 
 

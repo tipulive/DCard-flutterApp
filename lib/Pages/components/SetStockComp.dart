@@ -2,6 +2,7 @@ import 'dart:math';
 
 
 import 'package:dcard/Query/ParticipatedQuery.dart';
+import 'package:dcard/Utilconfig/HideShowState.dart';
 
 import 'package:dcard/models/Topups.dart';
 import 'package:get/get.dart';
@@ -23,6 +24,7 @@ class SetStockComp extends StatefulWidget {
 }
 
 class _SetStockCompState extends State<SetStockComp> {
+
   ScrollController _scrollController = ScrollController();// detect scroll
   List<dynamic> _data = [];
   var bottomResult=[];
@@ -32,7 +34,14 @@ class _SetStockCompState extends State<SetStockComp> {
   bool hasMoreData=true;
   bool isLoading=false;
 
+
+
+
+
+
   bool showOveray=false;
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -196,7 +205,7 @@ class _SetStockCompState extends State<SetStockComp> {
                           ],
                         ),
                       ),
-                      trailing:num.parse(_data[index]["count"])>0?Container(child:
+                      trailing:Container(child:
                       GestureDetector(
                           onTap: () async{
                             // This function will be called when the icon is tapped.
@@ -219,7 +228,11 @@ setState(() {
                             showOveray=false;
                             });
                            // print(bottomResult);
-                            viewThisProduct();
+                            var pcs="${(_data[index]['pcs']=='none')?'0':_data[index]['pcs']}";
+                            Get.put(HideShowState()).setDefaultInterest(5);
+                            viewThisProduct(_data[index]['productCode'],pcs);
+
+
                             }
                             else{
                               //showOveray=false;
@@ -237,9 +250,7 @@ setState(() {
                       )
 
 
-                      ):Visibility(
-                        visible: false,
-                          child: Text("")),
+                      )
 
                     //trailing: Text()
                   ),
@@ -268,8 +279,10 @@ setState(() {
   {
     super.initState();
     //getapi();
-    Quickdata();
-    _scrollController.addListener(_scrollListener);
+
+      Quickdata();
+      _scrollController.addListener(_scrollListener);
+
   }
   void _scrollListener() {
     if (_scrollController.offset >= _scrollController.position.maxScrollExtent &&
@@ -280,14 +293,15 @@ setState(() {
     }
   }
 
-  @override
+
   void dispose() {
+
+
     _scrollController.dispose();
     super.dispose();
   }
 
 
-  @override
 
   Color getRandomColor() {
     Random random = Random();
@@ -329,67 +343,152 @@ setState(() {
 
 
   }
-  void viewThisProduct() {
+  void viewThisProduct(productName,pcs) {
+
     Get.bottomSheet(
-        Stack(
-          alignment: Alignment.bottomCenter,
+      Container(
+        padding:EdgeInsets.all(5.0),
+        height: 200,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: ListView(
+
           children: [
 
-            SingleChildScrollView(
-              child: Container(
-                 padding:EdgeInsets.all(5.0),
-                height: 200,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                child: ListView.builder(
-                  itemCount: bottomResult.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      decoration: BoxDecoration(
+            Center(child: Text("${productName}")),
+          Container(
+            width: 40,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Obx(()=>
+                    SizedBox(
 
-                          border: Border(bottom
-                              : BorderSide(
-                            color: Colors.grey.withOpacity(0.1),
-                            width: 5
+                      child: IntrinsicWidth(
+                        child: TextField(
+                          //controller: TextEditingController(text:"${_data[index]["textchange_var"]??_data[index]["qty"]}"),
 
-                          ))),
-                      child: Card(
-                        elevation:0,
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            hintText: ' interest is ${Get.put(HideShowState()).defaultInterest.value} Change interest',
 
-                        //color:Colors.grey,
+                            hintStyle: TextStyle(color: Colors.blue),
+                            contentPadding: EdgeInsets.all(0),
+                            isDense: true,
 
 
-                        child: ListTile(
-                          title: Text('Price:1 x ${bottomResult[index]["price"]}'),
+
+                          ),
+                          style: TextStyle(
+                            color: Colors.blue, // Set the text color to red
+
+                          ),
+                          onChanged: (text) {
+
+                            try {
+                              //numVal = num.parse(str);
+                              var myValue = int.tryParse(text);
+
+                              if (myValue != null && !myValue.isNaN && myValue>=0) {
+
+                                Get.put(HideShowState()).setDefaultInterest(myValue);
+
+                              } else {
+
+                              }
+                            } catch (e) {
+
+                              print('Error: $e');
+                            }
+
+                            //print(this._data[index]["total_var"]);
+                            // print("Text changed to: $text");
+                          },
+                          focusNode: FocusNode(),
+
+
                         ),
+                        stepWidth: 0.5, // set minimum width to 100
                       ),
-                    );
+                    ),
 
-                  },
+
                 ),
-              ),
+              ],
             ),
-            if(showOveray)
-            Positioned.fill(
-              child: Container(
-                color: Colors.black.withOpacity(0.5),
-              ),
-            ),
-            if(showOveray)
-            Positioned(
+          ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: bottomResult.length,
+              itemBuilder: (context, index) {
 
-              child: Container(
-                padding: EdgeInsets.all(16),
-                child: CircularProgressIndicator(),
-              ),
+
+
+
+                return Container(
+                  decoration: BoxDecoration(
+
+                      border: Border(bottom
+                          : BorderSide(
+                          color: Colors.grey.withOpacity(0.1),
+                          width: 5
+
+                      ))),
+                  child: Card(
+                    elevation:0,
+
+                    //color:Colors.grey,
+
+
+                    child: ListTile(
+
+                      title: Container(
+                        child: Obx(()=>
+                            Column(
+
+                              children: [
+                                Center(child: Text('Price:${bottomResult[index]["price"]} ')),
+                                SizedBox(height:5,),
+                               Visibility(
+                                 visible: false,
+                                   child: Text("${Get.put(HideShowState()).defaultInterest.value}")),
+
+
+                               if(num.parse(pcs)>0)
+                               Column(
+                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                 children: [
+
+                                   Text('- Price(1pc)=${(num.parse(bottomResult[index]["price"])+Get.put(HideShowState()).defaultInterest.value)/num.parse(pcs)}'),
+                                   SizedBox(height:5,),
+
+                                   Text('- Price(12pcs)=${((num.parse(bottomResult[index]["price"])+Get.put(HideShowState()).defaultInterest.value)/num.parse(pcs))*12}',),
+                                   SizedBox(height:5,),
+
+                                   Text('- Price Bds (${pcs}pcs)=${((num.parse(bottomResult[index]["price"])+Get.put(HideShowState()).defaultInterest.value))}',),
+
+                                 ],
+                               )
+
+                              ],
+                            )
+                        ),
+                      )
+                    ),
+                  ),
+                );
+              },
             ),
+            // Other widgets...
           ],
-        )
+        ),
+      ),
     ).whenComplete(() {
 
       //do whatever you want after closing the bottom sheet

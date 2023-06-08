@@ -42,6 +42,8 @@ class _ErrorCompState extends State<ErrorComp> {
   }
   Widget listdata(){
     return  Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         //ProfilePic().profile(),
 

@@ -7,6 +7,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import '../Utilconfig/ConstantClassUtil.dart';
+import '../Utilconfig/HideShowState.dart';
 import '../models/Topups.dart';
 
 import '../DatabaseHelper.dart';
@@ -214,7 +215,17 @@ class TopupQuery extends GetxController{
 
         //updateBalanceHistState(response.data);
         //return response.data;
-        return response;
+
+        if(response.data["status"]!=null){
+          return response;
+        }
+        else{
+          Get.put(HideShowState()).setHomenavigator(0);
+          await Get.put(AdminQuery()).logout();
+
+          Get.toNamed('/Login');
+        }
+        //
 
 
       } else {
@@ -222,6 +233,7 @@ class TopupQuery extends GetxController{
         //print(false);
       }
     } catch (e) {
+
       //return false;
       print(e);
     }
@@ -256,6 +268,7 @@ class TopupQuery extends GetxController{
 
         //updateBalanceHistState(response.data);
         //return response.data;
+
         return response;
 
 

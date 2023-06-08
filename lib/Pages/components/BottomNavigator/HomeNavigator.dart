@@ -10,55 +10,64 @@ import '../../../Utilconfig/HideShowState.dart';
 
 
 class HomeNavigator extends StatelessWidget {
- const HomeNavigator({super.key});
- @override
+  const HomeNavigator({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    //final myindex = Get.arguments??0;
 
 
- Widget build(BuildContext context) {
-  //final myindex = Get.arguments??0;
-  const myindex =0;
+    return  Obx(
+            () =>BottomNavigationBar(
+          //backgroundColor: Colors.yellow,
+          //backgroundColor: Color(0xff010a0e),
+          currentIndex:Get.put(HideShowState()).homenavigator.value,
 
-  return BottomNavigationBar(
-   //backgroundColor: Colors.yellow,
-   //backgroundColor: Color(0xff010a0e),
-   currentIndex:myindex,
-   items: const [
-    BottomNavigationBarItem(
-        icon: Icon(Icons.access_alarm),
-        label: "Home",
-        backgroundColor: Colors.blue
-    ),
-    BottomNavigationBarItem(
-        icon: Icon(Icons.access_alarm),
-        label: "Card",
-        backgroundColor: Colors.blue
-    ),
-    BottomNavigationBarItem(
-        icon: Icon(Icons.access_alarm),
-        label: "Settings",//Account,Recent submitted
-        backgroundColor: Colors.blue
-    ),
+          items: const [
+            BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: "Home",
+                backgroundColor: Colors.blue
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.add_card),
+                label: "Card",
+                backgroundColor: Colors.blue
+            ),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.settings),
+                label: "Settings",//Account,Recent submitted
+                backgroundColor: Colors.blue
+            ),
 
-   ],
-   onTap: (index){
-    if(index==0)
-    {
-     Get.put(HideShowState()).isCameraVisible(true);
-     Get.to(() => const Homepage());
+          ],
+          onTap: (index){
+            Get.put(HideShowState()).setHomenavigator(index);
+            if(index==0)
+            {
 
-    }
-    if(index==1)
-    {
 
-     Get.to(() =>const AddCardPage(),arguments:1);
-    }
-    if(index==2)
-    {
-     Get.put(HideShowState()).isCameraVisible(false);
+              Get.put(HideShowState()).isCameraVisible(true);
+              Get.to(() => const Homepage());
 
-     Get.to(() =>const SettingPage(),arguments:1);
-    }
-   },
-  );
- }
+
+            }
+            if(index==1)
+            {
+
+
+              Get.to(() =>const AddCardPage(),arguments:1);
+            }
+            if(index==2)
+            {
+              Get.put(HideShowState()).isCameraVisible(false);
+
+              Get.to(() =>const SettingPage(),arguments:1);
+            }
+          },
+        )
+    );
+  }
 }
+
+

@@ -21,6 +21,7 @@ class SetStockPage extends StatelessWidget {
             icon: Icon(Icons.arrow_back,color: Colors.black,),
             onPressed: () {
               Get.back();
+              //Get.toNamed('settings');
             },
           ),
         ),

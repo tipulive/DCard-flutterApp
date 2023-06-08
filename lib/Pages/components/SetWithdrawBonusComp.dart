@@ -70,7 +70,7 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
 
         Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
-          child: Text("Bonus History",style:GoogleFonts.pacifico(fontSize:15,color: Colors.teal,fontWeight: FontWeight.w700)),
+          child: Text("Widraw Bonus History",style:GoogleFonts.pacifico(fontSize:15,color: Colors.teal,fontWeight: FontWeight.w700)),
         ),
 
 
@@ -129,7 +129,7 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
                     onTap: () {
                       // Handle card click event here
                       //Get.put(HideShowState()).isVisible(true);
-
+                      print(_data[index]);
                       EditParticipatePopup(_data[index]);
                     },
                     child:Card(
@@ -289,70 +289,13 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
                           padding: EdgeInsets.all(10),
                           children: [
                             Center(child: Text(data["name"])),
-                            Center(child: Text("Promotion:${data["promoName"]}")),
-                            TextField(
-                              controller:inputData,
-                              keyboardType: TextInputType.number,
-
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.symmetric(vertical: 3,horizontal: 3),
-                                border: OutlineInputBorder(),
-                                labelText: 'Enter Value',
-                                hintText: 'Enter Value',
-                                hintStyle: TextStyle(
-                                  color: Colors.grey,
-                                ),
-
-                              ),
+                            Center(child: Text("Description:")),
+                            SizedBox(height: 10,),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
+                              child: Text("${data["description"]}"),
                             ),
-                            SizedBox(height: 10.0,),
-                            SizedBox(height: 10.0,),
-                            Center(
-                              child: FloatingActionButton.extended(
-                                label: Text('Edit'), // <-- Text
-                                backgroundColor: Color(0xff010a0e),
-                                icon: Icon( // <-- Icon
-                                  Icons.redeem,
-                                  size: 24.0,
-                                ),
-                                onPressed: () async=> {
 
-
-                                  Get.put(HideShowState()).isVisible(true),
-                                  resultDatas=(await ParticipatedQuery().ParticipateEditEventOnline(Participated(uid:data["uid"],uidUser:data["uidUser"],inputData:inputData.text),Promotions(reach:data["reach"],gain:data["gain"]))).data,
-                                  if(resultDatas["status"])
-                                    {
-                                      Get.put(HideShowState()).isVisible(false),
-                                      Get.snackbar("Success", "Successfully Edited ",backgroundColor: Color(0xff9a1c55),
-                                          colorText: Color(0xffffffff),
-                                          titleText: const Text("Events",style:TextStyle(color:Color(
-                                              0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-
-                                          icon: Icon(Icons.access_alarm),
-                                          duration: Duration(seconds: 4)),
-
-
-                                    }else{
-                                    Get.put(HideShowState()).isVisible(false),
-
-                                    Get.snackbar("Error", "something wrong",backgroundColor: Color(
-                                        0xffdc2323),
-                                        colorText: Color(0xffffffff),
-                                        titleText: const Text("Events",style:TextStyle(color:Color(
-                                            0xffffffff),fontSize:18,fontWeight:FontWeight.w500,fontStyle: FontStyle.normal),),
-
-                                        icon: Icon(Icons.access_alarm),
-                                        duration: Duration(seconds: 4))
-                                  }
-
-
-                                },
-
-
-
-
-                              ),
-                            ),
 
 
 
