@@ -7,19 +7,20 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 
+import '../../Query/CardQuery.dart';
 import '../../Query/TopupQuery.dart';
 import '../../Utilconfig/HideShowState.dart';
 import '../../models/Topups.dart';
 
 
-class SetWithdrawBonusComp extends StatefulWidget {
-  const SetWithdrawBonusComp({Key? key}) : super(key: key);
+class WBonusHistComp extends StatefulWidget {
+  const WBonusHistComp({Key? key}) : super(key: key);
 
   @override
-  State<SetWithdrawBonusComp> createState() => _SetWithdrawBonusCompState();
+  State<WBonusHistComp> createState() => _WBonusHistCompState();
 }
 
-class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
+class _WBonusHistCompState extends State<WBonusHistComp> {
   ScrollController _scrollController = ScrollController();// detect scroll
   TextEditingController inputData=TextEditingController();
   List<dynamic> _data = [];
@@ -70,49 +71,7 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
         ),
 
 
-        Container(
-          height: 55,
-          //padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-          margin: const EdgeInsets.fromLTRB(10, 20, 10, 10),
-          child: TextField(
 
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(50.0),
-              ),
-              labelText: 'Search',
-            ),
-            onChanged: (text) async{
-
-              try {
-                int limit=10;
-                var resultData=(await TopupQuery().getBalanceHistCreator(Topups(startlimit:limit,endlimit:_page,optionCase:'bonus'),User(uid: "none",name:text))).data;
-                if(resultData["status"])
-                {
-                  setState(() {
-                    //print(Resul);
-                    isLoading=false;
-                    hasMoreData=false;
-                    _data.clear();
-
-                    _data.addAll(resultData["result"]);
-                  });
-                }
-                else{
-                  _data.clear();
-
-                }
-
-
-              } catch (e) {
-                print('Error: $e');
-              }
-
-              //print(this._data[index]["total_var"]);
-              // print("Text changed to: $text");
-            },
-          ),
-        ),
         Expanded(
           child: ListView.builder(
 
@@ -125,7 +84,7 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
                     onTap: () {
                       // Handle card click event here
                       //Get.put(HideShowState()).isVisible(true);
-                      print(_data[index]);
+                      //print(_data[index]);
                       EditParticipatePopup(_data[index]);
                     },
                     child:Card(
@@ -142,40 +101,11 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
                           child: Icon(_getRandomIcon()),
                           backgroundColor:getRandomColor(),
                         ),
-                        title:Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                          children: [
-
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text("${_data[index]['name']}"),
-                              ],
-                            ),
-
-
-
-                          ],
+                        title:Text("${_data[index]['name']}",overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
                         ),
                         subtitle: Text("${_data[index]['bonus']}"),
-                        trailing:Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            //mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment:CrossAxisAlignment.start,
-                            mainAxisAlignment:MainAxisAlignment.spaceBetween,
-                            children: [
-
-                              //Text("${_data[index]['action']}"),
-                              Text("${_data[index]['created_at']}"),
-
-
-
-                            ],
-                          ),
-                        ),
+                        trailing:Text("${_data[index]['created_at']}"),
 
 
 
@@ -244,7 +174,7 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
     if(isLoading) return;
     isLoading=true;
     int limit=10;
-    var resul=(await TopupQuery().getBalanceHistCreator(Topups(startlimit:limit,endlimit:_page,optionCase:'bonus'),User(uid: "none",name:"none"))).data;
+    var resul=(await TopupQuery().getWBalanceHistUser(Topups(startlimit:limit,endlimit:_page,optionCase:'bonus'),User(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}",name:"none"))).data;
     setState(() {
       isLoading=false;
       if(resul["result"].length<limit)
@@ -267,13 +197,13 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
               alignment: Alignment.bottomCenter,
               children: [
                 Container(
-                  height:200,
+                  height:250,
 
                   child: Column(
                     children: [
                       Container(
 
-                        height: 200,
+                        height: 250,
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.only(
@@ -284,13 +214,46 @@ class _SetWithdrawBonusCompState extends State<SetWithdrawBonusComp> {
                         child: ListView(
                           padding: EdgeInsets.all(10),
                           children: [
-                            Center(child: Text(data["name"])),
-                            Center(child: Text("Description:")),
+                            Center(child: Text(data["created_at"])),
+
                             SizedBox(height: 10,),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
-                              child: Text("${data["description"]}"),
+                            Card(
+                              elevation: 0.2,  // Adds a shadow effect
+                              shape: RoundedRectangleBorder(
+                                //borderRadius: BorderRadius.circular(8),  // Adds rounded corners
+                              ),
+                              color: Colors.white,  // Sets the background color
+                              child: Column(
+                                children: [
+
+                                  ListTile(
+
+                                    title: Text('Withdraw'),
+                                    subtitle: Text(data["name"]),
+
+                                  ),
+                                ],
+                              ),
                             ),
+                            Card(
+                              elevation: 0.2,  // Adds a shadow effect
+                              shape: RoundedRectangleBorder(
+                                //borderRadius: BorderRadius.circular(8),  // Adds rounded corners
+                              ),
+                              color: Colors.white,  // Sets the background color
+                              child: Column(
+                                children: [
+
+                                  ListTile(
+
+                                    title: Text('Description'),
+                                    subtitle: Text(data["description"]),
+
+                                  ),
+                                ],
+                              ),
+                            ),
+
 
 
 

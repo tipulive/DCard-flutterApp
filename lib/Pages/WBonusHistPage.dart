@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'components/BottomNavigator/HomeNavigator.dart';
-import 'components/SetWithdrawBalanceComp.dart';
+import 'components/WBonusHistComp.dart';
 
 import 'package:get/get.dart';
 
 
-class SetWithdrawBalancePage extends StatelessWidget {
-  const SetWithdrawBalancePage({Key? key}) : super(key: key);
+class WBonusHistPage extends StatelessWidget {
+  const WBonusHistPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +28,7 @@ class SetWithdrawBalancePage extends StatelessWidget {
       //backgroundColor: Colors.yellow,
       //backgroundColor: Color(0xff010a0e),
 
-      body:const SetWithdrawBalanceComp(),
+      body:const WBonusHistComp(),
       bottomNavigationBar:const HomeNavigator(),
 
 

@@ -2,6 +2,8 @@
 import 'package:dcard/Pages/AllEventPage.dart';
 import 'package:dcard/Pages/BalancePage.dart';
 import 'package:dcard/Pages/BonusPage.dart';
+import 'package:dcard/Pages/WBonusHistPage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -81,7 +83,13 @@ class _ProfileCompState extends State<ProfileComp> {
         onTap: (){
           redeemBonus();
         },
-        child: detailsProfile("Widraw Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,redeemBonus)),
+        child: detailsProfile("Widraw Bonus",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,bonusHistory)),
+          const SizedBox(height:5,),
+          GestureDetector(
+              onTap: (){
+                bonusHistory();
+              },
+              child: detailsProfile("Withdraw Bonus History",Icons.redeem,"",0xbfebf1ef,"textright",Icons.arrow_forward,"200\$",0xffffffff,bonusHistory)),
 
 
 
@@ -901,6 +909,11 @@ bonusfunc() async{
   //(await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
 
   Get.to(() =>BonusPage());
+}
+bonusHistory() async{
+  //(await Get.put(TopupQuery()).GetBalanceHist(Topups(uid:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
+
+  Get.to(() =>WBonusHistPage());
 }
 eventfunc() async{
   //(await Get.put(ParticipatedQuery()).getCountParticipateEventOnline(Participated(uidUser:"${(Get.put(CardQuery()).obj)["resultData"]["UserDetail"]["uid"]??'none'}")));
